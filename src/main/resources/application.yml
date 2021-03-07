@@ -1,0 +1,49 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /fakeuser
+  tomcat:
+    uri-encoding: UTF-8
+
+spring: #띄어쓰기 없음
+  datasource: #띄어쓰기 2칸
+    url: jdbc:h2:tcp://localhost/~/springBootBoard #4칸
+    username: sa #
+    password:
+    driver-class-name: org.h2.Driver
+
+# JPA 설정.
+  jpa: #띄어쓰기 2칸
+    hibernate: #띄어쓰기 4칸
+#      ddl-auto: create #띄어쓰기 6칸
+    properties: #띄어쓰기 4칸
+      hibernate: #띄어쓰기 6칸
+#        show_sql: true #띄어쓰기 8칸
+        format_sql: true #띄어쓰기 8칸
+
+#  thymeleaf:
+#    enabled: false
+#    cache: false
+#    prefix: classpath:templates/thymeleaf
+#    suffix: .html
+#    excluded-view-names: jsp/*
+
+  devtools:
+    livereload:
+      enabled: true
+
+# 로깅 설정.
+logging.level: #띄어쓰기 없음
+  org.hibernate.SQL: debug #띄어쓰기 2칸
+# org.hibernate.type: trace #띄어쓰기 2칸
+  com:
+    atoz_develop:
+      mybatissample:
+        repository: TRACE
+
+# Mybatis 설정.
+mybatis:
+  mapper-locations: mybatis/mapper/**/*Mapper.xml
+  configuration:
+    map-underscore-to-camel-case: true
+  type-aliases-package: com.allan.springBootBoard.web.board.domain.model, com.allan.springBootBoard.common

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.allan.springBootBoard.web.board.repository.mapper.BoardMapper">
+
+    <select id="selectAllBoards" resultType="BoardVO" parameterType="Search">
+        SELECT
+        board_id, member_id, category_id, title, content, tag, view_cnt, created_by, created_date, updated_by, updated_date
+        FROM
+        BOARD
+        <trim prefix="WHERE" prefixOverrides="AND|OR">
+            <if test="searchType=='title' and keyword != null and keyword != '' ">
+                AND title like CONCAT('%', #{keyword}, '%')
+            </if>
+            <if test="searchType=='content' and keyword != null and keyword != '' ">
+                AND content like CONCAT('%', #{keyword}, '%')
+            </if>
+            <if test="searchType=='registerId' and keyword != null and keyword != '' ">
+                AND created_by like CONCAT('%', #{keyword}, '%')
+            </if>
+        </trim>
+        ORDER BY board_id DESC
+        LIMIT #{startList}, #{listSize}
+    </select>
+
+    <delete id="deleteAll" >
+        DELETE FROM BOARD
+    </delete>
+
+    <select id="selectAllBoard" resultType="BoardVO">
+        SELECT
+        board_id, member_id, category_id, title, content, tag, view_cnt, created_by, created_date, updated_by, updated_date
+        FROM
+        BOARD
+    </select>
+
+
+</mapper>

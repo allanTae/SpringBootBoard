@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN" "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+<tiles-definitions>
+    <!-- account -->
+    <definition name="account-layout" template="/WEB-INF/tiles/layouts/login_layout.jsp">
+        <put-attribute name="tile_common" value="/WEB-INF/tiles/layouts/common.jsp" />
+    </definition>
+    <definition name="user/*" extends="account-layout">
+        <put-attribute name="tile_body" value="/WEB-INF/views/jsp/user/{1}.jsp" />
+    </definition>
+
+    <!-- base -->
+    <definition name="base-layout" template="/WEB-INF/tiles/layouts/base_layout.jsp">
+        <put-attribute name="tile_header" value="/WEB-INF/tiles/layouts/header.jsp" />
+        <put-attribute name="tile_common" value="/WEB-INF/tiles/layouts/common.jsp" />
+    </definition>
+    <definition name="board/*" extends="base-layout">
+        <put-attribute name="tile_body" value="/WEB-INF/views/jsp/board/{1}.jsp" />
+    </definition>
+    <definition name="member/*" extends="base-layout">
+        <put-attribute name="tile_body" value="/WEB-INF/views/jsp/user/{1}.jsp" />
+    </definition>
+
+    <!-- error -->
+    <definition name="error-layout" template="/WEB-INF/tiles/layouts/base_layout.jsp">
+        <put-attribute name="tile_common" value="/WEB-INF/tiles/layouts/common.jsp" />
+    </definition>
+    <definition name="error/*" extends="base-layout">
+        <put-attribute name="tile_body" value="/WEB-INF/views/jsp/error/{1}.jsp" />
+    </definition>
+</tiles-definitions>

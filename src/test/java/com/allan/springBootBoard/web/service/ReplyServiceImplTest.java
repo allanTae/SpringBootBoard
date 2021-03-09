@@ -41,7 +41,7 @@ class ReplyServiceImplTest {
                 .replyGroup(1L)
                 .replyGroupOrder(1L)
                 .depth(0L)
-                .createdBy("fakeuser")
+                .createdBy("testId")
                 .createdDate(LocalDateTime.now())
                 .build();
         em.persist(reply1);
@@ -52,7 +52,7 @@ class ReplyServiceImplTest {
                 .replyGroup(1L)
                 .replyGroupOrder(2L)
                 .depth(1L)
-                .createdBy("fakeuser")
+                .createdBy("testId")
                 .createdDate(LocalDateTime.now())
                 .build();
         em.persist(reply2);
@@ -60,7 +60,7 @@ class ReplyServiceImplTest {
         ReplyDTO dto = ReplyDTO.builder()
                 .boardId(board.getBoardId())
                 .content("test content")
-                .registerId("fakeuser")
+                .registerId("testId")
                 .build();
 
         //when
@@ -86,7 +86,7 @@ class ReplyServiceImplTest {
                 .replyGroup(1L)
                 .replyGroupOrder(1L)
                 .depth(0L)
-                .createdBy("fakeuser")
+                .createdBy("testId")
                 .createdDate(LocalDateTime.now())
                 .build();
         em.persist(reply1);
@@ -97,7 +97,7 @@ class ReplyServiceImplTest {
                 .replyGroup(1L)
                 .replyGroupOrder(2L)
                 .depth(1L)
-                .createdBy("fakeuser")
+                .createdBy("testId")
                 .createdDate(LocalDateTime.now())
                 .build();
         em.persist(reply2);
@@ -108,7 +108,7 @@ class ReplyServiceImplTest {
                 .replyGroup(1L)
                 .replyGroupOrder(3L)
                 .depth(2L)
-                .createdBy("fakeuser")
+                .createdBy("testId")
                 .createdDate(LocalDateTime.now())
                 .build();
         em.persist(reply3);
@@ -119,7 +119,7 @@ class ReplyServiceImplTest {
                 .replyGroup(1L)
                 .replyGroupOrder(4L)
                 .depth(1L)
-                .createdBy("fakeuser")
+                .createdBy("testId")
                 .createdDate(LocalDateTime.now())
                 .build();
         em.persist(reply4);
@@ -130,7 +130,7 @@ class ReplyServiceImplTest {
                 .replyGroup(1L)
                 .replyGroupOrder(5L)
                 .depth(1L)
-                .createdBy("fakeuser")
+                .createdBy("testId")
                 .createdDate(LocalDateTime.now())
                 .build();
         em.persist(reply5);
@@ -142,7 +142,7 @@ class ReplyServiceImplTest {
                 .parentDepth(1L)
                 .updatedBy("관리자")
                 .updatedDate(LocalDateTime.now())
-                .registerId("fakeuser")
+                .registerId("testId")
                 .build();
 
         //when
@@ -167,7 +167,7 @@ class ReplyServiceImplTest {
                 .replyId(1L)
                 .board(board)
                 .content("변경 전")
-                .createdBy("fakeuser")
+                .createdBy("testId")
                 .createdDate(LocalDateTime.now())
                 .build();
         em.persist(reply);
@@ -175,9 +175,7 @@ class ReplyServiceImplTest {
         ReplyDTO replyDTO = ReplyDTO.builder()
                 .replyId(1L)
                 .content("변경 후")
-                .updatedBy("관리자")
-                .updatedDate(LocalDateTime.now())
-                .registerId("fakeuser")
+                .registerId("testId2")
                 .build();
 
         //when후
@@ -188,6 +186,7 @@ class ReplyServiceImplTest {
 
         //then
         assertEquals("변경 후", updatedReply.getContent());
+        assertEquals("testId2", updatedReply.getUpdatedBy());
     }
 
     @Test
@@ -198,14 +197,14 @@ class ReplyServiceImplTest {
         Reply reply = Reply.builder()
                 .replyId(1L)
                 .content("변경 전")
-                .createdBy("fakeuser")
+                .createdBy("testId")
                 .createdDate(LocalDateTime.now())
                 .build();
 
         em.persist(reply);
 
         //when
-        replyService.deleteReply(1L);
+        replyService.deleteReply(1L, board.getBoardId());
         List<ReplyDTO> list = replyService.list(board.getBoardId());
 
         //then
@@ -215,7 +214,7 @@ class ReplyServiceImplTest {
     private Board createBoard() {
         Board board = Board.builder()
                 .title("테스트 게시글 내용")
-                .createdBy("fakeuser")
+                .createdBy("testId")
                 .createdDate(LocalDateTime.now())
                 .build();
         em.persist(board);

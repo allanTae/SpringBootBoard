@@ -33,30 +33,4 @@ public class ResolverConfig implements WebMvcConfigurer {
         return tilesViewResolver;
     }
 
-
-    // thymeleaf 설정.
-    @Bean
-    public SpringResourceTemplateResolver templateResolver() {
-        SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
-        templateResolver.setCacheable(false);
-        templateResolver.setPrefix("classpath:/templates/thymeleaf/");
-        templateResolver.setSuffix(".html");
-        return templateResolver;
-    }
-
-    @Bean
-    public SpringTemplateEngine templateEngine() {
-        SpringTemplateEngine springTemplateEngine = new SpringTemplateEngine();
-        springTemplateEngine.addTemplateResolver(templateResolver());
-        return springTemplateEngine;
-    }
-
-    @Bean
-    public ThymeleafViewResolver thymeleafViewResolver() {
-        ThymeleafViewResolver viewResolver = new ThymeleafViewResolver();
-        viewResolver.setTemplateEngine(templateEngine());
-        viewResolver.setOrder(2);
-        return viewResolver;
-    }
-
 }

@@ -20,7 +20,7 @@ public interface ReplyRepository {
 
     public Long updateReply(ReplyDTO dto);
 
-    public Long deleteReply(Long replyId);
+    public Long deleteReply(Long replyId, Long boardId);
 
     public void deleteAll(); // test용. 나중에 배포시 삭제 요망.
 

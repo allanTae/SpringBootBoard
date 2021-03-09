@@ -5,7 +5,7 @@
 <form:form class="form-signin" name="form" id="form" role="form"
 		   modelAttribute="loginForm" method="post" action="${pageContext.request.contextPath}/user/login">
 	<div class="text-center mb-4">
-		<h1 class="h3 mb-3 font-weight-normal">PRATICE.COM</h1>
+		<h1 class="h3 mb-3 font-weight-normal">FAKEUSER.COM</h1>
 	</div>
 	<div class="form-label-group">
 		<form:input path="userId" id="id" class="form-control" placeholder="User ID" required="" autofocus="" />

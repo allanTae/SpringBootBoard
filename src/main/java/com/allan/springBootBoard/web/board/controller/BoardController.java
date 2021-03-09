@@ -25,21 +25,6 @@ public class BoardController {
     @Autowired
     BoardService boardService;
 
-    // 나중에 삭제 필요.
-    // jsp test page.
-    @GetMapping("/testJsp")
-    public String test(Model model){
-        model.addAttribute("serverName", "testServer");
-        return "board/testPage";
-    }
-
-    // 나중에 삭제 필요.
-    // thymeleaf test page.
-    @GetMapping("/testThymeleaf")
-    public String test(){
-        return "thymeleaf/thymeleafTest";
-    }
-
     // 게시판 목록.
     @GetMapping("/getBoardList")
     public String list(Model model,

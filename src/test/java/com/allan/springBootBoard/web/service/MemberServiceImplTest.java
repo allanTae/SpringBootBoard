@@ -2,6 +2,9 @@ package com.allan.springBootBoard.web.service;
 
 import com.allan.springBootBoard.web.board.domain.Address;
 import com.allan.springBootBoard.web.board.domain.model.MemberDTO;
+import com.allan.springBootBoard.web.board.service.BoardService;
+import com.allan.springBootBoard.web.board.service.ReplyService;
+import com.allan.springBootBoard.web.exception.SameIdUseException;
 import com.allan.springBootBoard.web.member.domain.MemberRole;
 import com.allan.springBootBoard.web.member.service.MemberService;
 import com.allan.springBootBoard.web.member.domain.Gender;
@@ -37,13 +40,20 @@ class MemberServiceImplTest {
     @Autowired
     BCryptPasswordEncoder passwordEncoder;
 
+    @Autowired
+    BoardService boardService;
+
+    @Autowired
+    ReplyService replyService;
+
     @BeforeEach
     public void setup(){
+        replyService.deleteAll();
+        boardService.deleteAll();
         memberRepository.deleteAll();
     }
 
     @Test
-    @Rollback(value = false)
     public void 가입테스트() throws Exception {
         //given
         Address address = createAddress();
@@ -58,21 +68,21 @@ class MemberServiceImplTest {
     }
 
     private Address createAddress() {
-        return new Address("Gwanju", "Namunroo", "123456");
+        return new Address("City", "Street", "123456");
     }
 
     private Member createMember(Address address) {
         return Member.builder()
-                .id("fakeuser")
+                .id("testId")
                 .pwd(passwordEncoder.encode("test"))
-                .name("태지운")
+                .name("AllanTae")
                 .age(29L)
                 .gender(Gender.MAN)
                 .address(address)
-                .createdBy("fakeuser")
+                .createdBy("testId")
                 .createdDate(LocalDateTime.now())
                 .role(MemberRole.USER)
-                .phoneNumber("01079978543")
+                .phoneNumber("01012341234")
                 .build();
     }
 
@@ -89,7 +99,7 @@ class MemberServiceImplTest {
         memberService.join(member1);
 
         //then
-        IllegalStateException ex = assertThrows(IllegalStateException.class, () -> memberService.join(member2));
+        SameIdUseException ex = assertThrows(SameIdUseException.class, () -> memberService.join(member2));
         assertEquals("이미 등록 된 회원 아이디입니다.", ex.getMessage());
 
     }

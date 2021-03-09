@@ -81,4 +81,8 @@ public class Reply extends BaseEntity {
         this.updatedBy = updatedBy;
         this.updatedDate = updatedDate;
     }
+
+    public void changeBoard(Board board){
+        this.board = board;
+    }
 }

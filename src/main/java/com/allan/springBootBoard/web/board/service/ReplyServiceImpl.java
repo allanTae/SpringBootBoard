@@ -46,10 +46,11 @@ public class ReplyServiceImpl implements ReplyService {
                 .replyGroup(replyId)    // 댓글 그룹번호 설정.
                 .replyGroupOrder(1L)    // 댓글 그룹번호 내 초기 순서 설정.
                 .content(dto.getContent())
-                .board(board)
                 .createdBy(dto.getRegisterId())
                 .createdDate(LocalDateTime.now())
                 .build();
+
+        board.addReply(reply);
 
         replyRepository.insertReply(reply);
 
@@ -65,12 +66,14 @@ public class ReplyServiceImpl implements ReplyService {
         Reply reply = Reply.builder()
                 .replyId(replyId)
                 .content(dto.getContent())
-                .board(board)
                 .depth(dto.getParentDepth()+1)
                 .replyGroup(dto.getParentReplyGroup())
                 .createdBy(dto.getRegisterId())
                 .createdDate(LocalDateTime.now())
                 .build();
+
+        // 연관 관계 메소드를 사용.
+        board.addReply(reply);
 
         Long listCnt = replyRepository.getReplyListCnt(dto);
         Long groupOrder = replyRepository.getGroupOrder(dto);
@@ -102,8 +105,8 @@ public class ReplyServiceImpl implements ReplyService {
     }
 
     @Override
-    public Long deleteReply(Long replyId) {
-        replyRepository.deleteReply(replyId);
+    public Long deleteReply(Long replyId, Long boardId) {
+        replyRepository.deleteReply(replyId, boardId);
         return replyId;
     }
 

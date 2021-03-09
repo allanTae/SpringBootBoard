@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 <!DOCTYPE html>
 
@@ -13,41 +14,32 @@
 		margin-top: 10px;
 	}
 	#con-left {
-		padding-right: 220px;
+		padding-right: 250px;
 	}
 
 	#con-right{
 		width: 220px;
 		height: 400px;
-		background:#fafafa;
+		background: rgb(0 0 0 / 8%);
 		border=1px solid #ddd;
 		position:absolute;
-		top:100px;
+		top:46px;
 		right:10px;
 		text-align: center;
+		color:#212529;
 	}
 
-	article > .container {
+	article > .container:nth-child(1) {
 		max-width: 1300px;
 		position:relative;
-		padding:20px;
-
+		//padding:20px;
 	}
 
-	#bottomContainer {
-		width: 100%;
-		max-width: 1300px;
+	article > .container:nth-child(2) {
+	    max-width: 1300px;
 	}
 
-	#bottomContainer > #paginationBoxWrap {
-		margin-left: 7%;
 
-	}
-
-	#bottomContainer > #bottomButtonAreaWrap{
-		margin-left: 7%;
-
-	}
 </style>
 <script>
 	$(document).on('click', '#btnWriteForm', function(e){
@@ -131,7 +123,7 @@
 
 	<!-- container {s} -->
 	<div class="container">
-		<h2>board list</h2>
+		<h2>board</h2>
 
 		<!-- content-left {s} -->
 		<div class="table-responsive" id="con-left">
@@ -181,44 +173,27 @@
 		<!-- content-right {s} -->
 		<div id="con-right">
 			<div style=" margin-bottom: 20px; display: inline-block; padding:10px;">
-				<c:choose>
-					<c:when test="${empty userId }">
-						<div>
-							<form>
-								<button style="width:120px;" class="btn btn-sm btn-primary" type="button" name="btnLogin" id="btnLogin">로그인 하러 가기</button>
-							</form>
-						</div>
-					</c:when>
-					<c:otherwise>
-						<c:choose>
-							<c:when test="${authInfo.grade.getGrade() eq 'manager' }">
-								<div style="background-color: white;">
-									<p>관리자 ${userId}님</p>
-									<p>환영합니다.</p>
-								</div>
-								<div style="position: relative; width: 200px; height: 40px;">
-									<form>
-										<div>
-											<button style="width:100px; text-align: center; position: absolute; left:5px;" class="btn btn-sm btn-primary" type="button" name="btnUserPage" id="btnUserPage">관리 페이지</button>
-											<button style="width:80px; position: absolute; right: 5px;" class="btn btn-sm btn-primary" type="button" name="btnLogout" id="btnLogout">로그아웃</button>
-										</div>
-									</form>
-								</div>
-							</c:when>
-							<c:otherwise>
-								<div>
-									<p>${userId}님</p>
-									<p>환영합니다.</p>
-								</div>
-								<div>
-									<form>
-										<button style="width:120px;" class="btn btn-sm btn-primary" type="button" name="btnLogout" id="btnLogout">로그아웃</button>
-									</form>
-								</div>
-							</c:otherwise>
-						</c:choose>
-					</c:otherwise>
-				</c:choose>
+			    <sec:authorize access="isAuthenticated()">
+                    <div>
+                        <p>${userId}님</p>
+                        <p>환영합니다.</p>
+                    </div>
+                    <form>
+                        <div>
+                            <button style="width:80px; display:inline;" class="btn btn-sm btn-primary" type="button" name="btnLogout" id="btnLogout">로그아웃</button>
+                            <sec:authorize access="hasRole('ROLE_ADMIN')" >
+                                <button style="width:100px; display:inline;" class="btn btn-sm btn-primary" type="button" name="btnUserPage" id="btnUserPage">관리자 페이지</button>
+                            </sec:authorize>
+			            </div>
+			        </form>
+                </sec:authorize>
+                <sec:authorize access="!isAuthenticated()">
+                    <div>
+                        <form>
+                            <button style="width:120px;" class="btn btn-sm btn-primary" type="button" name="btnLogin" id="btnLogin">로그인 하러 가기</button>
+                        </form>
+                    </div>
+                </sec:authorize>
 			</div>
 		</div>
 		<!-- content-right {e} -->
@@ -226,7 +201,7 @@
 	<!-- container{e} -->
 
 	<!-- bottom-cotainer{s} -->
-	<div id="bottomContainer">
+	<div id="bottomContainer" class="container">
 
 		<!-- botton-area {s} -->
 		<div id="bottomButtonAreaWrap">
@@ -284,14 +259,6 @@
 		<!-- search{e} -->
 	</div>
 	<!-- bottom-cotainer{e} -->
-
-
-
-
-
-
-
-
 
 </article>
 

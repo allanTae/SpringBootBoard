@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -27,22 +29,25 @@ public class Board extends BaseEntity {
     @JoinColumn(name = "category_id")
     private Category category;
 
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Reply> replyList = new ArrayList<Reply>();
+
     private String title;
     private String content;
     private String tag;
 
     @JoinColumn(name = "view_cnt")
     @Column(nullable = false)
-    private int viewCnt;
+    private Long viewCnt;
 
     @PrePersist
     public void prePersist(){
-        this.viewCnt = 0;
+        this.viewCnt = 0L;
     }
 
     @Builder
     public Board(Member member, Category category, String title, String content,
-                 String tag, int view_cnt, String createdBy, LocalDateTime createdDate,
+                 String tag, Long view_cnt, String createdBy, LocalDateTime createdDate,
                  String updatedBy, LocalDateTime updatedDate ) {
         this.member = member;
         this.category = category;
@@ -64,7 +69,16 @@ public class Board extends BaseEntity {
         this.updatedDate = LocalDateTime.now();
     }
 
-    public void changeViewCnt(int viewCnt){
+    public void changeViewCnt(Long viewCnt){
         this.viewCnt = viewCnt;
+    }
+
+    public void addReply(Reply reply){
+        if(this.replyList.contains(reply)){
+        }else{
+            this.replyList.add(reply);
+            reply.changeBoard(this);
+        }
+
     }
 }

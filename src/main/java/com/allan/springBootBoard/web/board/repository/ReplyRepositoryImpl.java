@@ -1,5 +1,6 @@
 package com.allan.springBootBoard.web.board.repository;
 
+import com.allan.springBootBoard.web.board.domain.Board;
 import com.allan.springBootBoard.web.board.domain.Reply;
 import com.allan.springBootBoard.web.board.domain.model.ReplyDTO;
 import com.allan.springBootBoard.web.board.repository.mapper.ReplyMapper;
@@ -147,8 +148,10 @@ public class ReplyRepositoryImpl implements ReplyRepository{
      * @return
      */
     @Override
-    public Long deleteReply(Long replyId) {
+    public Long deleteReply(Long replyId, Long boardId) {
         Reply reply = em.find(Reply.class, replyId);
+        Board board = em.find(Board.class, boardId);
+        board.getReplyList().remove(reply);
         em.remove(reply);
         return replyId;
     }

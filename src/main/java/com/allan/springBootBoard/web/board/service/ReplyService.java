@@ -14,7 +14,7 @@ public interface ReplyService {
 
     public Long updateReply(ReplyDTO dto);
 
-    public Long deleteReply(Long replyId);
+    public Long deleteReply(Long replyId, Long boardId);
 
     public void deleteAll();
 

@@ -65,9 +65,6 @@
 	function showReplyList(){
 		var url = "${pageContext.request.contextPath}/restBoard/getHierarReplyList";
 		var paramData = {"boardId" : "${boardContent.boardId}"};
-		console.log("ajax request");
-		console.log("header: " + headerName);
-		console.log("token: " + token);
 		$.ajax({
             type: 'POST',
             url: url,
@@ -138,9 +135,10 @@
 	}
 	
 	// 부모 댓글 저장 버튼 클릭 이벤트
-	$(document).on('click', '#btnReplyParentSave', function(){
+	$(document).on('click', '#btnReplyParentSave', function(e){
+	    e.preventDefault();
         var replyContent = $('#content').val();
-        var registerId = "${userId}"; // 등록자 아이디는 현재 로그인 된 회원의 아이디어야 한다. 나중에 spring security 공부 후 수정 필요.
+        var registerId = "${userId}";
         var paramData = JSON.stringify({"content": replyContent
                                       , "registerId": registerId
                                       , "boardId":'${boardContent.boardId}'
@@ -162,7 +160,6 @@
                 console.log(result);
                 showReplyList();
                 $('#content').val('');
-                $('#registerId').val('');
             }
             , error:function(request,status,error){
                 alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);}
@@ -264,7 +261,8 @@
 
 	// 댓글 삭제 버튼 이벤트 메소드
 	function fn_deleteReply(replyId){
-        var paramData = JSON.stringify({"replyId": replyId});
+        var paramData = JSON.stringify({"replyId": replyId
+                                        , "boardId": '${boardContent.boardId}'});
         var headers = {"Content-Type" : "application/json"
             , "X-HTTP-Method-Override" : "DELETE"};
         $.ajax({
@@ -284,15 +282,6 @@
                 alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
             }
         });
-	}
-	
-	// 로그인 세션 확인 하는 메소드 
-	function check_login(url){
-		if("<%= session.getAttribute("authInfo") %>" !== "null"){
-			return true;
-		}else{
-			location.href="${pageContext.request.contextPath}/account/login";
-		}
 	}
 	
 	// 대 댓글 폼 생성 이벤트 메소드 
@@ -371,7 +360,6 @@
                     </div>
                 </form:form>
             </div>
-
 			<!-- Reply Form {e} -->
 
 			<!-- Reply List {s}-->

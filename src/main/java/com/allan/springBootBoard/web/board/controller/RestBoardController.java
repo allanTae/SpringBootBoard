@@ -64,7 +64,7 @@ public class RestBoardController {
     @DeleteMapping("/deleteHierarReply")
     public ResponseEntity<String> deleteReply(@RequestBody ReplyDTO dto){
         try{
-            replyService.deleteReply(dto.getReplyId());
+            replyService.deleteReply(dto.getReplyId(), dto.getBoardId());
             return new ResponseEntity<String>("댓글 삭제 성공", HttpStatus.OK);
         }catch (Exception e){
             log.error("error message: " + e.getMessage());

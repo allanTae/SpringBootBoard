@@ -2,6 +2,7 @@ package com.allan.springBootBoard.web.service;
 
 import com.allan.springBootBoard.common.Search;
 import com.allan.springBootBoard.web.board.repository.CategoryRepository;
+import com.allan.springBootBoard.web.board.service.ReplyService;
 import com.allan.springBootBoard.web.member.domain.Gender;
 import com.allan.springBootBoard.web.member.domain.Member;
 import com.allan.springBootBoard.web.board.domain.Address;
@@ -49,8 +50,12 @@ class BoardServiceImplTest {
     @Autowired
     CategoryRepository categoryRepository;
 
+    @Autowired
+    ReplyService replyService;
+
     @BeforeEach
     public void setup(){
+        replyService.deleteAll();
         boardService.deleteAll();
         memberService.deleteAll();
         categoryRepository.deleteAll();
@@ -90,8 +95,8 @@ class BoardServiceImplTest {
     @Test
     public void 마이바티스_키워드_전체조회() throws Exception {
         //given
-        Member member = createMember(createAddress(), "fakeuser");
-        Member member2 = createMember(createAddress(), "fakeuser2");
+        Member member = createMember(createAddress(), "testId");
+        Member member2 = createMember(createAddress(), "testId2");
         Category category = createCategory();
 
         BoardDTO boardDTO = BoardDTO.builder()
@@ -126,7 +131,7 @@ class BoardServiceImplTest {
     @Test
     public void 게시글_등록() throws Exception {
         //given
-        Member member = createMember(createAddress(), "fakeuser");
+        Member member = createMember(createAddress(), "testId");
         Category category = createCategory();
         BoardDTO boardDTO = createBoardDTO(member.getId());
 
@@ -143,7 +148,7 @@ class BoardServiceImplTest {
     @Test
     public void 게시글_회원이름으로_조회() throws Exception {
         //given
-        Member member = createMember(createAddress(), "fakeuser");
+        Member member = createMember(createAddress(), "testId");
         Category category = createCategory();
         BoardDTO boardDTO = createBoardDTO(member.getId());
 
@@ -160,7 +165,7 @@ class BoardServiceImplTest {
     @Test
     public void 게시글_수정() throws Exception {
         //given
-        Member member = createMember(createAddress(), "fakeuser");
+        Member member = createMember(createAddress(), "testId");
         Category category = createCategory();
         BoardDTO boardDTO = createBoardDTO(member.getId());
         Long boardId = boardService.save(category.getCategoryId(), boardDTO);
@@ -184,7 +189,7 @@ class BoardServiceImplTest {
     @Test
     public void 게시물_삭제() throws Exception {
         //given
-        Member member = createMember(createAddress(), "fakeuser");
+        Member member = createMember(createAddress(), "testId");
         Category category = createCategory();
         BoardDTO boardDTO = createBoardDTO(member.getId());
         Long boardId = boardService.save(category.getCategoryId(), boardDTO);
@@ -224,11 +229,11 @@ class BoardServiceImplTest {
         Member member = Member.builder()
                 .id(id)
                 .pwd("test")
-                .name("태지운")
+                .name("tester")
                 .age(29L)
                 .gender(Gender.MAN)
                 .address(address)
-                .createdBy("fakeuser")
+                .createdBy("testId")
                 .createdDate(LocalDateTime.now())
                 .role(MemberRole.USER)
                 .phoneNumber("01079978543")
@@ -239,6 +244,6 @@ class BoardServiceImplTest {
     }
 
     private Address createAddress() {
-        return new Address("Gwanju", "Namunroo", "123456");
+        return new Address("도시", "거리", "우편번호");
     }
 }

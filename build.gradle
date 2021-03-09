@@ -2,6 +2,7 @@ plugins {
 	id 'org.springframework.boot' version '2.4.2'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
+	id 'war'
 }
 
 group = 'com.allan'
@@ -19,7 +20,7 @@ repositories {
 }
 
 dependencies {
-//	jsp, tile
+	//	jsp, tile
 	compile('javax.servlet:jstl:1.2')
 	compile("org.apache.tomcat.embed:tomcat-embed-jasper")
 	compile("org.apache.tiles:tiles-jsp:3.0.8")
@@ -44,6 +45,9 @@ dependencies {
 	testImplementation 'org.springframework.security:spring-security-test'
 
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
+
+	implementation 'org.springframework.security:spring-security-taglibs'
+
 }
 
 test {

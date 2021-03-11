@@ -206,29 +206,32 @@
 	
 	// 댓글 수정 버튼 클릭 메소드
 	function fn_editReply(replyId, registerId, content){
-        var htmls = "";
-        htmls += '<div class="media text-muted pt-3" id="replyId' + replyId + '">';
-        htmls += '<svg class="bd-placeholder-img mr-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder:32x32">';
-        htmls += '<title>Placeholder</title>';
-        htmls += '<rect width="100%" height="100%" fill="#007bff"></rect>';
-        htmls += '<text x="50%" fill="#007bff" dy=".3em">32x32</text>';
-        htmls += '</svg>';
-        htmls += '<p class="media-body pb-3 mb-0 small lh-125 border-bottom horder-gray">';
-        htmls += '<span class="d-block">';
-        htmls += '<strong class="text-gray-dark">' + registerId + '</strong>';
-        htmls += '<span style="padding-left: 7px; font-size: 9pt">';
-        htmls += '<a href="javascript:void(0)" onclick="fn_updateReply(' + replyId + ', \'' + registerId + '\')" style="padding-right:5px">저장</a>';
-        htmls += '<a href="javascript:void(0)" onClick="showReplyList()">취소<a>';
-        htmls += '</span>';
-        htmls += '</span>';
-        htmls += '<textarea name="editContent" id="editContent" class="form-control" rows="3">';
-        htmls += content;
-        htmls += '</textarea>';
-        htmls += '</p>';
-        htmls += '</div>';
-        $('#replyId' + replyId).replaceWith(htmls);
-        $('#replyId' + replyId + ' #editContent').focus();
-
+	    if(registerId == "${userId}"){
+	        var htmls = "";
+                    htmls += '<div class="media text-muted pt-3" id="replyId' + replyId + '">';
+                    htmls += '<svg class="bd-placeholder-img mr-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder:32x32">';
+                    htmls += '<title>Placeholder</title>';
+                    htmls += '<rect width="100%" height="100%" fill="#007bff"></rect>';
+                    htmls += '<text x="50%" fill="#007bff" dy=".3em">32x32</text>';
+                    htmls += '</svg>';
+                    htmls += '<p class="media-body pb-3 mb-0 small lh-125 border-bottom horder-gray">';
+                    htmls += '<span class="d-block">';
+                    htmls += '<strong class="text-gray-dark">' + registerId + '</strong>';
+                    htmls += '<span style="padding-left: 7px; font-size: 9pt">';
+                    htmls += '<a href="javascript:void(0)" onclick="fn_updateReply(' + replyId + ', \'' + registerId + '\')" style="padding-right:5px">저장</a>';
+                    htmls += '<a href="javascript:void(0)" onClick="showReplyList()">취소<a>';
+                    htmls += '</span>';
+                    htmls += '</span>';
+                    htmls += '<textarea name="editContent" id="editContent" class="form-control" rows="3">';
+                    htmls += content;
+                    htmls += '</textarea>';
+                    htmls += '</p>';
+                    htmls += '</div>';
+                    $('#replyId' + replyId).replaceWith(htmls);
+                    $('#replyId' + replyId + ' #editContent').focus();
+	    }else{
+	        alert("직접 작성하신 댓글만 수정이 가능합니다.");
+	    }
 	}
 
 	// 댓글 수정 후 저장 버튼 클릭 메소드

@@ -1,5 +1,6 @@
 package com.allan.springBootBoard.web.board.controller;
 
+import com.allan.springBootBoard.web.board.domain.Reply;
 import com.allan.springBootBoard.web.board.domain.model.BoardDTO;
 import com.allan.springBootBoard.web.board.domain.model.ReplyDTO;
 import com.allan.springBootBoard.web.board.service.ReplyService;
@@ -40,6 +41,9 @@ public class RestBoardController {
     @PostMapping("/insertHierarReply/child")
     public ResponseEntity<String> insertChildReply(@RequestBody ReplyDTO dto){
         try{
+            if(dto.getReplyGroupOrder() > Reply.MAX_DEPTH){
+                return new ResponseEntity<String>("답변 댓글은 최대 " + Reply.MAX_DEPTH + "개 까지 작성 할 수 있습니다.", HttpStatus.FORBIDDEN);
+            }
             replyService.saveChildReply(dto);
             return new ResponseEntity<String>("댓글 저장 성공", HttpStatus.OK);
         }catch (Exception e){

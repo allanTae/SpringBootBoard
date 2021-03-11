@@ -47,6 +47,11 @@ public class MemberController {
     @PostMapping("/register/user")
     public String joinUser(@ModelAttribute("memberForm") @Valid MemberForm form, BindingResult bindingResult){
 
+        if(!form.getPwd().equals(form.getRe_pwd())){
+            bindingResult.rejectValue("pwd", "pwd.invalidatedVal", "비밀번호와 비밀번호 확인이 일치하지 않습니다.");
+            bindingResult.rejectValue("re_pwd", "re_pwd.invalidatedVal", "비밀번호와 비밀번호 확인이 일치하지 않습니다.");
+        }
+
         if(bindingResult.hasErrors()){
             return "member/signupForm";
         }

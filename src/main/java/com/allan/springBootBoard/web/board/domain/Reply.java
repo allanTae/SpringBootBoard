@@ -45,7 +45,7 @@ public class Reply extends BaseEntity {
     @ColumnDefault("0")
     private Long replyLike;
 
-    private static final int MAX_DEPTH = 3;
+    public static final int MAX_DEPTH = 3;
 
     @PrePersist
     public void prePersist(){

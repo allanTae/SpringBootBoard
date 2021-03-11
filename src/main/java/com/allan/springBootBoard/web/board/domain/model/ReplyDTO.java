@@ -13,7 +13,7 @@ public class ReplyDTO {
 
     private Long replyId;
     private Long boardId;
-    private String registerId; // 작성자 회원 아이디.
+    private String registerId; // 작성자 회원 아이디, reply 테이블에 createdBy 에 저장 될 데이터.
     private String content;
     private Long replyGroup;
     private Long replyGroupOrder;

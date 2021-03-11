@@ -1,4 +1,4 @@
-package com.allan.springBootBoard.web.board.domain.model;
+package com.allan.springBootBoard.web.member.domain.model;
 
 import com.allan.springBootBoard.web.member.domain.Gender;
 import com.allan.springBootBoard.web.board.domain.Address;

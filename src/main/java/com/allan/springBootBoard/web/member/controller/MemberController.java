@@ -24,14 +24,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-@RequiredArgsConstructor
 @RequestMapping("/member")
 public class MemberController {
 
     @Autowired
     private MemberService memberService;
 
-    @NonNull
+    @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
     @GetMapping("/loginForm")

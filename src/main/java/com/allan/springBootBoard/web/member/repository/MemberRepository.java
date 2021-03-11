@@ -1,9 +1,8 @@
 package com.allan.springBootBoard.web.member.repository;
 
 import com.allan.springBootBoard.web.member.domain.Member;
-import com.allan.springBootBoard.web.board.domain.model.MemberDTO;
+import com.allan.springBootBoard.web.member.domain.model.MemberDTO;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface MemberRepository {

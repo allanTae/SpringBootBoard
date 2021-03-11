@@ -3,7 +3,6 @@ package com.allan.springBootBoard.web.board.service;
 import com.allan.springBootBoard.common.Search;
 import com.allan.springBootBoard.web.board.domain.Board;
 import com.allan.springBootBoard.web.board.domain.model.BoardDTO;
-import com.allan.springBootBoard.web.board.domain.model.BoardVO;
 
 import java.util.List;
 
@@ -14,7 +13,7 @@ public interface BoardService {
     public List<Board> findByMemberId(String memberId);
     public List<Board> findAll();
     public Long update(BoardDTO dto, String updatedBy);
-    public List<BoardVO> findAllByMybatis(Search search);
+    public List<BoardDTO> findAllByMybatis(Search search);
     public void deleteAll();
     public Long deleteById(Long booardId);
     public Long updateViewCnt(Long boardId, String updatedBy);

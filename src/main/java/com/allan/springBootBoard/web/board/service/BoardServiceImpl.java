@@ -3,11 +3,9 @@ package com.allan.springBootBoard.web.board.service;
 import com.allan.springBootBoard.common.Search;
 import com.allan.springBootBoard.security.user.exception.UserNotFoundException;
 import com.allan.springBootBoard.web.member.domain.Member;
-import com.allan.springBootBoard.web.member.repository.MemberRepository;
 import com.allan.springBootBoard.web.board.domain.Board;
 import com.allan.springBootBoard.web.board.domain.Category;
 import com.allan.springBootBoard.web.board.domain.model.BoardDTO;
-import com.allan.springBootBoard.web.board.domain.model.BoardVO;
 import com.allan.springBootBoard.web.board.repository.BoardRepository;
 import com.allan.springBootBoard.web.board.repository.CategoryRepository;
 import com.allan.springBootBoard.web.board.repository.mapper.BoardMapper;
@@ -123,7 +121,7 @@ public class BoardServiceImpl implements BoardService {
      * @return
      */
     @Override
-    public List<BoardVO> findAllByMybatis(Search search) {
+    public List<BoardDTO> findAllByMybatis(Search search) {
         return boardMapper.selectAllBoards(search);
     }
 

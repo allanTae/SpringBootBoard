@@ -1,20 +1,15 @@
 package com.allan.springBootBoard.web.member.repository;
 
-import com.allan.springBootBoard.security.user.exception.UserNotFoundException;
-import com.allan.springBootBoard.web.board.repository.mapper.BoardMapper;
-import com.allan.springBootBoard.web.exception.NoDataException;
 import com.allan.springBootBoard.web.member.domain.Member;
-import com.allan.springBootBoard.web.board.domain.model.MemberDTO;
+import com.allan.springBootBoard.web.member.domain.model.MemberDTO;
 import com.allan.springBootBoard.web.member.repository.mapper.MemberMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
-import java.util.List;
 import java.util.Optional;
 
 @Repository

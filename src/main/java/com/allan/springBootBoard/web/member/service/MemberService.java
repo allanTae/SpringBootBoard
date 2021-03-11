@@ -1,9 +1,7 @@
 package com.allan.springBootBoard.web.member.service;
 
 import com.allan.springBootBoard.web.member.domain.Member;
-import com.allan.springBootBoard.web.board.domain.model.MemberDTO;
-
-import java.util.List;
+import com.allan.springBootBoard.web.member.domain.model.MemberDTO;
 
 public interface MemberService {
 

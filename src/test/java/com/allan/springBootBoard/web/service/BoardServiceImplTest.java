@@ -9,7 +9,6 @@ import com.allan.springBootBoard.web.board.domain.Address;
 import com.allan.springBootBoard.web.board.domain.Board;
 import com.allan.springBootBoard.web.board.domain.Category;
 import com.allan.springBootBoard.web.board.domain.model.BoardDTO;
-import com.allan.springBootBoard.web.board.domain.model.BoardVO;
 import com.allan.springBootBoard.web.board.repository.BoardRepository;
 import com.allan.springBootBoard.web.board.repository.mapper.BoardMapper;
 import com.allan.springBootBoard.web.board.service.BoardService;
@@ -62,17 +61,6 @@ class BoardServiceImplTest {
     }
 
     @Test
-    public void 마이바티스_전체조회() throws Exception {
-        //given
-
-        //when
-        List<BoardVO> boardVOS = boardMapper.selectAllBoard();
-
-        //then
-        assertEquals(0, boardVOS.size());
-    }
-
-    @Test
     public void 마이바티스_삭제() throws Exception {
         //given
         Member member = createMember(createAddress(), "fakeuser");
@@ -87,7 +75,7 @@ class BoardServiceImplTest {
         boardMapper.deleteAll();
 
         //then
-        List<BoardVO> boards = boardMapper.selectAllBoard();
+        List<Board> boards = boardService.findAll();
         int size = boards.size();
         assertEquals(size, 0);
     }
@@ -122,7 +110,7 @@ class BoardServiceImplTest {
                 .build();
 
         //when
-        List<BoardVO> boardVOs = boardMapper.selectAllBoards(search);
+        List<BoardDTO> boardVOs = boardMapper.selectAllBoards(search);
 
         //then
         assertEquals(boardVOs.get(0).getTitle(), "testTitle");

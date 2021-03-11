@@ -1,16 +1,13 @@
 package com.allan.springBootBoard.web.member.service;
 
-import com.allan.springBootBoard.security.user.exception.UserNotFoundException;
 import com.allan.springBootBoard.web.exception.SameIdUseException;
 import com.allan.springBootBoard.web.member.domain.Member;
 import com.allan.springBootBoard.web.member.repository.MemberRepository;
-import com.allan.springBootBoard.web.board.domain.model.MemberDTO;
+import com.allan.springBootBoard.web.member.domain.model.MemberDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @Transactional

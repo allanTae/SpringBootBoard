@@ -6,7 +6,6 @@ import com.allan.springBootBoard.web.board.domain.Board;
 import com.allan.springBootBoard.web.board.domain.model.BoardDTO;
 import com.allan.springBootBoard.web.board.domain.model.BoardForm;
 import com.allan.springBootBoard.web.board.domain.model.ReplyDTO;
-import com.allan.springBootBoard.web.board.domain.model.BoardVO;
 import com.allan.springBootBoard.web.board.service.BoardService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +39,7 @@ public class BoardController {
                 .keyword(keyword)
                 .build();
 
-        List<BoardVO> boardList = boardService.findAllByMybatis(search);
+        List<BoardDTO> boardList = boardService.findAllByMybatis(search);
 
         search.pageInfo(page, range, boardList.size());
 

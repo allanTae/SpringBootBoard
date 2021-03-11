@@ -5,7 +5,7 @@
 
 <mapper namespace="com.allan.springBootBoard.web.board.repository.mapper.BoardMapper">
 
-    <select id="selectAllBoards" resultType="BoardVO" parameterType="Search">
+    <select id="selectAllBoards" resultType="BoardDTO" parameterType="Search">
         SELECT
         board_id, member_id, category_id, title, content, tag, view_cnt, created_by, created_date, updated_by, updated_date
         FROM
@@ -28,13 +28,5 @@
     <delete id="deleteAll" >
         DELETE FROM BOARD
     </delete>
-
-    <select id="selectAllBoard" resultType="BoardVO">
-        SELECT
-        board_id, member_id, category_id, title, content, tag, view_cnt, created_by, created_date, updated_by, updated_date
-        FROM
-        BOARD
-    </select>
-
 
 </mapper>

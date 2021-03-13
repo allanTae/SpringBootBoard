@@ -23,9 +23,10 @@
 
     <!-- error -->
     <definition name="error-layout" template="/WEB-INF/tiles/layouts/base_layout.jsp">
+        <put-attribute name="tile_header" value="/WEB-INF/tiles/layouts/header.jsp" />
         <put-attribute name="tile_common" value="/WEB-INF/tiles/layouts/common.jsp" />
     </definition>
-    <definition name="error/*" extends="base-layout">
+    <definition name="error/*" extends="error-layout">
         <put-attribute name="tile_body" value="/WEB-INF/views/jsp/error/{1}.jsp" />
     </definition>
 </tiles-definitions>

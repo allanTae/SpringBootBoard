@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
@@ -38,6 +39,10 @@ public class BeanCheckTest {
                     System.out.println("suffix: " + resolver.getSuffix());
                     System.out.println("preffix: " + resolver.getPrefix());
                 }
+            }else if(name.equals("defaultViewResolver")){
+                System.out.println("Inter find!!!");
+                System.out.println("***** thymeleafViewResolver ********");
+                InternalResourceViewResolver th = (InternalResourceViewResolver) df.getBean(name);
             }
         }
     }

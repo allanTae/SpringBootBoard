@@ -60,6 +60,7 @@ public class ReplyServiceImpl implements ReplyService {
     @Override
     public Long saveChildReply(ReplyDTO dto) {
 
+        log.info("ReplyServiceImpl saveChildReply() call!! ");
         Board board = boardRepository.findOne(dto.getBoardId());
         Long replyId = replyRepository.getMaxReplyId(dto.getBoardId());
 

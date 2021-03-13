@@ -40,13 +40,15 @@ public class RestBoardController {
 
     @PostMapping("/insertHierarReply/child")
     public ResponseEntity<String> insertChildReply(@RequestBody ReplyDTO dto){
+        log.info("insertChildReply() call!!");
         try{
-            if(dto.getReplyGroupOrder() > Reply.MAX_DEPTH){
+            if(dto.getParentReplyGroupOrder() > Reply.MAX_DEPTH){
                 return new ResponseEntity<String>("답변 댓글은 최대 " + Reply.MAX_DEPTH + "개 까지 작성 할 수 있습니다.", HttpStatus.FORBIDDEN);
             }
             replyService.saveChildReply(dto);
             return new ResponseEntity<String>("댓글 저장 성공", HttpStatus.OK);
         }catch (Exception e){
+            log.error("exception: " + e.toString());
             log.error("error message: " + e.getMessage());
             log.error("dto: " + dto.toString());
             return new ResponseEntity<String>("댓글 저장 실패", HttpStatus.FORBIDDEN);

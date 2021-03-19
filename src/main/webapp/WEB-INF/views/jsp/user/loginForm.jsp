@@ -1,6 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
+<script>
+var errorMessage = "${errorMessage}";
+if(errorMessage != "null" && errorMessage == "UserNotFoundException"){
+    alert("아이디가 존재하지 않습니다.");
+}else if(errorMessage != "null" && errorMessage == "BadCredentialsException"){
+    alert("비밀번호가 일치하지 않습니다.");
+}
+</script>
+
 <!-- login form {s} -->
 <form:form class="form-signin" name="form" id="form" role="form"
 		   modelAttribute="loginForm" method="post" action="${pageContext.request.contextPath}/user/login">

@@ -1,6 +1,7 @@
 package com.allan.springBootBoard.security.handler;
 
 import com.allan.springBootBoard.security.user.exception.UserNotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+@Slf4j
 public class CustomLoginFailHandler extends SimpleUrlAuthenticationFailureHandler {
 
     @Override
@@ -25,6 +27,7 @@ public class CustomLoginFailHandler extends SimpleUrlAuthenticationFailureHandle
         if(exception instanceof BadCredentialsException){
             // 알맞는 에러코드 및 에러 메시지 설정.
         }
-        response.sendRedirect(request.getContextPath() + "/error/userNotFound?message=" + exception.getMessage());
+        log.info("CustomLoginFailHandler exception.getMessage(): " + exception.getMessage());
+        response.sendRedirect(request.getContextPath() + "/user/loginForm?errorMessage=" + exception.getMessage());
     }
 }

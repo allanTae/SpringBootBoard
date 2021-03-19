@@ -22,12 +22,14 @@ public class UserController {
     private BCryptPasswordEncoder passwordEncoder;
 
     @GetMapping("/loginForm")
-    public String loginForm(Model model, @CookieValue(value = "IDCOOKIE", required = false) Cookie idCookie){
+    public String loginForm(Model model, @CookieValue(value = "IDCOOKIE", required = false) Cookie idCookie,
+                            @RequestParam(name = "errorMessage", required = false, defaultValue = "null") String errorMessage){
         LoginForm form = new LoginForm();
         if(idCookie != null){
             form.setUserId(idCookie.getValue());
             form.setUseCookie(true);
         }
+        model.addAttribute("errorMessage", errorMessage);
         model.addAttribute("loginForm", form);
         return "user/loginForm";
     }

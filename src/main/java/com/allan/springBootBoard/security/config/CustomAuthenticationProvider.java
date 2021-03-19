@@ -37,7 +37,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         // UserDetailsService를 통해 DB에서 아이디로 사용자 조회
         UserDetailsVO userDetailsVO = (UserDetailsVO) userDetailsService.loadUserByUsername(userId);
         if(!bCryptPasswordEncoder.matches(userPwd, userDetailsVO.getPassword())){
-            throw new BadCredentialsException(userDetailsVO.getUsername() + " Invalid password");
+            throw new BadCredentialsException("BadCredentialsException");
         }
         return new UsernamePasswordAuthenticationToken(userDetailsVO, userPwd, userDetailsVO.getAuthorities());
     }

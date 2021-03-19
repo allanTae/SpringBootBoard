@@ -23,12 +23,6 @@ public class CustomErrorController implements ErrorController {
 
     private String viewPath = "error/";
 
-    @GetMapping("/userNotFound")
-    public String userNotFound(Model model, @RequestParam("message") String message){
-        model.addAttribute("message", message);
-        return viewPath + "userNotFound";
-    }
-
     @RequestMapping("/serverError")
     public String defaultHandleError(HttpServletRequest request, HttpServletResponse response) {
         log.info("customErrorController's defaultHandleError() call!!");

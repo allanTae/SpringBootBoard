@@ -83,16 +83,11 @@ public class MemberRepositoryImpl implements MemberRepository{
      */
     @Override
     public Optional<Member> findByMemberId(String memberId){
-//        try {
             Member member = em.createQuery("select m from Member m where m.id = :memberId", Member.class)
                     .setParameter("memberId", memberId)
                     .getSingleResult();
             log.error("member is not null");
             return Optional.ofNullable(member);
-//        } catch(EmptyResultDataAccessException e){
-//            log.error("member is null");
-//            return Optional.ofNullable(null);
-//        }
     }
 
     /**

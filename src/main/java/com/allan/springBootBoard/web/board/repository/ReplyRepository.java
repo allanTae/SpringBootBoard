@@ -10,7 +10,7 @@ public interface ReplyRepository {
 
     public Long insertReply(Reply reply);
 
-    public Long getMaxReplyId(Long boardId);
+    public Long getMaxReplyId();
 
     public Long getReplyListCnt(ReplyDTO dto);
 

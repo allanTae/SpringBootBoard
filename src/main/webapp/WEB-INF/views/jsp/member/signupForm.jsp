@@ -1,8 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<script>
 
+<script>
     // 스프링 시큐리티, ajax 처리를 위한 csrf 토큰 정보와 토큰을 서버에 전달하기 위한 헤더 이름.
         var token = '${_csrf.token}';
         var headerName = '${_csrf.headerName}';
@@ -32,7 +32,7 @@
 		var headers = {"Content-Type" : "application/json"
 				, "X-HTTP-Method-Override" : "POST"};
 		$.ajax({
-			url: "${pageContext.request.contextPath}/restUser/checkId"
+			url: "${pageContext.request.contextPath}/member/checkId"
 			, headers : headers
 			, data : paramData
 			, type : 'POST'
@@ -55,13 +55,74 @@
                 alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);}
 		});
 	});
+
+
+    // 유효성 체크 메소드
+    // return true => 유효성 검사 통과
+    // return false => 유효성 검사 실패
+    function validationCheck(text, reg) {
+        return reg.test(text);
+    }
+
+
+    // 아이디 유효성 체크 이벤트
+    $(document).on('input', '#memberId', function(e){
+        // 영소문자, 숫자만 허용하는 10~16자리 문자열
+        var reg = /^[a-zA-Z0-9]{10,16}$/g;
+
+        var result = validationCheck(e.target.value, reg);
+        var html = '';
+        if(result === false){
+            html += '<div style="color: red; font-size: 10pt">아이디는 영대소문자, 숫자 10~16자리만 허용됩니다.</div>';
+        }
+
+        $("#checkId").html(html);
+    });
+
+
+    // 폼내 사용자 입력 값의 양쪽 공백 제거
+    function textTrim(){
+        var inputTexts = $("#form input[type=text]");
+        for(let i=0; i<inputTexts.length; i++){
+            if(inputTexts[i].value !== null && inputTexts[i].value !== ''){
+                inputTexts[i].value = $.trim(inputTexts[i].value);
+            }
+        }
+    }
+
+
+    // 폼 submit 이벤트 메소드
+    // 폼 데이터 유효성 검사 수행
+    $(document).on('submit', 'form', function(e){
+        // 공백 제거
+        textTrim();
+
+        // 이름 유효성 검사 정규식
+        var regName = /^[가-힣]{2,16}$/;
+        if(!validationCheck($("#name").val(), regName)){
+            alert("이름은 한글로 2자~16자이 사이로 입력하셔야 합니다.");
+            e.preventDefault();
+            return;
+        }
+
+        // 비밀번호 유효성 검사 정규식
+        // 조건1) 영문자, 숫자, 특수문자가 모두 들어가야 한다.
+        // 조건2) 공백문자 들어가서는 안된다.
+        var regPwd = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*()\-_=+~₩|\\:;"',.<>/?]{10,16}$/;
+        if(!validationCheck($("#pwd").val(), regPwd)){
+            alert("비밀번호는 영문자, 숫자, 특수문자가 모두 들어가 10자~16자로 입력하셔야 합니다.");
+            e.preventDefault();
+            return;
+        }
+    });
+
 </script>
 <article>
 	<div class="container col-md-6" role="main">
 		<div class="card">
 			<div class="card-header">Register</div>
 			<div class="card-body">
-				<form:form name="form" id="form" class="form-signup" role="form" modelAttribute="memberForm" method="post" action="${pageContext.request.contextPath}/member/register/user">
+				<form:form name="form" id="form" class="form-signup" role="form" modelAttribute="memberForm" method="post" action="${pageContext.request.contextPath}/member">
 
 					<div class="form-group row">
 						<label for="memberId" class="col-md-3 col-form-label text-md-right">아이디</label>

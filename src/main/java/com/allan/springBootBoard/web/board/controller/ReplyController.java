@@ -13,19 +13,19 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/restBoard")
+@RequestMapping(value = "/reply")
 @Slf4j
-public class RestBoardController {
+public class ReplyController {
 
     @Autowired
     ReplyService replyService;
 
-    @PostMapping("/getHierarReplyList")
+    @GetMapping("/list")
     public List<ReplyDTO> getReplyList(@ModelAttribute BoardDTO dto){
         return replyService.list(dto.getBoardId());
     }
 
-    @PostMapping("/insertHierarReqly/parent")
+    @PostMapping("/parent")
     public ResponseEntity<String> insertParentReply(@RequestBody ReplyDTO dto){
         try{
             replyService.saveParentReply(dto);
@@ -38,9 +38,8 @@ public class RestBoardController {
 
     }
 
-    @PostMapping("/insertHierarReply/child")
+    @PostMapping("/child")
     public ResponseEntity<String> insertChildReply(@RequestBody ReplyDTO dto){
-        log.info("insertChildReply() call!!");
         try{
             if(dto.getParentReplyGroupOrder() > Reply.MAX_DEPTH){
                 return new ResponseEntity<String>("답변 댓글은 최대 " + Reply.MAX_DEPTH + "개 까지 작성 할 수 있습니다.", HttpStatus.FORBIDDEN);

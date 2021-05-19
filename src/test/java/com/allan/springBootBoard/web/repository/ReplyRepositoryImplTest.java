@@ -87,7 +87,7 @@ class ReplyRepositoryImplTest {
         createAndSaveReply(board, 3L, "test content2", "test manager");
 
         //when
-        Long replyId = replyRepository.getMaxReplyId(board.getBoardId());
+        Long replyId = replyRepository.getMaxReplyId();
 
         //then
         assertEquals(4L, replyId);
@@ -99,7 +99,7 @@ class ReplyRepositoryImplTest {
         Board board2 = createBoard();
 
         // when
-        Long replyId2 = replyRepository.getMaxReplyId(board2.getBoardId());
+        Long replyId2 = replyRepository.getMaxReplyId();
         assertEquals(1L, replyId2);
     }
 

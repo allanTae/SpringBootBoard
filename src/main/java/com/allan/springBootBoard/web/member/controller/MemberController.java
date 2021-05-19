@@ -22,9 +22,10 @@ import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Controller
-@RequestMapping("/member")
 public class MemberController {
 
     @Autowired
@@ -33,23 +34,36 @@ public class MemberController {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
-    @GetMapping("/loginForm")
-    public String loginView(){
-        return "/user/loginForm";
-    }
-
     /**
      * 일반 회원 등록.
      * @param form
      * @return
      */
-    @PostMapping("/register/user")
+    @PostMapping("/member")
     public String joinUser(@ModelAttribute("memberForm") @Valid MemberForm form, BindingResult bindingResult){
 
-        if(!form.getPwd().equals(form.getRe_pwd())){
+        String ID_PATTERN = "^[a-zA-Z0-9]{10,16}$";
+        String NAME_PATTERN = "^[가-힣]{2,16}$";
+        String PASSWORD_PATTERN = "^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*()\\-_=+~₩|\\\\:;\"',.<>/?]{10,16}$";
+
+        boolean validationResult = true;
+
+        // 유효성 검사
+        if(!Pattern.compile(ID_PATTERN).matcher(form.getMemberId()).find()){
+            bindingResult.rejectValue("id", "id.invalidatedVal", "아이디는 영대소문자, 숫자로 10자~16자까지만 입력이 가능합니다.");
+        }
+        if(!Pattern.compile(NAME_PATTERN).matcher(form.getName()).find()){
+            bindingResult.rejectValue("name", "name.invalidatedVal", "이름은 한글 2자~16자까지만 입력이 가능합니다.");
+        }
+        if(!Pattern.compile(PASSWORD_PATTERN).matcher(form.getPwd()).find()){
+            bindingResult.rejectValue("pwd", "pwd.invalidatedVal", "비밀번호는 영대소문자, 숫자, 특수문자를 반드시 한글자 포함하고, 10~16자까지만 입력이 가능합니다.");
+        }
+
+        if(!bindingResult.hasErrors() && !form.getPwd().equals(form.getRe_pwd())){
             bindingResult.rejectValue("pwd", "pwd.invalidatedVal", "비밀번호와 비밀번호 확인이 일치하지 않습니다.");
             bindingResult.rejectValue("re_pwd", "re_pwd.invalidatedVal", "비밀번호와 비밀번호 확인이 일치하지 않습니다.");
         }
+
 
         if(bindingResult.hasErrors()){
             return "member/signupForm";
@@ -72,10 +86,10 @@ public class MemberController {
         return "redirect:/board/getBoardList";
     }
 
-    @GetMapping("/signupForm")
+    @GetMapping("/member/signupForm")
     public String signupForm(Model model){
         model.addAttribute("memberForm", new MemberForm());
-        return "user/signupForm";
+        return "member/signupForm";
     }
 
     /**

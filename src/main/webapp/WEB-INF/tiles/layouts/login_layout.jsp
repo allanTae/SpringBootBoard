@@ -20,15 +20,15 @@
 <link rel="stylesheet" type="text/css"
 	  href="<c:url value='/resources/common/css/login.css'/>" >
 
-<!-- common CSS --> 
-<link rel="stylesheet" 
-	  href="<c:url value='/resources/common/css/common.css'/>" > 
+<!-- common CSS -->
+<link rel="stylesheet"
+	  href="<c:url value='/resources/common/css/common.css'/>" >
 	  
 <!-- Ajax jquery -->
 <script src="http://code.jquery.com/jquery-latest.min.js"></script>
 	  
 <style> 
-	body{padding : 0px} 
+	body{padding : 0px}
 	#tile_body { width:100%; float:left; } 
 </style> 
 	

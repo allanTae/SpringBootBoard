@@ -63,10 +63,10 @@
 	
 	// 댓글 리스트를 위한 AJax 처리
 	function showReplyList(){
-		var url = "${pageContext.request.contextPath}/restBoard/getHierarReplyList";
+		var url = "${pageContext.request.contextPath}/reply/list";
 		var paramData = {"boardId" : "${boardContent.boardId}"};
 		$.ajax({
-            type: 'POST',
+            type: 'GET',
             url: url,
             data: paramData,
             dataType: 'json',
@@ -148,7 +148,7 @@
                 , "X-HTTP-Method-Override" : "POST"
                 , "Accept" : "application/json"};
         $.ajax({
-            url: "${pageContext.request.contextPath}/restBoard/insertHierarReqly/parent"
+            url: "${pageContext.request.contextPath}/reply/parent"
             , headers : headers
             , data : paramData
             , type : 'POST'
@@ -184,7 +184,7 @@
         var headers = {"Content-Type" : "application/json"
                 , "X-HTTP-Method-Override" : "POST"};
         $.ajax({
-            url: "${pageContext.request.contextPath}/restBoard/insertHierarReply/child"
+            url: "${pageContext.request.contextPath}/reply/child"
             , headers : headers
             , data : paramData
             , type : 'POST'
@@ -244,7 +244,7 @@
 		var headers = {"Content-Type" : "application/json"
 				, "X-HTTP-Method-Override" : "PUT"};
 		$.ajax({
-			url: "${pageContext.request.contextPath}/restBoard/updateHierarReply"
+			url: "${pageContext.request.contextPath}/reply/updateHierarReply"
 			, headers : headers
 			, data : paramData
 			, type : 'PUT'
@@ -269,7 +269,7 @@
         var headers = {"Content-Type" : "application/json"
             , "X-HTTP-Method-Override" : "DELETE"};
         $.ajax({
-            url: "${pageContext.request.contextPath}/restBoard/deleteHierarReply"
+            url: "${pageContext.request.contextPath}/reply/deleteHierarReply"
             , headers : headers
             , data : paramData
             , type : 'DELETE'

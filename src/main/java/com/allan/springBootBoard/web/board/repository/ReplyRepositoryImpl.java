@@ -57,15 +57,11 @@ public class ReplyRepositoryImpl implements ReplyRepository{
      * @return
      */
     @Override
-    public Long getMaxReplyId(Long boardId) {
+    public Long getMaxReplyId() {
 
-        List<Long> idList = em.createQuery("select max(r.replyId) from Reply r join r.board b", Long.class)
+        List<Long> idList = em.createQuery("select max(r.replyId) from Reply r", Long.class)
                 .getResultList();
 
-        // max() 는 값이 없는 경우, null을 반환하고, 결과적으로 getResultList()는 list 를 반환하는 듯 하다.
-        log.info("idList: " + idList);
-        log.info("idList.size(): " + idList.size());
-        log.info("idList.get(0): " + idList.get(0));
         Long maxReplyId = (idList.get(0) == null)? 1L:idList.get(0)+1;
         return maxReplyId;
     }
@@ -80,8 +76,8 @@ public class ReplyRepositoryImpl implements ReplyRepository{
     @Override
     public Long getReplyListCnt(ReplyDTO dto) {
 
-        Long cnt = em.createQuery("select count(r) from Reply r join r.board b on b.boardId = :boardId and r.replyGroup = :parentReplyGroup", Long.class)
-                .setParameter("boardId", dto.getBoardId())
+        Long cnt = em.createQuery("select count(r) from Reply r join r.board b on b.boardId = :board_Id and r.replyGroup = :parentReplyGroup", Long.class)
+                .setParameter("board_Id", dto.getBoardId())
                 .setParameter("parentReplyGroup", dto.getParentReplyGroup())
                 .getSingleResult();
 

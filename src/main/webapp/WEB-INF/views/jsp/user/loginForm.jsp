@@ -8,6 +8,7 @@ if(errorMessage != "null" && errorMessage == "UserNotFoundException"){
 }else if(errorMessage != "null" && errorMessage == "BadCredentialsException"){
     alert("비밀번호가 일치하지 않습니다.");
 }
+
 </script>
 
 <!-- login form {s} -->
@@ -35,8 +36,9 @@ if(errorMessage != "null" && errorMessage == "UserNotFoundException"){
 	<span style="font-size:11pt;">
 		<a href="#" onClick="fn_btnSignupClick()">Sign up</a>
 	</span>
-	<script> function fn_btnSignupClick(){
+	<script> function fn_btnSignupClick(e){
 		location.href ="${pageContext.request.contextPath}/member/signupForm"; }
+        e.preventDefault();
 	</script>
 </form:form>
 <!-- login form {e} -->

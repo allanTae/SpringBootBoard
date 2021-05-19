@@ -31,15 +31,12 @@ public class ReplyServiceImpl implements ReplyService {
 
     @Override
     public Long saveParentReply(ReplyDTO dto) {
-
         Board board = boardRepository.findOne(dto.getBoardId());
 
         // 댓글 아이디를 위해 호출
         // 기존에 엔티티에서 기본키는 자동으로 생성되도록 설정했으나,
         // 댓글 그룹번호, 그룹번호 내 순서를 설정하기 위해서 별도 sql로 호출하여 설정한다.
-        Long replyId = replyRepository.getMaxReplyId(dto.getBoardId());
-
-        log.info("replyId: " + replyId);
+        Long replyId = replyRepository.getMaxReplyId();
 
         Reply reply = Reply.builder()
                 .replyId(replyId)
@@ -59,10 +56,10 @@ public class ReplyServiceImpl implements ReplyService {
 
     @Override
     public Long saveChildReply(ReplyDTO dto) {
-
-        log.info("ReplyServiceImpl saveChildReply() call!! ");
         Board board = boardRepository.findOne(dto.getBoardId());
-        Long replyId = replyRepository.getMaxReplyId(dto.getBoardId());
+        Long replyId = replyRepository.getMaxReplyId();
+        Long listCnt = replyRepository.getReplyListCnt(dto);
+        Long groupOrder = replyRepository.getGroupOrder(dto);
 
         Reply reply = Reply.builder()
                 .replyId(replyId)
@@ -74,13 +71,11 @@ public class ReplyServiceImpl implements ReplyService {
                 .build();
 
         // 연관 관계 메소드를 사용.
+        log.info("===========insert 예상지점.============");
         board.addReply(reply);
+        log.info("=====================================");
 
-        Long listCnt = replyRepository.getReplyListCnt(dto);
-        Long groupOrder = replyRepository.getGroupOrder(dto);
-
-        log.info("groupOrder: " + groupOrder);
-        log.info("listCnt: " + listCnt);
+        log.info("listCnt: " + listCnt + " ,groupOrder: " + groupOrder);
 
         if(groupOrder == null ){
             reply.changeGroupOrder(listCnt+1);
@@ -96,7 +91,6 @@ public class ReplyServiceImpl implements ReplyService {
 
     @Override
     public Long updateReply(ReplyDTO dto) {
-
         dto.setUpdatedBy(dto.getRegisterId());
         dto.setUpdatedDate(LocalDateTime.now());
 

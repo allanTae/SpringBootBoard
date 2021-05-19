@@ -10,6 +10,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.URLEncoder;
 
 @Slf4j
 public class CustomLoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
@@ -19,7 +20,8 @@ public class CustomLoginSuccessHandler extends SavedRequestAwareAuthenticationSu
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         // 아이디 체크를 위한 쿠키.
-        Cookie idCookie = new Cookie("IDCOOKIE", request.getParameter("userId"));
+        String cookieData = URLEncoder.encode(request.getParameter("userId"), "utf-8");
+        Cookie idCookie = new Cookie("IDCOOKIE", cookieData);
         idCookie.setPath("/");
         if(Boolean.valueOf(request.getParameter("useCookie"))){
             idCookie.setMaxAge(60*60*24*7);

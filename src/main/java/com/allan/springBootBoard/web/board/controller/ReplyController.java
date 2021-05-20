@@ -41,7 +41,7 @@ public class ReplyController {
     @PostMapping("/child")
     public ResponseEntity<String> insertChildReply(@RequestBody ReplyDTO dto){
         try{
-            if(dto.getParentReplyGroupOrder() > Reply.MAX_DEPTH){
+            if(dto.getParentDepth() > Reply.MAX_DEPTH){
                 return new ResponseEntity<String>("답변 댓글은 최대 " + Reply.MAX_DEPTH + "개 까지 작성 할 수 있습니다.", HttpStatus.FORBIDDEN);
             }
             replyService.saveChildReply(dto);
@@ -69,7 +69,7 @@ public class ReplyController {
     @DeleteMapping("/deleteHierarReply")
     public ResponseEntity<String> deleteReply(@RequestBody ReplyDTO dto){
         try{
-            replyService.deleteReply(dto.getReplyId(), dto.getBoardId());
+            replyService.deleteReply(dto);
             return new ResponseEntity<String>("댓글 삭제 성공", HttpStatus.OK);
         }catch (Exception e){
             log.error("error message: " + e.getMessage());

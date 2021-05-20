@@ -71,11 +71,7 @@ public class ReplyServiceImpl implements ReplyService {
                 .build();
 
         // 연관 관계 메소드를 사용.
-        log.info("===========insert 예상지점.============");
         board.addReply(reply);
-        log.info("=====================================");
-
-        log.info("listCnt: " + listCnt + " ,groupOrder: " + groupOrder);
 
         if(groupOrder == null ){
             reply.changeGroupOrder(listCnt+1);
@@ -100,9 +96,17 @@ public class ReplyServiceImpl implements ReplyService {
     }
 
     @Override
-    public Long deleteReply(Long replyId, Long boardId) {
-        replyRepository.deleteReply(replyId, boardId);
-        return replyId;
+    public Long deleteReply(ReplyDTO dto) {
+        // 댓글을 완전 삭제한다.
+        //replyRepository.deleteReply(dto.getReplyId(), dto.getBoardId());
+
+        // 댓글 삭제 플래그만 변경한다.
+        dto.setIsRemove(true);
+        dto.setUpdatedBy(dto.getRegisterId());
+        dto.setUpdatedDate(LocalDateTime.now());
+        replyRepository.updateReply(dto);
+
+        return dto.getReplyId();
     }
 
     @Override

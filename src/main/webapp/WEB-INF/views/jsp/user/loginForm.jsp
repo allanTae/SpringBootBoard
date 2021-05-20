@@ -2,11 +2,17 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 <script>
-var errorMessage = "${errorMessage}";
-if(errorMessage != "null" && errorMessage == "UserNotFoundException"){
-    alert("아이디가 존재하지 않습니다.");
-}else if(errorMessage != "null" && errorMessage == "BadCredentialsException"){
-    alert("비밀번호가 일치하지 않습니다.");
+    var errorMessage = "${errorMessage}";
+    if(errorMessage != "null" && errorMessage == "UserNotFoundException"){
+        alert("아이디가 존재하지 않습니다.");
+    }else if(errorMessage != "null" && errorMessage == "BadCredentialsException"){
+        alert("비밀번호가 일치하지 않습니다.");
+
+    $(document).on('click', '#signUp', function(e){
+        location.href ="${pageContext.request.contextPath}/member/signupForm";
+        e.preventDefault();
+    });
+
 }
 
 </script>
@@ -34,11 +40,8 @@ if(errorMessage != "null" && errorMessage == "UserNotFoundException"){
     </div>
 	<button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
 	<span style="font-size:11pt;">
-		<a href="#" onClick="fn_btnSignupClick()">Sign up</a>
+		<a href="#" id="signUp" onClick="fn_btnSignupClick(e)">Sign up</a>
 	</span>
-	<script> function fn_btnSignupClick(e){
-		location.href ="${pageContext.request.contextPath}/member/signupForm"; }
-        e.preventDefault();
-	</script>
+
 </form:form>
 <!-- login form {e} -->

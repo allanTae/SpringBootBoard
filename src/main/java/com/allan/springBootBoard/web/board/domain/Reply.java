@@ -45,6 +45,10 @@ public class Reply extends BaseEntity {
     @ColumnDefault("0")
     private Long replyLike;
 
+    @Column(name = "is_remove")
+    @ColumnDefault(("false"))
+    private Boolean isRemove;
+
     public static final int MAX_DEPTH = 3;
 
     @PrePersist
@@ -52,6 +56,7 @@ public class Reply extends BaseEntity {
         this.depth = this.depth == null ? 0L:this.depth;
         this.replyGroupOrder = this.replyGroupOrder == null ? 1L:this.replyGroupOrder;
         this.replyLike = this.replyLike == null ?0L:this.replyLike;
+        this.isRemove = this.isRemove == null ? false:this.isRemove;
     }
 
     @Builder
@@ -84,5 +89,9 @@ public class Reply extends BaseEntity {
 
     public void changeBoard(Board board){
         this.board = board;
+    }
+
+    public void changeIsRemove(boolean isRemove){
+        this.isRemove = isRemove;
     }
 }

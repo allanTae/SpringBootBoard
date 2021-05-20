@@ -74,57 +74,12 @@
                     xhr.setRequestHeader(headerName, token);
                 },
             success: function(result) {
-                console.log(result);
                	var htmls = "";
 			if(result.length < 1){
 				htmls += "<strong>등록된 댓글이 없습니다.</strong>";
 			} else {
                 $(result).each(function(){
-                	if(this.replyGroupOrder < 2) {
-	                    htmls += '<div class="media text-muted pt-3" id="replyId' + this.replyId + '">';
-                  		htmls += '<svg class="bd-placeholder-img mr-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder:32x32">';
-	                  	htmls += '<title>Placeholder</title>';
-	                  	htmls += '<rect width="100%" height="100%" fill="#007bff"></rect>';
-	                  	htmls += '<text x="50%" fill="#007bff" dy=".3em">32x32</text>';
-	                  	htmls += '</svg>';
-	                  	htmls += '<p class="media-body pb-3 mb-0 small lh-125 border-bottom horder-gray">';
-	                  	htmls += '<span class="d-block">';
-	                  	htmls += '<strong class="text-gray-dark">' + this.registerId + '</strong>';
-	                  	htmls += '<span style="padding-left: 7px; font-size: 9pt">';
-	                  	htmls += '<a href="javascript:void(0)" onclick="fn_editReply(' + this.replyId + ', \'' + this.registerId + '\', \'' + escapeHtml(this.content) + '\' )" style="padding-right:5px">수정</a>';
-	                  	htmls += '<a href="javascript:void(0)" onclick="fn_deleteReply(' + this.replyId + ')" style="padding-right:5px">삭제</a>';
-                   		htmls += '<a href="javascript:void(0)" onclick="fn_replyForm(' + this.replyGroup + ', ' + this.replyGroupOrder + ', ' + this.replyId + ', ' + this.depth + ' )" >댓글작성</a>';
-                  		htmls += '</span>';
-                  		htmls += '</span>';
-                  		htmls += escapeHtml(this.content);
-                  		htmls += '</p>';
-                  		htmls += '</div>';
-                  		htmls += '<div id="' + this.replyId + 'replyId">';
-                  		htmls += '</div>';
-                	}else{
-                		htmls += '<div class="media text-muted pt-3" id="replyId' + this.replyId + '">';
-                		htmls += '<div style="padding-left:' + 50*this.depth + 'px"></div>'
-                  		htmls += '<svg class="bd-placeholder-img mr-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder:32x32">';
-                  		htmls += '<title>Placeholder</title>';
-                  		htmls += '<rect width="100%" height="100%" fill="#007baf"></rect>';
-                  		htmls += '<text x="50%" fill="#007bff" dy=".3em">32x32</text>';
-                  		htmls += '</svg>';
-                  		htmls += '<p class="media-body pb-3 mb-0 small lh-125 border-bottom horder-gray">';
-                  		htmls += '<span class="d-block">';
-                  		htmls += '<strong class="text-gray-dark">' + this.registerId + '</strong>';
-                  		htmls += '<span style="padding-left: 7px; font-size: 9pt">';
-                  		htmls += '<a href="javascript:void(0)" onclick="fn_editReply(' + this.replyId + ', \'' + this.registerId + '\', \'' + escapeHtml(this.content) + '\' )" style="padding-right:5px">수정</a>';
-                  		htmls += '<a href="javascript:void(0)" onclick="fn_deleteReply(' + this.replyId + ')" style="padding-right:5px">삭제</a>';
-                   		htmls += '<a href="javascript:void(0)" onclick="fn_replyForm(' + this.replyGroup + ', ' + this.replyGroupOrder + ', ' + this.replyId + ', ' + this.depth + ' )" >댓글작성</a>';
-                  		htmls += '</span>';
-                  		htmls += '</span>';
-                  		htmls += escapeHtml(this.content);
-                  		htmls += '</p>';
-                  		htmls += '</div>';
-                  		htmls += '<div id="' + this.replyId + 'replyId">';
-                  		htmls += '</div>';
-                	} // if end
-
+                	htmls += makeHTML(this);
 	        	});	//each end
 			}
 			$("#replyList").html(htmls);
@@ -133,6 +88,49 @@
                 alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);}
 		});	// Ajax end
 	}
+
+
+    //  댓글 HTML 생성 메소드
+    function makeHTML(reply){
+        var htmls = "";
+        if(!reply.isRemove){
+            htmls += '<div class="media text-muted pt-3" id="replyId' + reply.replyId + '">';
+            htmls += '<div style="padding-left:' + 50*reply.depth + 'px"></div>'
+            htmls += '<svg class="bd-placeholder-img mr-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder:32x32">';
+            htmls += '<title>Placeholder</title>';
+            htmls += '<rect width="100%" height="100%" fill="#007baf"></rect>';
+            htmls += '<text x="50%" fill="#007bff" dy=".3em">32x32</text>';
+            htmls += '</svg>';
+            htmls += '<p class="media-body pb-3 mb-0 small lh-125 border-bottom horder-gray">';
+            htmls += '<span class="d-block">';
+            htmls += '<strong class="text-gray-dark">' + reply.registerId + '</strong>';
+            htmls += '<span style="padding-left: 7px; font-size: 9pt">';
+            htmls += '<a href="javascript:void(0)" onclick="fn_editReply(' + reply.replyId + ', \'' + reply.registerId + '\', \'' + escapeHtml(reply.content) + '\' )" style="padding-right:5px">수정</a>';
+            htmls += '<a href="javascript:void(0)" onclick="fn_deleteReply(' + reply.replyId + ')" style="padding-right:5px">삭제</a>';
+            htmls += '<a href="javascript:void(0)" onclick="fn_replyForm(' + reply.replyGroup + ', ' + reply.replyGroupOrder + ', ' + reply.replyId + ', ' + reply.depth + ' )" >댓글작성</a>';
+            htmls += '</span>';
+            htmls += '</span>';
+            htmls += escapeHtml(reply.content);
+            htmls += '</p>';
+            htmls += '</div>';
+            htmls += '<div id="' + reply.replyId + 'replyId">';
+            htmls += '</div>';
+        }else{
+            htmls += '<div class="media text-muted pt-3" id="replyId' + reply.replyId + '">';
+            htmls += '<div style="padding-left:' + 50*reply.depth + 'px"></div>'
+            htmls += '<p class="media-body pb-3 mb-0 small lh-125 border-bottom horder-gray">';
+            htmls += '<span class="d-block">';
+            htmls += '</span>';
+            htmls += "<strong>삭제 된 댓글입니다.</strong>";
+            htmls += '</p>';
+            htmls += '</div>';
+            htmls += '<div id="' + reply.replyId + 'replyId">';
+            htmls += '</div>';
+        }
+
+        return htmls;
+    }
+
 	
 	// 부모 댓글 저장 버튼 클릭 이벤트
 	$(document).on('click', '#btnReplyParentSave', function(e){
@@ -289,6 +287,7 @@
 	
 	// 대 댓글 폼 생성 이벤트 메소드 
  	function fn_replyForm(replyGroup, replyGroupOrder, replyId, depth){
+ 	    console.log("parentReplyGroup: " + replyGroup + ", parentReplyGroupOrder: " + replyGroupOrder + ", parentDepth: " + depth);
         var htmls = "";
         htmls += '<div class="my-3 p-3 bg-white rounded shadow-sm" style="padding-top: 10px">';
         htmls += '<form name="form" id="form" role="form" method="post">';

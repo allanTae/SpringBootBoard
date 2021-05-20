@@ -26,6 +26,7 @@ public class ReplyDTO {
     private LocalDateTime createdDate;
     private String updatedBy;
     private LocalDateTime updatedDate;
+    private Boolean isRemove = false;
 
     public ReplyDTO() {
     }
@@ -33,7 +34,7 @@ public class ReplyDTO {
     // jpql 에서 특정 resultType로 반환하기 위해서 사용하는 생성자.
     // 수정하지 말자. (만일 수정해야 하는 경우, ReplyRepositoryImpl.getReplyList() 에 jpql 내부 생성자부분도 변경해주어야 한다.)
     public ReplyDTO(Long replyId, String registerId, String content, Long replyGroup,
-                    Long replyGroupOrder, Long depth, Long replyLike) {
+                    Long replyGroupOrder, Long depth, Long replyLike, Boolean isRemove) {
         this.replyId = replyId;
         this.registerId = registerId;
         this.content = content;
@@ -41,13 +42,14 @@ public class ReplyDTO {
         this.replyGroupOrder = replyGroupOrder;
         this.depth = depth;
         this.replyLike = replyLike;
+        this.isRemove = isRemove;
     }
 
     @Builder
     public ReplyDTO(Long replyId, Long boardId, String registerId, String content, Long replyGroup,
                     Long replyGroupOrder, Long depth, Long replyLike,
                     Long parentReplyGroup, Long parentReplyGroupOrder, Long parentDepth,
-                    String updatedBy, LocalDateTime updatedDate) {
+                    String updatedBy, LocalDateTime updatedDate, boolean isRemove) {
         this.replyId = replyId;
         this.boardId = boardId;
         this.registerId = registerId;
@@ -61,6 +63,7 @@ public class ReplyDTO {
         this.parentDepth = parentDepth;
         this.updatedBy = updatedBy;
         this.updatedDate = updatedDate;
+        this.isRemove = isRemove;
     }
 
 }

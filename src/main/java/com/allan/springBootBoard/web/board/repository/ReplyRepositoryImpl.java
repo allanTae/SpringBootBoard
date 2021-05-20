@@ -30,7 +30,7 @@ public class ReplyRepositoryImpl implements ReplyRepository{
     @Override
     public List<ReplyDTO> getReplyList(Long boardId) {
         String qlString = "select new com.allan.springBootBoard.web.board.domain.model.ReplyDTO(r.replyId, r.createdBy, r.content, r.replyGroup, r.replyGroupOrder, " +
-                "r.depth, r.replyLike)" +
+                "r.depth, r.replyLike, r.isRemove)" +
                 " from Reply r join r.board b on b.boardId = :boardId order by  " +
                 "r.replyGroup asc, r.replyGroupOrder asc";
         List<ReplyDTO> list = em.createQuery(qlString, ReplyDTO.class)
@@ -53,7 +53,6 @@ public class ReplyRepositoryImpl implements ReplyRepository{
 
     /**
      * 댓글 pk 값을 설정하기 위해 reply 테이블에 pk 값중 가장 큰 값을 반환.
-     * @param boardId
      * @return
      */
     @Override
@@ -133,13 +132,18 @@ public class ReplyRepositoryImpl implements ReplyRepository{
     @Override
     public Long updateReply(ReplyDTO dto) {
         Reply reply = em.find(Reply.class, dto.getReplyId());
+        if(dto.getIsRemove()){
+            reply.changeIsRemove(dto.getIsRemove());
+            reply.changeUpdateInfo(dto.getUpdatedBy(), dto.getUpdatedDate());
+            return reply.getReplyId();
+        }
         reply.changeContent(dto.getContent());
         reply.changeUpdateInfo(dto.getUpdatedBy(), dto.getUpdatedDate());
         return reply.getReplyId();
     }
 
     /**
-     * 댓글 삭제하는 메소드
+     * 댓글 완전 삭제하는 메소드
      * @param replyId
      * @return
      */

@@ -2,6 +2,7 @@ package com.allan.springBootBoard.web.service;
 
 import com.allan.springBootBoard.web.board.domain.Board;
 import com.allan.springBootBoard.web.board.domain.Reply;
+import com.allan.springBootBoard.web.board.domain.model.BoardDTO;
 import com.allan.springBootBoard.web.board.domain.model.ReplyDTO;
 import com.allan.springBootBoard.web.board.repository.ReplyRepository;
 import com.allan.springBootBoard.web.board.service.ReplyService;
@@ -196,19 +197,32 @@ class ReplyServiceImplTest {
         Board board = createBoard();
         Reply reply = Reply.builder()
                 .replyId(1L)
+                .board(board)
                 .content("변경 전")
                 .createdBy("testId")
                 .createdDate(LocalDateTime.now())
                 .build();
-
         em.persist(reply);
 
+        ReplyDTO dto = ReplyDTO.builder()
+                .replyId(1L)
+                .boardId(board.getBoardId())
+                .isRemove(true)
+                .build();
+
+        em.flush();
+        em.clear();
+        List<ReplyDTO> list1 = replyService.list(board.getBoardId());
+        assertEquals(1,list1.size());
+
         //when
-        replyService.deleteReply(1L, board.getBoardId());
+        replyService.deleteReply(dto);
+        Reply deletedReply = em.find(Reply.class, 1L);
         List<ReplyDTO> list = replyService.list(board.getBoardId());
 
         //then
-        assertEquals(0, list.size());
+        assertEquals(1, list.size());
+        assertEquals(deletedReply.getIsRemove(), true);
     }
 
     private Board createBoard() {

@@ -45,12 +45,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             // 로그인시 설정
             .formLogin()
                 // 로그인 페이지를 제공하는 URL 설정
-                .loginPage("/user/loginForm")
+                .loginPage("/serviceLogin/loginForm")
             .and()
             .logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
-//                .logoutUrl("/user/logout")    // 요거는 안됨.
-                .logoutSuccessUrl("/user/loginForm")
+                .logoutSuccessUrl("/serviceLogin/loginForm")
             .and()
             // 인증 커스텀 필터 설정
             .addFilterBefore(customAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)

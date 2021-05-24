@@ -10,7 +10,6 @@ server:
     path: /error/serverError # 에러 발생시 path 지정
 
 spring:
-
 #  jsp viewResolver 설정.
   mvc:
     view:

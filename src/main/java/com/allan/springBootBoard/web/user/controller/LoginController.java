@@ -4,23 +4,19 @@ import com.allan.springBootBoard.web.user.domain.model.LoginForm;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.Cookie;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/user")
+@RequestMapping("/serviceLogin")
 @Slf4j
-public class UserController {
-
-    UserDetailsService userDetailsService;
+public class LoginController {
 
     @NonNull
     private BCryptPasswordEncoder passwordEncoder;
@@ -38,7 +34,6 @@ public class UserController {
                 e.printStackTrace();
             }
 
-            // cookie needs null check.??
             form.setUserId(cookieData);
             form.setUseCookie(true);
         }

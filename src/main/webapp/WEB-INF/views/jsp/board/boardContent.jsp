@@ -63,7 +63,7 @@
 	
 	// 댓글 리스트를 위한 AJax 처리
 	function showReplyList(){
-		var url = "${pageContext.request.contextPath}/reply/list";
+		var url = "${pageContext.request.contextPath}/boards/${boardContent.boardId}/replies";
 		var paramData = {"boardId" : "${boardContent.boardId}"};
 		$.ajax({
             type: 'GET',
@@ -146,7 +146,7 @@
                 , "X-HTTP-Method-Override" : "POST"
                 , "Accept" : "application/json"};
         $.ajax({
-            url: "${pageContext.request.contextPath}/reply/parent"
+            url: "${pageContext.request.contextPath}/boards/${boardContent.boardId}/replies/parent-reply"
             , headers : headers
             , data : paramData
             , type : 'POST'
@@ -182,7 +182,7 @@
         var headers = {"Content-Type" : "application/json"
                 , "X-HTTP-Method-Override" : "POST"};
         $.ajax({
-            url: "${pageContext.request.contextPath}/reply/child"
+            url: "${pageContext.request.contextPath}/boards/${boardContent.boardId}/replies/child-reply"
             , headers : headers
             , data : paramData
             , type : 'POST'
@@ -242,7 +242,7 @@
 		var headers = {"Content-Type" : "application/json"
 				, "X-HTTP-Method-Override" : "PUT"};
 		$.ajax({
-			url: "${pageContext.request.contextPath}/reply/updateHierarReply"
+			url: "${pageContext.request.contextPath}/boards/${boardContent.boardId}/replies/" + replyId
 			, headers : headers
 			, data : paramData
 			, type : 'PUT'
@@ -267,7 +267,7 @@
         var headers = {"Content-Type" : "application/json"
             , "X-HTTP-Method-Override" : "DELETE"};
         $.ajax({
-            url: "${pageContext.request.contextPath}/reply/deleteHierarReply"
+            url: "${pageContext.request.contextPath}/boards/${boardContent.boardId}/replies/" + replyId
             , headers : headers
             , data : paramData
             , type : 'DELETE'

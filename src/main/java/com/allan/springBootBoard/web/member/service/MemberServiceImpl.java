@@ -1,6 +1,6 @@
 package com.allan.springBootBoard.web.member.service;
 
-import com.allan.springBootBoard.web.exception.SameIdUseException;
+import com.allan.springBootBoard.web.member.exception.SameIdUseException;
 import com.allan.springBootBoard.web.member.domain.Member;
 import com.allan.springBootBoard.web.member.repository.MemberRepository;
 import com.allan.springBootBoard.web.member.domain.model.MemberDTO;

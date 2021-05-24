@@ -4,7 +4,7 @@ import com.allan.springBootBoard.web.board.domain.Address;
 import com.allan.springBootBoard.web.member.domain.model.MemberDTO;
 import com.allan.springBootBoard.web.board.service.BoardService;
 import com.allan.springBootBoard.web.board.service.ReplyService;
-import com.allan.springBootBoard.web.exception.SameIdUseException;
+import com.allan.springBootBoard.web.member.exception.SameIdUseException;
 import com.allan.springBootBoard.web.member.domain.MemberRole;
 import com.allan.springBootBoard.web.member.service.MemberService;
 import com.allan.springBootBoard.web.member.domain.Gender;

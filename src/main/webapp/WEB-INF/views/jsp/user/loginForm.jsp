@@ -7,13 +7,12 @@
         alert("아이디가 존재하지 않습니다.");
     }else if(errorMessage != "null" && errorMessage == "BadCredentialsException"){
         alert("비밀번호가 일치하지 않습니다.");
+    }
 
     $(document).on('click', '#signUp', function(e){
         location.href ="${pageContext.request.contextPath}/member/signupForm";
         e.preventDefault();
     });
-
-}
 
 </script>
 
@@ -40,7 +39,7 @@
     </div>
 	<button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
 	<span style="font-size:11pt;">
-		<a href="#" id="signUp" onClick="fn_btnSignupClick(e)">Sign up</a>
+		<a href="#" id="signUp">Sign up</a>
 	</span>
 
 </form:form>

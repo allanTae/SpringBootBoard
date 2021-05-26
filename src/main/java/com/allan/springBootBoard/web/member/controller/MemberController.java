@@ -45,7 +45,7 @@ public class MemberController {
 
         // 유효성 검사
         if(!Pattern.compile(ID_PATTERN).matcher(form.getMemberId()).find()){
-            bindingResult.rejectValue("id", "id.invalidatedVal", "아이디는 영대소문자, 숫자로 10자~16자까지만 입력이 가능합니다.");
+            bindingResult.rejectValue("memberId", "id.invalidatedVal", "아이디는 영대소문자, 숫자로 10자~16자까지만 입력이 가능합니다.");
         }
         if(!Pattern.compile(NAME_PATTERN).matcher(form.getName()).find()){
             bindingResult.rejectValue("name", "name.invalidatedVal", "이름은 한글 2자~16자까지만 입력이 가능합니다.");

@@ -1,7 +1,11 @@
 package com.allan.springBootBoard.web.member.exception;
 
-public class SameIdUseException extends RuntimeException {
+import com.allan.springBootBoard.web.error.code.ErrorCode;
+import com.allan.springBootBoard.web.error.exception.BusinessException;
+
+public class SameIdUseException extends BusinessException {
     public SameIdUseException(String message) {
-        super(message);
+
+        super(message, ErrorCode.Member_ID_DUPLICATION);
     }
 }

@@ -7,7 +7,7 @@
     var token = '${_csrf.token}';
     var headerName = '${_csrf.headerName}';
 
-    var idCheck = false; // 중복 아이디 체크 여부
+    var idCheck = false; // 중복 아이디 체크 여부 default value = false
 
     // 회원가입 버튼 이벤트
 	$(document).on('click', '#btnSignup', function(e){
@@ -34,9 +34,9 @@
 	$(document).on('click', '#btnIdCheck', function(e){
 		e.preventDefault();
 		var memberId = $('#memberId').val();
-		var paramData = JSON.stringify({"memberId": memberId});
+        var paramData = {"memberId": memberId};
 
-		var headers = {"Content-Type" : "application/json"
+		var headers = {"Content-Type" : "application/x-www-form-urlencoded; charset=UTF-8;"
 				, "X-HTTP-Method-Override" : "POST"};
 		$.ajax({
 			url: "${pageContext.request.contextPath}/member/checkId"

@@ -47,16 +47,21 @@ public class Member extends BaseEntity {
     @Column(nullable = false)
     private Boolean isEnable;
 
+
+    @Column(nullable = false, name="DATE_OF_BIRTH")
+    private String dateOfBirth;
+
     @PrePersist
     public void prePersist(){
         this.isEnable = true;
     }
 
+
     @Builder
     public Member(String id, String pwd, String name, Long age,
                   Gender gender, Address address, String createdBy, LocalDateTime createdDate,
                   String updatedBy, LocalDateTime updatedDate,
-                  MemberRole role, String phoneNumber) {
+                  MemberRole role, String phoneNumber, String dateOfBirth) {
         this.id = id;
         this.pwd = pwd;
         this.name = name;
@@ -69,6 +74,7 @@ public class Member extends BaseEntity {
         this.updatedDate = updatedDate;
         this.role = role;
         this.phoneNumber = phoneNumber;
+        this.dateOfBirth = dateOfBirth;
     }
 
     public void changePassword(String password, String updatedBy){

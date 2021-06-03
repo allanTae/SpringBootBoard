@@ -13,12 +13,18 @@ import javax.persistence.Embeddable;
 @RequiredArgsConstructor
 @Embeddable
 public class Address {
-    @Column(nullable = false)
-    private final String city;
+    @Column(nullable = false, name="JIBUN_ADDRESS")
+    private final String jibunAddress;
+
+    @Column(nullable = false, name="ROAD_ADDRESS")
+    private final String roadAddress;
 
     @Column(nullable = false)
-    private final String street;
+    private final String postcode;
 
-    @Column(nullable = false)
-    private final String zipcode;
+    @Column(nullable = false, name ="DETAIL_ADDRESS")
+    private final String detailAddress;
+
+    @Column(name="EXTRA_ADDRESS")
+    private final String extraAddress;
 }

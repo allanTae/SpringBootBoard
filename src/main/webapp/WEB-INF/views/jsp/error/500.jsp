@@ -9,7 +9,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
-	<title>404 Page Not Found!</title>
+	<title>500 Internal Server Error!</title>
 
 	<!-- Google font -->
 	<link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,900" rel="stylesheet">
@@ -33,8 +33,8 @@
 			<div class="notfound-404">
 				<h1>Oops!</h1>
 			</div>
-			<h2>404 - 페이지를 찾을 수 없습니다.</h2>
-			<p>요청하신 페이지는 이미 삭제되었거나 존재하지 않는 페이지 요청입니다.</p>
+			<h2>500 - 서버가 응답하지 않습니다.</h2>
+			<p>서버 관리자에게 문의 해주세요.</p>
 			<a href="${pageContext.request.contextPath}/board/getBoardList">Go To Homepage</a>
 		</div>
 	</div>

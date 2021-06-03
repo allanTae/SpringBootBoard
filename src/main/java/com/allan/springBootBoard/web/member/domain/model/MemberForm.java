@@ -22,14 +22,19 @@ public class MemberForm {
     @NotEmpty(message = "이름을 입력 해 주세요.")
     private String name;
 
-    @NotEmpty(message = "도로명을 입력 해 주세요.")
-    private String street;
+    @NotEmpty(message = "도로명주소를 입력 해 주세요.")
+    private String roadAddress;
 
     @NotEmpty(message = "우편번호를 입력 해 주세요.")
-    private String zipcode;
+    private String postcode;
 
-    @NotEmpty(message = "도시명을 입력 해 주세요.")
-    private String city;
+    @NotEmpty(message = "지번주소를 입력 해 주세요.")
+    private String jibunAddress;
+
+    @NotEmpty(message = "상세 주소를 입력 해 주세요.")
+    private String detailAddress;
+
+    private String extraAddress;
 
     @NotEmpty(message = "전화번호를 입력 해 주세요.")
     private String phone;
@@ -40,5 +45,13 @@ public class MemberForm {
     @Max(message = "나이를 제대로 입력 해 주세요.", value = 150L)
     @Min(message = "나이를 제대로 입력 해 주세요.", value = 0L)
     private Long age;
+
+    // 날자정보.
+    private String year;
+    private String month;
+    private String day;
+    private String dateOfBirth;
+
+
 
 }

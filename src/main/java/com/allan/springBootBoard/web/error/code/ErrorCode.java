@@ -16,7 +16,13 @@ public enum ErrorCode {
 
     // Member
     Member_ID_DUPLICATION(400, "M001", "MemberId is Duplication"),
-    LOGIN_INPUT_INVALID(400, "M002", "Login input is invalid");
+    LOGIN_INPUT_INVALID(400, "M002", "Login input is invalid"),
+    MEMBER_INPUT_NULL_VALUE(400, "M003", "inputValue is null"),
+
+
+    // Database
+    INTEGRITY_VIOLATION(400, "D001", "Data's Itegrity is violation");
+
 
     private final String code;      // error code
     private final String message;   // error message

@@ -3,6 +3,8 @@ package com.allan.springBootBoard.web.error;
 import com.allan.springBootBoard.web.error.code.ErrorCode;
 import com.allan.springBootBoard.web.error.exception.BusinessException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -10,8 +12,14 @@ import org.springframework.validation.BindException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 @Slf4j
 @RestControllerAdvice
@@ -80,6 +88,34 @@ public class GlobalExceptionHandler {
         final ErrorCode errorCode = e.getErrorCode();
         final ErrorResponse response = ErrorResponse.of(errorCode);
         return new ResponseEntity<>(response, HttpStatus.valueOf(errorCode.getStatus()));
+    }
+
+    /**
+     * Database process logic 에서 발생한 예외를 처리.
+     */
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(DataAccessException.class)
+    protected void handleBusinessException(final DataAccessException e,HttpServletRequest request, HttpServletResponse response) {
+        log.error("handleDataAccessException", e);
+        ErrorCode errorCode = null;
+        ErrorResponse errorResponse = null;
+        // 데이터 무결성으로 인한 제약 조건 위반 예외
+        // 데이터 무결성으로 인한 제약 조건 위반 예외는 설계상에 발생하는 문제이기 때문에
+        // 에러 로그만 남기고, 서버 에러 컨트롤러로 넘긴다.
+        if(e instanceof DataIntegrityViolationException){
+            DataIntegrityViolationException exception = (DataIntegrityViolationException) e;
+            String sqlMsg = exception.getRootCause().getMessage().substring(0,exception.getRootCause().getMessage().indexOf("SQL statement"));
+            log.error("sqlMsg: " + sqlMsg);
+            response.setStatus(500);
+            RequestDispatcher dispatcher = request.getRequestDispatcher("/error/serverError");
+            try {
+                dispatcher.forward(request, response);
+            }catch (IOException | ServletException io){
+                log.error("GlobalExceptionHandler's handleBusinessException() call!");
+                log.error("> " + io.getMessage());
+            }
+        }
+
     }
 
     /**

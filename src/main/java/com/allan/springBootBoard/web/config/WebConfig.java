@@ -19,11 +19,11 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
 
-//        registry.addResourceHandler("/**").addResourceLocations(CLASSPATH_RESOURCE_LOCATIONS);
+        registry.addResourceHandler("/resources/**").addResourceLocations(CLASSPATH_RESOURCE_LOCATIONS);
 
-        registry.addResourceHandler("/resources/common/**")
-                .addResourceLocations("classpath:/common/")
-                .setCachePeriod(20);
+//        registry.addResourceHandler("/resources/common/**")
+//                .addResourceLocations("classpath:/common/")
+//                .setCachePeriod(20);
 
     }
 

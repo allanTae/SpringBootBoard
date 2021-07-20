@@ -3,10 +3,8 @@
 
 <script>
     var errorMessage = "${errorMessage}";
-    if(errorMessage != "null" && errorMessage == "UserNotFoundException"){
-        alert("아이디가 존재하지 않습니다.");
-    }else if(errorMessage != "null" && errorMessage == "BadCredentialsException"){
-        alert("비밀번호가 일치하지 않습니다.");
+    if(errorMessage){
+        alert(errorMessage);
     }
 
     $(document).on('click', '#signUp', function(e){

@@ -16,7 +16,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import javax.annotation.Resource;
 
 @RequiredArgsConstructor
-@Slf4j
 public class CustomAuthenticationProvider implements AuthenticationProvider {
 
     @Resource(name="userDetailsService")

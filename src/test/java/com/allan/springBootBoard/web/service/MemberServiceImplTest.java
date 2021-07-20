@@ -67,7 +67,7 @@ class MemberServiceImplTest {
     }
 
     private Address createAddress() {
-        return new Address("City", "Street", "123456");
+        return new Address("City", "Street", "123456", "", "");
     }
 
     private Member createMember(Address address) {

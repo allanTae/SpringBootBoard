@@ -31,6 +31,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 
         // 한글 깨짐 현상을 위한 인코딩 필터
+        // spring security을 사용 할 때는 encordingFilter 가 csrfFilter 앞에 위치해야 한다.
         CharacterEncodingFilter filter = new CharacterEncodingFilter();
         filter.setEncoding("UTF-8");
         filter.setForceEncoding(true);
@@ -53,7 +54,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .and()
             // 인증 커스텀 필터 설정
             .addFilterBefore(customAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
-            .addFilterBefore(filter, CsrfFilter.class); // 인코딩 필터를 CSRF필터 앞에 배치시켜주어야 함.
+            // 인코딩 필터를 CSRF필터 앞에 배치시켜주어야 함.
+            .addFilterBefore(filter, CsrfFilter.class);
     }
 
     @Bean
@@ -75,7 +77,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public CustomLoginSuccessHandler customLoginSuccessHandler(){
         return new CustomLoginSuccessHandler();
     }
-
 
     @Bean
     public CustomLoginFailHandler customLoginFailHandler() {

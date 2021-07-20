@@ -20,7 +20,7 @@ public class CustomLoginSuccessHandler extends SavedRequestAwareAuthenticationSu
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         // 아이디 체크를 위한 쿠키.
-        String cookieData = URLEncoder.encode(request.getParameter("userId"), "utf-8");
+        String cookieData = request.getParameter("userId");
         Cookie idCookie = new Cookie("IDCOOKIE", cookieData);
         idCookie.setPath("/");
         if(Boolean.valueOf(request.getParameter("useCookie"))){

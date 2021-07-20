@@ -232,6 +232,6 @@ class BoardServiceImplTest {
     }
 
     private Address createAddress() {
-        return new Address("도시", "거리", "우편번호");
+        return new Address("도시", "거리", "우편번호", "", "");
     }
 }

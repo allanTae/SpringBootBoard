@@ -15,31 +15,39 @@ import java.net.URLDecoder;
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/serviceLogin")
-@Slf4j
 public class LoginController {
 
     @NonNull
     private BCryptPasswordEncoder passwordEncoder;
 
     @GetMapping("/loginForm")
-    public String loginForm(Model model, @CookieValue(value = "IDCOOKIE", required = false) Cookie idCookie,
-                            @RequestParam(name = "errorMessage", required = false, defaultValue = "null") String errorMessage){
+    public String loginForm(Model model, @CookieValue(value = "IDCOOKIE", required = false) Cookie idCookie){
         LoginForm form = new LoginForm();
-        if(idCookie != null){
-            String cookieData = null;
-            try {
-                cookieData = URLDecoder.decode(idCookie.getValue(), "utf-8");
-            } catch (UnsupportedEncodingException e) {
-                log.error("login cookieData decode process cause error!!: " + e.getMessage());
-                e.printStackTrace();
-            }
+        setCookieVal(idCookie, form);
+        model.addAttribute("loginForm", form);
+        return "user/loginForm";
+    }
 
-            form.setUserId(cookieData);
-            form.setUseCookie(true);
-        }
+    /*
+    * CustomLoginFailHandler에서 넘어온 예외 메시지로 로그인 창에 전달하기 위한
+    * post 메소드
+    * */
+    @PostMapping("/loginForm")
+    public String logi드nFormByLonginFailHandler(Model model, @CookieValue(value = "IDCOOKIE", required = false) Cookie idCookie,
+                                               @RequestParam(name = "errorMessage") String errorMessage){
+        LoginForm form = new LoginForm();
+        setCookieVal(idCookie, form);
         model.addAttribute("errorMessage", errorMessage);
         model.addAttribute("loginForm", form);
         return "user/loginForm";
+    }
+
+    private void setCookieVal(Cookie idCookie, LoginForm form) {
+        if(idCookie != null){
+            String cookieData = idCookie.getValue();
+            form.setUserId(cookieData);
+            form.setUseCookie(true);
+        }
     }
 
 }

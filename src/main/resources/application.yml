@@ -11,25 +11,22 @@ server:
     path: /error/serverError # 에러 발생시 path 지정
 
 spring:
-#  jsp viewResolver 설정.
+  profiles:
+    active: devDB
+
+  #  jsp viewResolver 설정.
   mvc:
     view:
       prefix: /WEB-INF/views/jsp/
       suffix: .jsp
 
-  datasource:
-    url: jdbc:h2:tcp://localhost/~/springBootBoard
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
-
-# JPA 설정.
+  # JPA 설정.
   jpa:
     hibernate:
 #      ddl-auto: create
     properties:
       hibernate:
-#        show_sql: true
+        #show_sql: true
         format_sql: true
 
   devtools:
@@ -39,7 +36,7 @@ spring:
 # 로깅 설정.
 logging.level:
   org.hibernate.SQL: debug
-# org.hibernate.type: trace
+  # org.hibernate.type: trace
   com:
     atoz_develop:
       mybatissample:
@@ -51,3 +48,26 @@ mybatis:
   configuration:
     map-underscore-to-camel-case: true
   type-aliases-package: com.allan.springBootBoard.web.board.domain.model, com.allan.springBootBoard.common
+
+---
+# develop Database
+spring:
+  config.activate.on-profile: devDB
+
+  datasource:
+    url: jdbc:h2:tcp://localhost/~/testDB
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+
+---
+# local Database
+spring:
+  config.activate.on-profile: localDB
+
+  datasource:
+    url: jdbc:h2:tcp://localhost/~/springBootBoard
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+---

@@ -10,15 +10,15 @@
         board_id, member_id, category_id, title, content, tag, view_cnt, created_by, created_date, updated_by, updated_date
         FROM
         BOARD
-        <trim prefix="WHERE" prefixOverrides="AND|OR">
+        <trim prefix="WHERE">
             <if test="searchType=='title' and keyword != null and keyword != '' ">
-                AND title like CONCAT('%', #{keyword}, '%')
+                title like CONCAT('%', #{keyword}, '%')
             </if>
             <if test="searchType=='content' and keyword != null and keyword != '' ">
-                AND content like CONCAT('%', #{keyword}, '%')
+                content like CONCAT('%', #{keyword}, '%')
             </if>
             <if test="searchType=='registerId' and keyword != null and keyword != '' ">
-                AND created_by like CONCAT('%', #{keyword}, '%')
+                created_by like CONCAT('%', #{keyword}, '%')
             </if>
         </trim>
         ORDER BY board_id DESC

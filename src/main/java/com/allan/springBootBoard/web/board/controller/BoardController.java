@@ -33,7 +33,6 @@ public class BoardController {
                        @RequestParam(required = false) String keyword,
                        @AuthenticationPrincipal UserDetailsVO user){
 
-
         Search search = Search.builder()
                 .searchType(searchType)
                 .keyword(keyword)

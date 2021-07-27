@@ -29,11 +29,14 @@ public class LoginController {
     }
 
     /*
+    * loginForm 에서 post 로그인 요청 후,
     * CustomLoginFailHandler에서 넘어온 예외 메시지로 로그인 창에 전달하기 위한
     * post 메소드
+    * (단순 view 파일에 model 정보만 추가하는 형태이기에 PGR 패턴을 적용하지 않음.
+    * errorMessage 노출 하는것이 보안상, 더 안좋다고 생각함.)
     * */
     @PostMapping("/loginForm")
-    public String logi드nFormByLonginFailHandler(Model model, @CookieValue(value = "IDCOOKIE", required = false) Cookie idCookie,
+    public String loginFormByLonginFailHandler(Model model, @CookieValue(value = "IDCOOKIE", required = false) Cookie idCookie,
                                                @RequestParam(name = "errorMessage") String errorMessage){
         LoginForm form = new LoginForm();
         setCookieVal(idCookie, form);

@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+@Slf4j
 public class CustomLoginFailHandler extends SimpleUrlAuthenticationFailureHandler {
 
     @Override
@@ -22,13 +23,19 @@ public class CustomLoginFailHandler extends SimpleUrlAuthenticationFailureHandle
         String errorMsg = "";   // 에러 메세지
         String errorPath = "";
 
-        if(exception instanceof UsernameNotFoundException){    // 입력 아이디가 존재하지 않을때 예외 발생.
+        log.error("loginFailHandler call!!");
+
+        if(exception instanceof UserNotFoundException){    // 입력 아이디가 존재하지 않을때 예외 발생.
+            log.error("UsernameNotFountException!!");
             errorCode = ErrorCode.USER_ID_NOT_FOUND.getCode();
             errorMsg = ErrorCode.USER_ID_NOT_FOUND.getMessage();
         }
         if(exception instanceof BadCredentialsException){   // 아이디와 비밀빈호가 일치하지 않을 때 예외 발생.
+            log.error("BadCredentialsException!!");
             errorCode = ErrorCode.INPUT_ID_NOT_MATCH.getCode();
             errorMsg = ErrorCode.INPUT_ID_NOT_MATCH.getMessage();
+        }else{
+            log.error("exception : " + exception);
         }
 
         errorPath = "/serviceLogin/loginForm?errorMessage=" + errorMsg;

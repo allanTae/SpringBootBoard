@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class BoardServiceImpl implements BoardService {
 
     @Autowired
@@ -39,6 +39,7 @@ public class BoardServiceImpl implements BoardService {
      * @param dto
      * @return
      */
+    @Transactional
     @Override
     public Long save(Long categoryPk, BoardDTO dto) {
 
@@ -67,6 +68,7 @@ public class BoardServiceImpl implements BoardService {
         return board.getBoardId();
     }
 
+    @Transactional
     @Override
     public Board findOne(Long boardId) {
         Board board = boardRepository.findOne(boardId);
@@ -99,6 +101,7 @@ public class BoardServiceImpl implements BoardService {
      * @param updatedBy
      * @return
      */
+    @Transactional
     @Override
     public Long update(BoardDTO dto, String updatedBy) {
         boardRepository.update(dto, updatedBy);
@@ -110,6 +113,7 @@ public class BoardServiceImpl implements BoardService {
      * @param booardId
      * @return
      */
+    @Transactional
     @Override
     public Long deleteById(Long booardId) {
         return boardRepository.delete(booardId);
@@ -129,6 +133,7 @@ public class BoardServiceImpl implements BoardService {
      * mybatis 로 모든 게시물 삭제/
      * @return
      */
+    @Transactional
     @Override
     public void deleteAll() {
         boardRepository.deleteAll();
@@ -140,6 +145,7 @@ public class BoardServiceImpl implements BoardService {
      * @param updatedBy
      * @return
      */
+    @Transactional
     @Override
     public Long updateViewCnt(Long boardId, String updatedBy) {
         return null;

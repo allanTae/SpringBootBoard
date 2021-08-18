@@ -10,13 +10,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @Slf4j
 public class MemberServiceImpl implements MemberService{
 
     @Autowired
     MemberRepository memberRepository;
 
+    @Transactional
     @Override
     public Long join(Member member){
         if(validateId(member)){
@@ -39,11 +40,13 @@ public class MemberServiceImpl implements MemberService{
         return memberRepository.findOneById(memberId);
     }
 
+    @Transactional
     @Override
     public Long update(MemberDTO dto, String updatedBy) {
         return memberRepository.update(dto, updatedBy);
     }
 
+    @Transactional
     @Override
     public void deleteAll() {
         memberRepository.deleteAll();

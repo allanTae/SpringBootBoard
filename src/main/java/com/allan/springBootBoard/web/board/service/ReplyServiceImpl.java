@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @Slf4j
 public class ReplyServiceImpl implements ReplyService {
 
@@ -29,9 +29,15 @@ public class ReplyServiceImpl implements ReplyService {
         return replyRepository.getReplyList(boardId);
     }
 
+    /**
+     * 자식 댓글을 저장하기 위한 메소드 입니다.
+     * @param replyDTO
+     * @return replyId, this is ReplyEntity's ID that was successfully registered.
+     */
+    @Transactional
     @Override
-    public Long saveParentReply(ReplyDTO dto) {
-        Board board = boardRepository.findOne(dto.getBoardId());
+    public Long saveParentReply(ReplyDTO replyDTO) {
+        Board board = boardRepository.findOne(replyDTO.getBoardId());
 
         // 댓글 아이디를 위해 호출
         // 기존에 엔티티에서 기본키는 자동으로 생성되도록 설정했으나,
@@ -42,8 +48,8 @@ public class ReplyServiceImpl implements ReplyService {
                 .replyId(replyId)
                 .replyGroup(replyId)    // 댓글 그룹번호 설정.
                 .replyGroupOrder(1L)    // 댓글 그룹번호 내 초기 순서 설정.
-                .content(dto.getContent())
-                .createdBy(dto.getRegisterId())
+                .content(replyDTO.getContent())
+                .createdBy(replyDTO.getRegisterId())
                 .createdDate(LocalDateTime.now())
                 .build();
 
@@ -54,19 +60,24 @@ public class ReplyServiceImpl implements ReplyService {
         return replyId;
     }
 
+    /**
+     * @param replyDTO
+     * @return replyId, this is ReplyEntity's ID that was successfully registered.
+     */
+    @Transactional
     @Override
-    public Long saveChildReply(ReplyDTO dto) {
-        Board board = boardRepository.findOne(dto.getBoardId());
+    public Long saveChildReply(ReplyDTO replyDTO) {
+        Board board = boardRepository.findOne(replyDTO.getBoardId());
         Long replyId = replyRepository.getMaxReplyId();
-        Long listCnt = replyRepository.getReplyListCnt(dto);
-        Long groupOrder = replyRepository.getGroupOrder(dto);
+        Long listCnt = replyRepository.getReplyListCnt(replyDTO);
+        Long groupOrder = replyRepository.getGroupOrder(replyDTO);
 
         Reply reply = Reply.builder()
                 .replyId(replyId)
-                .content(dto.getContent())
-                .depth(dto.getParentDepth()+1)
-                .replyGroup(dto.getParentReplyGroup())
-                .createdBy(dto.getRegisterId())
+                .content(replyDTO.getContent())
+                .depth(replyDTO.getParentDepth()+1)
+                .replyGroup(replyDTO.getParentReplyGroup())
+                .createdBy(replyDTO.getRegisterId())
                 .createdDate(LocalDateTime.now())
                 .build();
 
@@ -76,7 +87,7 @@ public class ReplyServiceImpl implements ReplyService {
         if(groupOrder == null ){
             reply.changeGroupOrder(listCnt+1);
         }else{
-            replyRepository.updateGroupOrder(dto);  // 그룹 내 순서를 조정하기 위한 update 문.
+            replyRepository.updateGroupOrder(replyDTO);  // 그룹 내 순서를 조정하기 위한 update 문.
             reply.changeGroupOrder(groupOrder);
         }
 
@@ -85,6 +96,7 @@ public class ReplyServiceImpl implements ReplyService {
         return replyId;
     }
 
+    @Transactional
     @Override
     public Long updateReply(ReplyDTO dto) {
         dto.setUpdatedBy(dto.getRegisterId());
@@ -95,20 +107,27 @@ public class ReplyServiceImpl implements ReplyService {
         return replyId;
     }
 
+    /**
+     * 댓글을 완전히 삭제하는 기존의 형태에서 삭제 플래그를 변경하는 형태로 수정합니다.
+     * @param replyDTO
+     * @return replyId, this is ReplyEntity's ID that was successfully updated.
+     */
+    @Transactional
     @Override
-    public Long deleteReply(ReplyDTO dto) {
+    public Long deleteReply(ReplyDTO replyDTO) {
         // 댓글을 완전 삭제한다.
         //replyRepository.deleteReply(dto.getReplyId(), dto.getBoardId());
 
         // 댓글 삭제 플래그만 변경한다.
-        dto.setIsRemove(true);
-        dto.setUpdatedBy(dto.getRegisterId());
-        dto.setUpdatedDate(LocalDateTime.now());
-        replyRepository.updateReply(dto);
+        replyDTO.setIsRemove(true);
+        replyDTO.setUpdatedBy(replyDTO.getRegisterId());
+        replyDTO.setUpdatedDate(LocalDateTime.now());
+        replyRepository.updateReply(replyDTO);
 
-        return dto.getReplyId();
+        return replyDTO.getReplyId();
     }
 
+    @Transactional
     @Override
     public void deleteAll() {
         replyRepository.deleteAll();

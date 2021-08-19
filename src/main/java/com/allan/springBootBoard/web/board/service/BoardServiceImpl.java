@@ -46,7 +46,7 @@ public class BoardServiceImpl implements BoardService {
         // 엔티티 조회
         Member findMember;
         try{
-            findMember = memberService.findOneById(dto.getRegisterId());
+            findMember = memberService.findById(dto.getRegisterId());
         }catch(UserNotFoundException exception){
             throw new IllegalStateException(dto.getRegisterId() + " is not exist!!");
         }

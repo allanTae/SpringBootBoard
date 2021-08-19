@@ -23,9 +23,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String id){
         try {
-            return memberRepository.findByMemberId(id).map(u -> new UserDetailsVO(u, Collections
+            return memberRepository.findById(id).map(u -> new UserDetailsVO(u, Collections
                     .singleton(new SimpleGrantedAuthority(u.getRole().getValue())))).orElseThrow(() -> {
-                    System.out.println("orElseThrow()!!!");
                     return new UserNotFoundException("UserNotFoundException");
             });
         } catch(EmptyResultDataAccessException ex){

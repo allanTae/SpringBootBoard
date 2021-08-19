@@ -12,88 +12,92 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import java.util.Optional;
 
-@Repository
-@Slf4j
-public class MemberRepositoryImpl implements MemberRepository{
+public class MemberRepositoryImpl {
 
-    @PersistenceContext
-    EntityManager em;
-
-    @Autowired
-    MemberMapper memberMapper;
-
-    /**
-     * 회원 가입
-     * @param member
-     * @return member's pk
-     */
-    @Override
-    public Long save(Member member){
-        em.persist(member);
-        return member.getMemberId();
-    }
-
-    /**
-     * 단일 회원 조회
-     * @param
-     * @return
-     */
-    @Override
-    public Member findOne(Long memberPk){
-
-        return em.find(Member.class, memberPk);
-    }
-
-    /**
-     * 회원 아이디로 단일 회원 조회
-     * @param memberId
-     * @return
-     */
-    @Override
-    public Member findOneById(String memberId){
-        try{
-            Member member = em.createQuery("select m from Member m where m.id = :memberId", Member.class)
-                    .setParameter("memberId", memberId)
-                    .getSingleResult();
-            return member;
-        } catch(NoResultException exception){
-            return null;
-        }
-
-    }
-
-    /**
-     * 회원 정보(비밀번호, 주소) 수정
-     * @param dto
-     * @return member's pk
-     */
-    @Override
-    public Long update(MemberDTO dto, String updatedBy) {
-        Member findMember = em.find(Member.class, dto.getMemberId());
-        findMember.changePassword(dto.getPassword(), updatedBy);
-        findMember.changeAddress(dto.getAddress(), updatedBy);
-
-        return findMember.getMemberId();
-    }
-
-    /**
-     * spring seucrity 에서 회원 아이디로 비밀번호를 조회하기 위한 메소드
-     * @param memberId
-     * @return
-     */
-    @Override
-    public Optional<Member> findByMemberId(String memberId){
-            Member member = em.createQuery("select m from Member m where m.id = :memberId", Member.class)
-                    .setParameter("memberId", memberId)
-                    .getSingleResult();
-            return Optional.ofNullable(member);
-    }
-
-    /**
-     * 테스트에서 database 를 초기화 시킬 메소드
-     */
-    @Override
-    public void deleteAll() {
-        memberMapper.deleteAll();
-    }
 }
+
+//@Repository
+//@Slf4j
+//public class MemberRepositoryImpl implements MemberRepository{
+//
+//    @PersistenceContext
+//    EntityManager em;
+//
+//    @Autowired
+//    MemberMapper memberMapper;
+//
+//    /**
+//     * 회원 가입
+//     * @param member
+//     * @return member's pk
+//     */
+//    @Override
+//    public Long save(Member member){
+//        em.persist(member);
+//        return member.getMemberId();
+//    }
+//
+//    /**
+//     * 단일 회원 조회
+//     * @param
+//     * @return
+//     */
+//    @Override
+//    public Member findOne(Long memberPk){
+//
+//        return em.find(Member.class, memberPk);
+//    }
+//
+//    /**
+//     * 회원 아이디로 단일 회원 조회
+//     * @param memberId
+//     * @return
+//     */
+//    @Override
+//    public Member findOneById(String memberId){
+//        try{
+//            Member member = em.createQuery("select m from Member m where m.id = :memberId", Member.class)
+//                    .setParameter("memberId", memberId)
+//                    .getSingleResult();
+//            return member;
+//        } catch(NoResultException exception){
+//            return null;
+//        }
+//
+//    }
+//
+//    /**
+//     * 회원 정보(비밀번호, 주소) 수정
+//     * @param dto
+//     * @return member's pk
+//     */
+//    @Override
+//    public Long update(MemberDTO dto, String updatedBy) {
+//        Member findMember = em.find(Member.class, dto.getMemberId());
+//        findMember.changePassword(dto.getPassword(), updatedBy);
+//        findMember.changeAddress(dto.getAddress(), updatedBy);
+//
+//        return findMember.getMemberId();
+//    }
+//
+//    /**
+//     * spring seucrity 에서 회원 아이디로 비밀번호를 조회하기 위한 메소드
+//     * @param memberId
+//     * @return
+//     */
+//    @Override
+//    public Optional<Member> findByMemberId(String memberId){
+//            Member member = em.createQuery("select m from Member m where m.id = :memberId", Member.class)
+//                    .setParameter("memberId", memberId)
+//                    .getSingleResult();
+//            return Optional.ofNullable(member);
+//    }
+//
+//    /**
+//     * 테스트에서 database 를 초기화 시킬 메소드
+//     */
+//    @Override
+//    public void deleteAll() {
+//        memberMapper.deleteAll();
+//    }
+//}

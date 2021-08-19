@@ -2,77 +2,126 @@ package com.allan.springBootBoard.web.service;
 
 import com.allan.springBootBoard.web.board.domain.Address;
 import com.allan.springBootBoard.web.member.domain.model.MemberDTO;
-import com.allan.springBootBoard.web.board.service.BoardService;
-import com.allan.springBootBoard.web.board.service.ReplyService;
 import com.allan.springBootBoard.web.member.exception.SameIdUseException;
 import com.allan.springBootBoard.web.member.domain.MemberRole;
 import com.allan.springBootBoard.web.member.service.MemberService;
 import com.allan.springBootBoard.web.member.domain.Gender;
 import com.allan.springBootBoard.web.member.domain.Member;
 import com.allan.springBootBoard.web.member.repository.MemberRepository;
+import com.allan.springBootBoard.web.member.service.MemberServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.transaction.annotation.Transactional;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.test.util.ReflectionTestUtils;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.verify;
 
-@SpringBootTest
-@Transactional
+@ExtendWith(MockitoExtension.class)
+@Rollback(value = true)
 class MemberServiceImplTest {
 
-    @PersistenceContext
-    EntityManager em;
+    String TEST_MEMBER_ID = "testId";
+    Long TEST_MEMBER_ENTITY_ID = 1l;
 
-    @Autowired
-    MemberService memberService;
+    private MemberService memberService;
 
-    @Autowired
-    MemberRepository memberRepository;
+    @Mock
+    private MemberRepository memberRepository;
 
-    @Autowired
+    @Mock
     BCryptPasswordEncoder passwordEncoder;
 
-    @Autowired
-    BoardService boardService;
-
-    @Autowired
-    ReplyService replyService;
-
     @BeforeEach
-    public void setup(){
-        replyService.deleteAll();
-        boardService.deleteAll();
-        memberRepository.deleteAll();
+    public void setUp(){
+        MockitoAnnotations.openMocks(this);
+        memberService = new MemberServiceImpl(memberRepository);
     }
 
     @Test
-    public void 가입테스트() throws Exception {
+    public void 가입_테스트() throws Exception {
         //given
-        Address address = createAddress();
-
-        Member member = createMember(address);
+        Address TEST_ADDR =  createAddress();
+        Member TEST_MEMBER = createMember(TEST_ADDR, TEST_MEMBER_ID);
+        given(memberRepository.save(any(Member.class)))
+                .willReturn(TEST_MEMBER);
 
         //when
-        memberService.join(member);
+        memberService.join(TEST_MEMBER);
 
         //then
-        assertEquals(member, memberRepository.findOne(member.getMemberId()));
+        verify(memberRepository, atLeastOnce()).save(any());
+    }
+
+    @Test
+    public void 중복회원가입_테스트() throws Exception {
+        //given
+        Address TEST_ADDR = createAddress();
+        Member TEST_MEMBER1 = createMember(TEST_ADDR, TEST_MEMBER_ID);
+        given(memberRepository.findById(any(String.class)))
+                .willReturn(Optional.of(TEST_MEMBER1));
+
+        // when, then
+        assertThrows(SameIdUseException.class, () -> memberService.join(TEST_MEMBER1));
+    }
+
+    @Test
+    public void 회원아이디로_조회_테스트() throws Exception {
+        //given
+        Address TEST_ADDR = createAddress();
+        Member TEST_MEMBER = createMember(TEST_ADDR, TEST_MEMBER_ID);
+        given(memberRepository.findById(any((String.class))))
+                .willReturn(Optional.of(TEST_MEMBER));
+
+        //when
+        memberService.findById(TEST_MEMBER_ID);
+
+        //then
+        assertThat(TEST_MEMBER.getId(), is(TEST_MEMBER_ID));
+    }
+
+    @Test
+    public void 회원정보수정_테스트() throws Exception {
+        //given
+        Address TEST_ADDR = createAddress();
+        Member TEST_MEMBER = createMember(TEST_ADDR, TEST_MEMBER_ID);
+
+        MemberDTO TEST_MEM_DTO = new MemberDTO();
+        TEST_MEM_DTO.setMemberId(TEST_MEMBER_ENTITY_ID);
+        TEST_MEM_DTO.setAddress(new Address("updateCity", "updateStreet", "", "", ""));
+        TEST_MEM_DTO.setPassword("updatePassword");
+
+        given(memberRepository.findByMemberId(TEST_MEMBER_ENTITY_ID))
+                .willReturn(Optional.of(TEST_MEMBER));
+
+        //when
+        memberService.updateMemberInfo(TEST_MEM_DTO, "updatedBy");
+
+        //then
+        verify(memberRepository, atLeastOnce()).findByMemberId(any(Long.class));
+        assertThat(TEST_MEMBER.getAddress().getJibunAddress(), is("updateCity"));
+        assertThat(TEST_MEMBER.getPwd(), is("updatePassword"));
     }
 
     private Address createAddress() {
         return new Address("City", "Street", "123456", "", "");
     }
 
-    private Member createMember(Address address) {
-        return Member.builder()
-                .id("testId")
+    private Member createMember(Address address, String id) {
+        Member member = Member.builder()
+                .id(id)
                 .pwd(passwordEncoder.encode("test"))
                 .name("AllanTae")
                 .age(29L)
@@ -83,54 +132,10 @@ class MemberServiceImplTest {
                 .role(MemberRole.USER)
                 .phoneNumber("01012341234")
                 .build();
+
+        ReflectionTestUtils.setField(member, "memberId", TEST_MEMBER_ENTITY_ID);
+
+        return member;
     }
 
-    @Test
-    public void 중복회원_가입_테스트() throws Exception {
-        //given
-        Address address = createAddress();
-
-        Member member1 = createMember(address);
-
-        Member member2 = createMember(address);
-
-        //when
-        memberService.join(member1);
-
-        //then
-        SameIdUseException ex = assertThrows(SameIdUseException.class, () -> memberService.join(member2));
-        assertEquals("이미 등록 된 회원 아이디입니다.", ex.getMessage());
-
-    }
-
-    @Test
-    public void 회원_이름으로_조회() throws Exception {
-        //given
-        Address address = createAddress();
-        Member member = createMember(address);
-
-        //when
-        em.persist(member);
-
-        //then
-        assertEquals(member.getId(), memberService.findOneById(member.getId()).getId());
-    }
-
-    @Test
-    public void 회원정보_수정() throws Exception {
-        //given
-        Address addr = createAddress();
-        Member member = createMember(addr);
-        em.persist(member);
-
-        //when
-        MemberDTO dto = new MemberDTO();
-        dto.setMemberId(member.getMemberId());
-        dto.setPassword("updatedPs");
-        memberService.update(dto, "관리자 아이디");
-
-        //then
-        assertEquals(member.getPwd(), memberRepository.findOne(member.getMemberId()).getPwd());
-
-    }
 }

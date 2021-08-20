@@ -1,5 +1,6 @@
 package com.allan.springBootBoard.web.member.controller;
 
+import com.allan.springBootBoard.security.user.exception.UserNotFoundException;
 import com.allan.springBootBoard.web.member.domain.Member;
 import com.allan.springBootBoard.web.member.repository.MemberRepository;
 import com.allan.springBootBoard.web.member.service.MemberService;
@@ -28,14 +29,14 @@ public class RestMemberController {
         if(!Pattern.compile(ID_PATTERN).matcher(id).find()){
             return new CheckId(CheckId.INVALID, "아이디는 영대소문자, 숫자로 10자~16자까지만 입력이 가능합니다.");
         }
-
-        Member member = memberService.findById(id);
-        if(member != null) {
-            log.error(id + " is already in use.");
-            return new CheckId(CheckId.IN_USE, "이미 사용중인 아이디 입니다.");
-        }else{
+        Member member;
+        try{
+            member = memberService.findById(id);
+        }catch (UserNotFoundException e){
             return new CheckId(CheckId.IN_NOT_USE, "사용 가능한 아이디 입니다.");
         }
+        log.error(id + " is already in use.");
+        return new CheckId(CheckId.IN_USE, "이미 사용중인 아이디 입니다.");
     }
 
     @Getter

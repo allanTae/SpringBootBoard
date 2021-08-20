@@ -5,6 +5,8 @@ import com.allan.springBootBoard.web.board.domain.Reply;
 import com.allan.springBootBoard.web.board.domain.model.ReplyDTO;
 import com.allan.springBootBoard.web.board.repository.BoardRepository;
 import com.allan.springBootBoard.web.board.repository.ReplyRepository;
+import com.allan.springBootBoard.web.error.code.ErrorCode;
+import com.allan.springBootBoard.web.error.exception.BoardNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,7 +39,7 @@ public class ReplyServiceImpl implements ReplyService {
     @Transactional
     @Override
     public Long saveParentReply(ReplyDTO replyDTO) {
-        Board board = boardRepository.findOne(replyDTO.getBoardId());
+        Board board = boardRepository.findById(replyDTO.getBoardId()).orElseThrow(() ->new BoardNotFoundException("해당 Board 엔티티가 존재하지 않습니다.", ErrorCode.ENTITY_NOT_FOUND));
 
         // 댓글 아이디를 위해 호출
         // 기존에 엔티티에서 기본키는 자동으로 생성되도록 설정했으나,
@@ -67,7 +69,7 @@ public class ReplyServiceImpl implements ReplyService {
     @Transactional
     @Override
     public Long saveChildReply(ReplyDTO replyDTO) {
-        Board board = boardRepository.findOne(replyDTO.getBoardId());
+        Board board = boardRepository.findById(replyDTO.getBoardId()).orElseThrow(() -> new BoardNotFoundException("해당 Board 엔티티가 존재하지 않습니다.", ErrorCode.ENTITY_NOT_FOUND));
         Long replyId = replyRepository.getMaxReplyId();
         Long listCnt = replyRepository.getReplyListCnt(replyDTO);
         Long groupOrder = replyRepository.getGroupOrder(replyDTO);

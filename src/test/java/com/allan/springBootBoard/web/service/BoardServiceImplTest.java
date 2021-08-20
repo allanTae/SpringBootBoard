@@ -2,7 +2,7 @@ package com.allan.springBootBoard.web.service;
 
 import com.allan.springBootBoard.common.Search;
 import com.allan.springBootBoard.web.board.repository.CategoryRepository;
-import com.allan.springBootBoard.web.board.service.ReplyService;
+import com.allan.springBootBoard.web.board.service.BoardServiceImpl;
 import com.allan.springBootBoard.web.member.domain.Gender;
 import com.allan.springBootBoard.web.member.domain.Member;
 import com.allan.springBootBoard.web.board.domain.Address;
@@ -16,179 +16,164 @@ import com.allan.springBootBoard.web.member.domain.MemberRole;
 import com.allan.springBootBoard.web.member.service.MemberService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.test.util.ReflectionTestUtils;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.*;
 
-@SpringBootTest
-@Transactional
+@ExtendWith(MockitoExtension.class)
+@Rollback(value = true)
 class BoardServiceImplTest {
 
-    @PersistenceContext
-    EntityManager em;
+    private String TEST_MEMBER_AUTH_ID = "TEST_ID";
+    private Long TEST_BOARD_ENTITY_ID = 1l;
 
-    @Autowired
-    BoardService boardService;
-
-    @Autowired
-    BoardRepository boardRepository;
-
-    @Autowired
-    BoardMapper boardMapper;
-
-    @Autowired
-    MemberService memberService;
-
-    @Autowired
-    CategoryRepository categoryRepository;
-
-    @Autowired
-    ReplyService replyService;
+    private BoardService boardService;
+    @Mock
+    private BoardRepository boardRepository;
+    @Mock
+    private CategoryRepository categoryRepository;
+    @Mock
+    private MemberService memberService;
+    @Mock
+    private BoardMapper boardMapper;
 
     @BeforeEach
-    public void setup(){
-        replyService.deleteAll();
-        boardService.deleteAll();
-        memberService.deleteAll();
-        categoryRepository.deleteAll();
+    private void setUp(){
+        MockitoAnnotations.openMocks(this);
+        boardService =  new BoardServiceImpl(boardRepository, memberService, categoryRepository, boardMapper);
+    }
+
+    @Test
+    public void 게시글등록_테스트() throws Exception {
+        //given
+        Long TEST_CATEGORY_ID = 2l;
+        Member TEST_MEMBER = createMember(createAddress(), TEST_MEMBER_AUTH_ID);
+        Board TEST_BOARD = createBoard(TEST_MEMBER);
+        given(memberService.findById(any(String.class)))
+                .willReturn(TEST_MEMBER);
+        Category TEST_CATEGORY = createCategory();
+        given(categoryRepository.findOne(any(Long.class)))
+                .willReturn(TEST_CATEGORY);
+        BoardDTO TEST_BOARD_DTO = createBoardDTO(TEST_MEMBER_AUTH_ID);
+
+        //when
+        boardService.save(TEST_CATEGORY_ID, TEST_BOARD_DTO);
+
+        //then
+        verify(boardRepository, atLeastOnce()).save(any(Board.class));
+    }
+
+    @Test
+    public void 게시글회원_아이디_조회_테스트() throws Exception {
+        //given
+        Member TEST_MEMBER = createMember(createAddress(), TEST_MEMBER_AUTH_ID);
+        Board TEST_BOARD = createBoard(TEST_MEMBER);
+        given(boardRepository.findByBoardId(TEST_MEMBER_AUTH_ID))
+                .willReturn(TEST_BOARD);
+
+        //when
+        boardService.findByMemberId(TEST_MEMBER_AUTH_ID);
+
+        //then
+        verify(boardRepository, atLeastOnce()).findByBoardId(any(String.class));
+    }
+
+    @Test
+    public void 게시글수정_테스트() throws Exception {
+        //given
+        Member TEST_MEMBER = createMember(createAddress(), TEST_MEMBER_AUTH_ID);
+        Board TEST_BOARD = createBoard(TEST_MEMBER);
+        BoardDTO TEST_UPDATE_INFO = BoardDTO.builder()
+                .title("modified data")
+                .content("modified data")
+                .tag("modified data")
+                .boardId(TEST_BOARD_ENTITY_ID)
+                .build();
+        given(boardRepository.findById(TEST_BOARD_ENTITY_ID))
+                .willReturn(Optional.of(TEST_BOARD));
+
+        //when
+        boardService.update(TEST_UPDATE_INFO, "tester");
+
+        //then
+        verify(boardRepository, atLeastOnce()).findById(TEST_BOARD_ENTITY_ID);
+        assertThat(TEST_BOARD.getTitle(), is("modified data"));
+        assertThat(TEST_BOARD.getContent(), is("modified data"));
+        assertThat(TEST_BOARD.getTag(), is("modified data"));
+    }
+
+    @Test
+    public void 게시물삭제_테스트() throws Exception {
+        //given
+        Member TEST_MEMBER = createMember(createAddress(),TEST_MEMBER_AUTH_ID);
+        Board TEST_BOARD = createBoard(TEST_MEMBER);
+        given(boardRepository.findById(any(Long.class)))
+                .willReturn(Optional.of(TEST_BOARD));
+
+        //when
+        boardService.deleteById(TEST_BOARD_ENTITY_ID);
+
+        //then
+        verify(boardRepository, atLeastOnce()).delete(TEST_BOARD);
+    }
+
+    @Test
+    public void 마이바티스게시물_조회() throws Exception {
+        //given
+        Search TEST_SEARCH = new Search("test", "test", 0, 0, 0);
+        List<BoardDTO> TEST_BOARD_DTOS = new ArrayList<>();
+        given(boardMapper.selectAllBoards(any(Search.class)))
+                .willReturn(TEST_BOARD_DTOS);
+
+        //when
+        boardService.findAllByMybatis(TEST_SEARCH);
+
+        //then
+        verify(boardMapper, atLeastOnce()).selectAllBoards(TEST_SEARCH);
     }
 
     @Test
     public void 마이바티스_삭제() throws Exception {
         //given
-        Member member = createMember(createAddress(), "fakeuser");
-        Category category = createCategory();
-        em.flush();
-        em.clear();
-        BoardDTO boardDTO = createBoardDTO(member.getId());
-
-        boardService.save(category.getCategoryId(), boardDTO);
+        Search TEST_SEARCH = new Search("test", "test", 0, 0, 0);
+        int TEST_DELETE_COUNT = 1;
+        given(boardMapper.deleteAll())
+                .willReturn(TEST_DELETE_COUNT);
 
         //when
-        boardMapper.deleteAll();
+        boardService.deleteAll();
 
         //then
-        List<Board> boards = boardService.findAll();
-        int size = boards.size();
-        assertEquals(size, 0);
+        verify(boardMapper, atLeastOnce()).deleteAll();
     }
 
-    @Test
-    public void 마이바티스_키워드_전체조회() throws Exception {
-        //given
-        Member member = createMember(createAddress(), "testId");
-        Member member2 = createMember(createAddress(), "testId2");
-        Category category = createCategory();
-
-        BoardDTO boardDTO = BoardDTO.builder()
-                .registerId(member.getId())
+    private Board createBoard(Member TEST_MEMBER) {
+        Board board = Board.builder()
+                .title("TEST")
+                .content("TEST")
+                .tag("TEST")
+                .createdBy("TEST")
+                .createdDate(LocalDateTime.now())
+                .member(TEST_MEMBER)
                 .build();
 
-        BoardDTO boardDTO2 = BoardDTO.builder()
-                .title("testTitle")
-                .content("testContent")
-                .registerId(member2.getId())
-                .tag("testTag")
-                .build();
+        ReflectionTestUtils.setField(board, "boardId", TEST_BOARD_ENTITY_ID);
 
-        boardService.save(category.getCategoryId(), boardDTO);
-        boardService.save(category.getCategoryId(), boardDTO2);
-
-        em.flush();
-        em.clear();
-
-        Search search = Search.builder()
-                .searchType("title")
-                .keyword("testTitle")
-                .build();
-
-        //when
-        List<BoardDTO> boardVOs = boardMapper.selectAllBoards(search);
-
-        //then
-        assertEquals(boardVOs.get(0).getTitle(), "testTitle");
-    }
-
-    @Test
-    public void 게시글_등록() throws Exception {
-        //given
-        Member member = createMember(createAddress(), "testId");
-        Category category = createCategory();
-        BoardDTO boardDTO = createBoardDTO(member.getId());
-
-        //when
-        Long boardPk = boardService.save(category.getCategoryId(), boardDTO);
-
-        //then
-        Board board = em.find(Board.class, boardPk);
-        assertEquals(boardDTO.getTitle(), board.getTitle());
-        assertEquals(boardDTO.getContent(), board.getContent());
-        assertEquals(boardDTO.getTag(), board.getTag());
-    }
-
-    @Test
-    public void 게시글_회원이름으로_조회() throws Exception {
-        //given
-        Member member = createMember(createAddress(), "testId");
-        Category category = createCategory();
-        BoardDTO boardDTO = createBoardDTO(member.getId());
-
-        //when
-        boardService.save(category.getCategoryId(), boardDTO);
-
-        //then
-        Board findBoard = boardService.findByMemberId(member.getId()).get(0);
-        assertEquals(boardDTO.getTitle(), findBoard.getTitle());
-        assertEquals(boardDTO.getContent(), findBoard.getContent());
-        assertEquals(boardDTO.getTag(), findBoard.getTag());
-    }
-
-    @Test
-    public void 게시글_수정() throws Exception {
-        //given
-        Member member = createMember(createAddress(), "testId");
-        Category category = createCategory();
-        BoardDTO boardDTO = createBoardDTO(member.getId());
-        Long boardId = boardService.save(category.getCategoryId(), boardDTO);
-
-        //when
-        BoardDTO updateDTO = BoardDTO.builder()
-                .boardId(boardId)
-                .title("수정 된 제목")
-                .content("수정 된 내용")
-                .tag("수정 된 태그")
-                .build();
-        boardService.update(updateDTO, "관리자");
-
-        //then
-        Board findBoard = boardRepository.findOne(boardId);
-        assertEquals(updateDTO.getTitle(), findBoard.getTitle());
-        assertEquals(updateDTO.getContent(), findBoard.getContent());
-        assertEquals(updateDTO.getTag(), findBoard.getTag());
-    }
-
-    @Test
-    public void 게시물_삭제() throws Exception {
-        //given
-        Member member = createMember(createAddress(), "testId");
-        Category category = createCategory();
-        BoardDTO boardDTO = createBoardDTO(member.getId());
-        Long boardId = boardService.save(category.getCategoryId(), boardDTO);
-
-        //when
-        boardService.deleteById(boardId);
-        List<Board> boards = boardService.findAll();
-
-        //then
-        assertEquals(boards.size(), 0);
-
+        return board;
     }
 
     private BoardDTO createBoardDTO(String memberId) {
@@ -209,7 +194,7 @@ class BoardServiceImplTest {
                 .createdDate(LocalDateTime.now())
                 .build();
 
-        em.persist(category);
+        //em.persist(category);
         return category;
     }
 
@@ -227,7 +212,6 @@ class BoardServiceImplTest {
                 .phoneNumber("01079978543")
                 .build();
 
-        em.persist(member);
         return member;
     }
 

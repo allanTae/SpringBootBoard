@@ -10,11 +10,10 @@ public interface BoardService {
 
     public Long save(Long categoryPk, BoardDTO dto);
     public Board findOne(Long boardId);
-    public List<Board> findByMemberId(String memberId);
+    public Board findByMemberId(String memberId);
     public List<Board> findAll();
     public Long update(BoardDTO dto, String updatedBy);
     public List<BoardDTO> findAllByMybatis(Search search);
     public void deleteAll();
-    public Long deleteById(Long booardId);
-    public Long updateViewCnt(Long boardId, String updatedBy);
+    public Long deleteById(Long boardId);
 }

@@ -2,6 +2,7 @@ package com.allan.springBootBoard.web.board.service;
 
 import com.allan.springBootBoard.common.Search;
 import com.allan.springBootBoard.security.user.exception.UserNotFoundException;
+import com.allan.springBootBoard.web.error.exception.BoardNotFoundException;
 import com.allan.springBootBoard.web.member.domain.Member;
 import com.allan.springBootBoard.web.board.domain.Board;
 import com.allan.springBootBoard.web.board.domain.Category;
@@ -10,27 +11,31 @@ import com.allan.springBootBoard.web.board.repository.BoardRepository;
 import com.allan.springBootBoard.web.board.repository.CategoryRepository;
 import com.allan.springBootBoard.web.board.repository.mapper.BoardMapper;
 import com.allan.springBootBoard.web.member.service.MemberService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static com.allan.springBootBoard.web.error.code.ErrorCode.ENTITY_NOT_FOUND;
+
 @Service
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class BoardServiceImpl implements BoardService {
 
-    @Autowired
+    @NonNull
     BoardRepository boardRepository;
 
-    @Autowired
+    @NonNull
     MemberService memberService;
 
-    @Autowired
+    @NonNull
     CategoryRepository categoryRepository;
 
-    @Autowired
+    @NonNull
     BoardMapper boardMapper;
 
     /**
@@ -71,9 +76,9 @@ public class BoardServiceImpl implements BoardService {
     @Transactional
     @Override
     public Board findOne(Long boardId) {
-        Board board = boardRepository.findOne(boardId);
-        board.changeViewCnt(board.getViewCnt() + 1);
-        return board;
+        Board findBoard = boardRepository.findById(boardId).orElseThrow(() -> new BoardNotFoundException( "해당 Board 엔티티가 존재하지 안습니다.", ENTITY_NOT_FOUND));
+        findBoard.changeViewCnt(findBoard.getViewCnt() + 1);
+        return findBoard;
     }
 
     /**
@@ -82,8 +87,8 @@ public class BoardServiceImpl implements BoardService {
      * @return
      */
     @Override
-    public List<Board> findByMemberId(String memberId) {
-        return boardRepository.findByMemberId(memberId);
+    public Board findByMemberId(String memberId) {
+        return boardRepository.findByBoardId(memberId);
     }
 
     /**
@@ -104,19 +109,22 @@ public class BoardServiceImpl implements BoardService {
     @Transactional
     @Override
     public Long update(BoardDTO dto, String updatedBy) {
-        boardRepository.update(dto, updatedBy);
+        Board findBoard = boardRepository.findById(dto.getBoardId()).orElseThrow(() -> new BoardNotFoundException("해당 Board 엔티티가 존재하지 않습니다.", ENTITY_NOT_FOUND));
+        findBoard.changeBoardContent(dto.getTitle(), dto.getContent(), dto.getTag(), dto.getUpdatedBy());
         return dto.getBoardId();
     }
 
     /**
      * 게시물 삭제.
-     * @param booardId
+     * @param boardId
      * @return
      */
     @Transactional
     @Override
-    public Long deleteById(Long booardId) {
-        return boardRepository.delete(booardId);
+    public Long deleteById(Long boardId) {
+        Board findBoard = boardRepository.findById(boardId).orElseThrow(() -> new BoardNotFoundException("해당 Board 엔티티가 존재하지 않습니다.", ENTITY_NOT_FOUND));
+        boardRepository.delete(findBoard);
+        return findBoard.getBoardId();
     }
 
     /**
@@ -136,18 +144,9 @@ public class BoardServiceImpl implements BoardService {
     @Transactional
     @Override
     public void deleteAll() {
-        boardRepository.deleteAll();
+        boardMapper.deleteAll();
     }
 
-    /**
-     * 조회수 수정
-     * @param boardId
-     * @param updatedBy
-     * @return
-     */
-    @Transactional
-    @Override
-    public Long updateViewCnt(Long boardId, String updatedBy) {
-        return null;
-    }
+
+
 }

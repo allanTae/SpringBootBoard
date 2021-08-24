@@ -7,6 +7,7 @@ import com.allan.springBootBoard.web.board.repository.BoardRepository;
 import com.allan.springBootBoard.web.board.repository.ReplyRepository;
 import com.allan.springBootBoard.web.error.code.ErrorCode;
 import com.allan.springBootBoard.web.error.exception.BoardNotFoundException;
+import com.allan.springBootBoard.web.error.exception.ReplyNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -57,7 +58,7 @@ public class ReplyServiceImpl implements ReplyService {
 
         board.addReply(reply);
 
-        replyRepository.insertReply(reply);
+        replyRepository.save(reply);
 
         return replyId;
     }
@@ -71,8 +72,8 @@ public class ReplyServiceImpl implements ReplyService {
     public Long saveChildReply(ReplyDTO replyDTO) {
         Board board = boardRepository.findById(replyDTO.getBoardId()).orElseThrow(() -> new BoardNotFoundException("해당 Board 엔티티가 존재하지 않습니다.", ErrorCode.ENTITY_NOT_FOUND));
         Long replyId = replyRepository.getMaxReplyId();
-        Long listCnt = replyRepository.getReplyListCnt(replyDTO);
-        Long groupOrder = replyRepository.getGroupOrder(replyDTO);
+        Long listCnt = replyRepository.getReplyListCnt(replyDTO.getBoardId(), replyDTO.getParentReplyGroup());
+        Long groupOrder = replyRepository.getGroupOrder(replyDTO.getBoardId(), replyDTO.getParentReplyGroup(), replyDTO.getParentReplyGroupOrder(), replyDTO.getParentDepth());
 
         Reply reply = Reply.builder()
                 .replyId(replyId)
@@ -89,11 +90,12 @@ public class ReplyServiceImpl implements ReplyService {
         if(groupOrder == null ){
             reply.changeGroupOrder(listCnt+1);
         }else{
-            replyRepository.updateGroupOrder(replyDTO);  // 그룹 내 순서를 조정하기 위한 update 문.
+            replyRepository.updateGroupOrder(replyDTO.getUpdatedBy(), replyDTO.getUpdatedDate(),
+                                             replyDTO.getBoardId(), replyDTO.getParentReplyGroup(), replyDTO.getParentReplyGroupOrder());  // 그룹 내 순서를 조정하기 위한 update 문.
             reply.changeGroupOrder(groupOrder);
         }
 
-        replyRepository.insertReply(reply);
+        replyRepository.save(reply);
 
         return replyId;
     }
@@ -101,32 +103,39 @@ public class ReplyServiceImpl implements ReplyService {
     @Transactional
     @Override
     public Long updateReply(ReplyDTO dto) {
-        dto.setUpdatedBy(dto.getRegisterId());
-        dto.setUpdatedDate(LocalDateTime.now());
+        Reply findReply = replyRepository.findById(dto.getReplyId()).orElseThrow(() -> new ReplyNotFoundException("해당 reply 엔티티를 찾을 수 없습니다.", ErrorCode.ENTITY_NOT_FOUND));
 
-        Long replyId = replyRepository.updateReply(dto);
+        findReply.changeContent(dto.getContent());
+        findReply.changeUpdateInfo(dto.getRegisterId(), LocalDateTime.now());
 
-        return replyId;
+//        dto.setUpdatedBy(dto.getRegisterId());
+//        dto.setUpdatedDate(LocalDateTime.now());
+//
+//        Long replyId = replyRepository.updateReply(dto);
+
+        return findReply.getReplyId();
     }
 
     /**
-     * 댓글을 완전히 삭제하는 기존의 형태에서 삭제 플래그를 변경하는 형태로 수정합니다.
+     * 댓글 삭제 플래그만 변경 합니다.
      * @param replyDTO
      * @return replyId, this is ReplyEntity's ID that was successfully updated.
      */
     @Transactional
     @Override
     public Long deleteReply(ReplyDTO replyDTO) {
-        // 댓글을 완전 삭제한다.
-        //replyRepository.deleteReply(dto.getReplyId(), dto.getBoardId());
+        Reply findReply = replyRepository.findById(replyDTO.getReplyId()).orElseThrow(() -> new ReplyNotFoundException("해당 reply 엔티티를 찾을 수 없습니다.", ErrorCode.ENTITY_NOT_FOUND));
+
+        findReply.changeIsRemove(true);
+        findReply.changeUpdateInfo(replyDTO.getRegisterId(), LocalDateTime.now());
 
         // 댓글 삭제 플래그만 변경한다.
-        replyDTO.setIsRemove(true);
-        replyDTO.setUpdatedBy(replyDTO.getRegisterId());
-        replyDTO.setUpdatedDate(LocalDateTime.now());
-        replyRepository.updateReply(replyDTO);
+//        replyDTO.setIsRemove(true);
+//        replyDTO.setUpdatedBy(replyDTO.getRegisterId());
+//        replyDTO.setUpdatedDate(LocalDateTime.now());
+//        replyRepository.updateReply(replyDTO);
 
-        return replyDTO.getReplyId();
+        return findReply.getReplyId();
     }
 
     @Transactional

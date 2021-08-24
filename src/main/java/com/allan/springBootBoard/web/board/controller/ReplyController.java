@@ -33,8 +33,7 @@ public class ReplyController {
             replyService.saveParentReply(dto);
             return new ResponseEntity<String>("댓글 저장 성공", HttpStatus.OK);
         }catch(Exception e){
-            log.error("error message: " + e.getMessage());
-            log.error("dto: " + dto.toString());
+            log.error("ReplyController's error message: " + e.getMessage());
             return new ResponseEntity<String>("댓글 저장 실패", HttpStatus.FORBIDDEN);
         }
 

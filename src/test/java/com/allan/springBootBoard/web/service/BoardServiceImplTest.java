@@ -63,34 +63,20 @@ class BoardServiceImplTest {
         Long TEST_CATEGORY_ID = 2l;
         Member TEST_MEMBER = createMember(createAddress(), TEST_MEMBER_AUTH_ID);
         Board TEST_BOARD = createBoard(TEST_MEMBER);
-        given(memberService.findById(any(String.class)))
+        given(memberService.findByAuthId(any(String.class)))
                 .willReturn(TEST_MEMBER);
         Category TEST_CATEGORY = createCategory();
         given(categoryRepository.findOne(any(Long.class)))
                 .willReturn(TEST_CATEGORY);
-        BoardDTO TEST_BOARD_DTO = createBoardDTO(TEST_MEMBER_AUTH_ID);
+        BoardDTO TEST_BOARD_DTO = createBoardDTO();
 
         //when
-        boardService.save(TEST_CATEGORY_ID, TEST_BOARD_DTO);
+        boardService.save(TEST_CATEGORY_ID, TEST_BOARD_DTO, TEST_MEMBER_AUTH_ID);
 
         //then
         verify(boardRepository, atLeastOnce()).save(any(Board.class));
     }
 
-    @Test
-    public void 게시글회원_아이디_조회_테스트() throws Exception {
-        //given
-        Member TEST_MEMBER = createMember(createAddress(), TEST_MEMBER_AUTH_ID);
-        Board TEST_BOARD = createBoard(TEST_MEMBER);
-        given(boardRepository.findByBoardId(TEST_MEMBER_AUTH_ID))
-                .willReturn(TEST_BOARD);
-
-        //when
-        boardService.findByMemberId(TEST_MEMBER_AUTH_ID);
-
-        //then
-        verify(boardRepository, atLeastOnce()).findByBoardId(any(String.class));
-    }
 
     @Test
     public void 게시글수정_테스트() throws Exception {
@@ -176,12 +162,11 @@ class BoardServiceImplTest {
         return board;
     }
 
-    private BoardDTO createBoardDTO(String memberId) {
+    private BoardDTO createBoardDTO() {
         BoardDTO dto = BoardDTO.builder()
                 .title("테스트 게시 제목")
                 .content("테스트 게시글 내용")
                 .tag("테스트 게시글 태그")
-                .registerId(memberId)
                 .build();
 
         return dto;

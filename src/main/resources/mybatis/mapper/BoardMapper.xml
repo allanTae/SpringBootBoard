@@ -7,7 +7,7 @@
 
     <select id="selectAllBoards" resultType="BoardDTO" parameterType="Search">
         SELECT
-        board_id, member_id, category_id, title, content, tag, view_cnt, created_by, created_date, updated_by, updated_date
+        board_id, category_id, title, content, tag, view_cnt, created_by, created_date
         FROM
         BOARD
         <trim prefix="WHERE">

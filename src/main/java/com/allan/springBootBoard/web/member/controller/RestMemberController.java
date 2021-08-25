@@ -1,6 +1,6 @@
 package com.allan.springBootBoard.web.member.controller;
 
-import com.allan.springBootBoard.security.user.exception.UserNotFoundException;
+import com.allan.springBootBoard.web.error.exception.MemberNotFoundException;
 import com.allan.springBootBoard.web.member.domain.Member;
 import com.allan.springBootBoard.web.member.repository.MemberRepository;
 import com.allan.springBootBoard.web.member.service.MemberService;
@@ -31,8 +31,8 @@ public class RestMemberController {
         }
         Member member;
         try{
-            member = memberService.findById(id);
-        }catch (UserNotFoundException e){
+            member = memberService.findByAuthId(id);
+        }catch (MemberNotFoundException e){
             return new CheckId(CheckId.IN_NOT_USE, "사용 가능한 아이디 입니다.");
         }
         log.error(id + " is already in use.");

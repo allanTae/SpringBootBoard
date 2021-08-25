@@ -65,6 +65,4 @@ public interface ReplyRepository extends JpaRepository<Reply, Long>, ReplyReposi
                                  @Param("parentReplyGroup") Long parentReplyGroup,
                                  @Param("parentReplyGroupOrder") Long parentReplyGroupOrder);
 
-//    public void deleteAll(); // test용. 나중에 배포시 삭제 요망.
-
 }

@@ -29,27 +29,6 @@ public class ReplyRepositoryImpl implements ReplyRepositoryCustom{
         return maxReplyId;
     }
 
-//    /**
-//     * (수정필요)
-//     * 댓글을 수정하는 메소드
-//     * 댓글의 삭제 플래그나, 내용을 수정하는 메소드이지만, Spring Data JPA 를 사용하기에
-//     * 서비스단에서 데이터를 변경하고 데이터 변형 감지를 통해 수정되도록 변경하는 것이 나아 보인다.
-//     * @param dto
-//     * @return
-//     */
-//    @Override
-//    public Long updateReply(ReplyDTO dto) {
-//        Reply reply = em.find(Reply.class, dto.getReplyId());
-//        if(dto.getIsRemove()){
-//            reply.changeIsRemove(dto.getIsRemove());
-//            reply.changeUpdateInfo(dto.getUpdatedBy(), dto.getUpdatedDate());
-//            return reply.getReplyId();
-//        }
-//        reply.changeContent(dto.getContent());
-//        reply.changeUpdateInfo(dto.getUpdatedBy(), dto.getUpdatedDate());
-//        return reply.getReplyId();
-//    }
-
     /**
      * (수정 필요)
      * (depreciated 예정)
@@ -70,13 +49,4 @@ public class ReplyRepositoryImpl implements ReplyRepositoryCustom{
         return replyId;
     }
 
-    /**
-     * (수정 필요)
-     * 삭제가 필요하다. 애초에 JPA 에서 지원하는 메소드이기 때문.
-     * test용, 전체 댓글 삭제하기 위한 용도.
-     */
-//    @Override
-//    public void deleteAll() {
-//        replyMapper.deleteAll();
-//    }
 }

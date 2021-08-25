@@ -33,7 +33,6 @@ class ReplyServiceImplTest {
     @Test
     public void 부모댓글_생성() throws Exception {
         //given
-        replyService.deleteAll();
         Board board = createBoard();
 
         Reply reply1 = Reply.builder()
@@ -78,7 +77,6 @@ class ReplyServiceImplTest {
     @Test
     public void 자식댓글_생성() throws Exception {
         //given
-        replyService.deleteAll();
         Board board = createBoard();
 
         Reply reply1 = Reply.builder()
@@ -141,8 +139,6 @@ class ReplyServiceImplTest {
                 .parentReplyGroup(1L)
                 .parentReplyGroupOrder(2L)
                 .parentDepth(1L)
-                .updatedBy("관리자")
-                .updatedDate(LocalDateTime.now())
                 .registerId("testId")
                 .build();
 
@@ -162,7 +158,6 @@ class ReplyServiceImplTest {
     @Test
     public void 댓글_수정() throws Exception {
         //given
-        replyService.deleteAll();
         Board board = createBoard();
         Reply reply = Reply.builder()
                 .replyId(1L)
@@ -193,7 +188,6 @@ class ReplyServiceImplTest {
     @Test
     public void 댓글_삭제() throws Exception {
         //given
-        replyService.deleteAll();
         Board board = createBoard();
         Reply reply = Reply.builder()
                 .replyId(1L)

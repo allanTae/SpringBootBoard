@@ -70,29 +70,11 @@ public class MemberController {
             bindingResult.rejectValue("re_pwd", "re_pwd.invalidatedVal", "비밀번호와 비밀번호 확인이 일치하지 않습니다.");
         }
 
-
         if(bindingResult.hasErrors()){
             return "member/signupForm";
         }
 
-        Member member = Member.builder()
-                .id(form.getMemberId())
-                .pwd(passwordEncoder.encode(form.getPwd()))
-                .role(MemberRole.USER)
-                .name(form.getName())
-                .address(new Address(form.getJibunAddress(), form.getRoadAddress(), form.getPostcode(), form.getDetailAddress(), form.getExtraAddress()))
-                .age(form.getAge())
-                .phoneNumber(form.getPhone())
-                .gender(Gender.valueOf(Integer.parseInt(form.getGender()))) // 폼에서 전달 된 String 값을 int로 변환하기 위함.
-                .createdBy(form.getMemberId())
-                .createdDate(LocalDateTime.now())
-                .dateOfBirth(dateOfBirth)
-                .build();
-
-        log.info("Member: ");
-        log.info(member.toString());
-
-        memberService.join(member);
+        memberService.join(form, dateOfBirth);
         return "redirect:/board/getBoardList";
     }
 

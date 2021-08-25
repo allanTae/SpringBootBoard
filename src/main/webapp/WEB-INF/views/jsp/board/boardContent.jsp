@@ -236,7 +236,8 @@
 	function fn_updateReply(replyId, registerId){
 		var replyEditContent = $('#editContent').val();
 		var paramData = JSON.stringify({"content": replyEditContent
-				, "replyId": replyId
+				                      , "replyId": replyId
+				                      , "registerId": registerId
 		});
 		
 		var headers = {"Content-Type" : "application/json"

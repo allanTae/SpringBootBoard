@@ -1,7 +1,6 @@
 package com.allan.springBootBoard.web.board.service;
 
 import com.allan.springBootBoard.common.Search;
-import com.allan.springBootBoard.security.user.exception.UserNotFoundException;
 import com.allan.springBootBoard.web.error.exception.BoardNotFoundException;
 import com.allan.springBootBoard.web.member.domain.Member;
 import com.allan.springBootBoard.web.board.domain.Board;
@@ -41,20 +40,17 @@ public class BoardServiceImpl implements BoardService {
     /**
      * 게시물 생성.
      * @param categoryPk
-     * @param dto
+     * @param boardDTO
+     * @param registerId
      * @return
      */
     @Transactional
     @Override
-    public Long save(Long categoryPk, BoardDTO dto) {
+    public Long save(Long categoryPk, BoardDTO boardDTO, String registerId) {
 
         // 엔티티 조회
         Member findMember;
-        try{
-            findMember = memberService.findById(dto.getRegisterId());
-        }catch(UserNotFoundException exception){
-            throw new IllegalStateException(dto.getRegisterId() + " is not exist!!");
-        }
+        findMember = memberService.findByAuthId(registerId);
 
         Category findCategory = categoryRepository.findOne(categoryPk);
 
@@ -62,42 +58,28 @@ public class BoardServiceImpl implements BoardService {
         Board board = Board.builder()
                 .member(findMember)
                 .category(findCategory)
-                .title(dto.getTitle())
-                .content(dto.getContent())
-                .createdBy(dto.getRegisterId())
+                .title(boardDTO.getTitle())
+                .content(boardDTO.getContent())
+                .createdBy(registerId)
                 .createdDate(LocalDateTime.now())
-                .tag(dto.getTag())
+                .tag(boardDTO.getTag())
                 .build();
 
         boardRepository.save(board);
         return board.getBoardId();
     }
 
+    /**
+     * Board 엔티티의 식별자로 게시글을 조회하는 메소드입니다.
+     * @param boardId
+     * @return
+     */
     @Transactional
     @Override
     public Board findOne(Long boardId) {
         Board findBoard = boardRepository.findById(boardId).orElseThrow(() -> new BoardNotFoundException( "해당 Board 엔티티가 존재하지 안습니다.", ENTITY_NOT_FOUND));
         findBoard.changeViewCnt(findBoard.getViewCnt() + 1);
         return findBoard;
-    }
-
-    /**
-     * 회원 아이디로 게시물 조회.
-     * @param memberId
-     * @return
-     */
-    @Override
-    public Board findByMemberId(String memberId) {
-        return boardRepository.findByBoardId(memberId);
-    }
-
-    /**
-     * 모든 게시물 조회.
-     * @return
-     */
-    @Override
-    public List<Board> findAll() {
-        return boardRepository.findAll();
     }
 
     /**
@@ -110,7 +92,7 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public Long update(BoardDTO dto, String updatedBy) {
         Board findBoard = boardRepository.findById(dto.getBoardId()).orElseThrow(() -> new BoardNotFoundException("해당 Board 엔티티가 존재하지 않습니다.", ENTITY_NOT_FOUND));
-        findBoard.changeBoardContent(dto.getTitle(), dto.getContent(), dto.getTag(), dto.getUpdatedBy());
+        findBoard.changeBoardContent(dto.getTitle(), dto.getContent(), dto.getTag(), updatedBy);
         return dto.getBoardId();
     }
 

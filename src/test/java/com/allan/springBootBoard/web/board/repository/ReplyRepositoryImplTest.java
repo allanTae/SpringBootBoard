@@ -3,23 +3,17 @@ package com.allan.springBootBoard.web.board.repository;
 import com.allan.springBootBoard.web.board.domain.Board;
 import com.allan.springBootBoard.web.board.domain.Reply;
 import com.allan.springBootBoard.web.board.domain.model.ReplyDTO;
-import com.allan.springBootBoard.web.board.service.BoardService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.boot.test.autoconfigure.AutoConfigureMybatis;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.test.util.ReflectionTestUtils;
-
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @AutoConfigureMybatis
@@ -142,15 +136,6 @@ class ReplyRepositoryImplTest {
         assertThat(updatedReply.getUpdatedDate(), is(LocalDateTime.of(2021, 8, 24, 22, 50, 0)));
     }
 
-    private ReplyDTO createReplyDTO(boolean isRemove) {
-        ReplyDTO replyDTO = new ReplyDTO();
-        replyDTO.setReplyId(TEST_REPLY_ID);
-        replyDTO.setContent("update content");
-        replyDTO.setIsRemove(isRemove);
-        replyDTO.setUpdatedBy("TEST2");
-        replyDTO.setUpdatedDate(LocalDateTime.of(2021, 4, 3, 3,5));
-        return replyDTO;
-    }
 
     private Reply createReply(Long replyId) {
         return Reply.builder()

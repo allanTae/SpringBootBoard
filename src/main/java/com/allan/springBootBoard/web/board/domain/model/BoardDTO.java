@@ -11,26 +11,20 @@ import java.time.format.DateTimeFormatter;
 public class BoardDTO {
 
     private Long boardId;
-    private Long memberId;
     private Long categoryId;
-    public String title;
+    private String title;
     private String content;
     private String tag;
     private int viewCnt;
     private String createdBy;
     private String createdDate;
-    private String updatedBy;
-    private LocalDateTime updatedDate;
-    private String registerId;
-
 
     @Builder
-    public BoardDTO(Long boardId, String title, String content, String tag, String registerId) {
+    public BoardDTO(Long boardId, String title, String content, String tag) {
         this.boardId = boardId;
         this.title = title;
         this.content = content;
         this.tag = tag;
-        this.registerId = registerId;
     }
 
     public void setCreatedDate(LocalDateTime createdDate){

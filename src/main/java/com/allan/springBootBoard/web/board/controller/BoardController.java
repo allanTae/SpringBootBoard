@@ -64,7 +64,6 @@ public class BoardController {
                 .boardId(form.getBoardId())
                 .title(form.getTitle())
                 .content(form.getContent())
-                .registerId(form.getRegisterId())
                 .tag(form.getTag())
                 .build();
 
@@ -72,10 +71,9 @@ public class BoardController {
             boardService.update(dto, form.getRegisterId());
             log.info("update execute!!");
         }else{
-            boardService.save(7L, dto); // 현재 작성자와 카테고리 정보를 고정으로(4L, 5L)로 고정 해놈. 수정 필요.
+            boardService.save(7L, dto, form.getRegisterId()); // 현재 작성자와 카테고리 정보를 고정으로(4L, 5L)로 고정 해놈. 수정 필요.
             log.info("save execute!!");
         }
-
 
         return "redirect:/board/getBoardList";
     }

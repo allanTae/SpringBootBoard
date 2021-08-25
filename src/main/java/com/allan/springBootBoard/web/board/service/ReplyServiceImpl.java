@@ -33,7 +33,9 @@ public class ReplyServiceImpl implements ReplyService {
     }
 
     /**
-     * 자식 댓글을 저장하기 위한 메소드 입니다.
+     * 게시글 댓글을 저장하기 위한 메소드 입니다.
+     * 특정 게시글의 댓글로, '부모댓글' 또는 '게시글댓글' 로 분류되는 댓글을 저장하는 메소드입니다.
+     * 각 게시글 댓글들은 고유 그룹번호를 가지고 있으며, 게시글 댓글과 관련된 모든 댓글들은 같은 그룹번호를 공유합니다.
      * @param replyDTO
      * @return replyId, this is ReplyEntity's ID that was successfully registered.
      */
@@ -57,15 +59,17 @@ public class ReplyServiceImpl implements ReplyService {
                 .build();
 
         board.addReply(reply);
-
         replyRepository.save(reply);
 
         return replyId;
     }
 
     /**
+     * 답변 댓글을 저장하기 위한 메소드 입니다.
+     * 이미 작성 된 댓글의 답변 댓글로, '자식댓글' 또는 '답변댓글' 로 분류되는 댓글을 저장하는 메소드입니다.
+     * 답변 기준이 되는 댓글과 같은 그룹번호를 공유합니다.
      * @param replyDTO
-     * @return replyId, this is ReplyEntity's ID that was successfully registered.
+     * @return
      */
     @Transactional
     @Override
@@ -87,10 +91,11 @@ public class ReplyServiceImpl implements ReplyService {
         // 연관 관계 메소드를 사용.
         board.addReply(reply);
 
+        // 댓글들 순서 조정을 위한 메소드.
         if(groupOrder == null ){
             reply.changeGroupOrder(listCnt+1);
         }else{
-            replyRepository.updateGroupOrder(replyDTO.getUpdatedBy(), replyDTO.getUpdatedDate(),
+            replyRepository.updateGroupOrder("system", LocalDateTime.now(),
                                              replyDTO.getBoardId(), replyDTO.getParentReplyGroup(), replyDTO.getParentReplyGroupOrder());  // 그룹 내 순서를 조정하기 위한 update 문.
             reply.changeGroupOrder(groupOrder);
         }
@@ -100,23 +105,24 @@ public class ReplyServiceImpl implements ReplyService {
         return replyId;
     }
 
+    /**
+     * 댓글에 내용을 수정하는 위한 메소드 입니다.
+     * @param replyDTO
+     * @return
+     */
     @Transactional
     @Override
-    public Long updateReply(ReplyDTO dto) {
-        Reply findReply = replyRepository.findById(dto.getReplyId()).orElseThrow(() -> new ReplyNotFoundException("해당 reply 엔티티를 찾을 수 없습니다.", ErrorCode.ENTITY_NOT_FOUND));
+    public Long updateReply(ReplyDTO replyDTO) {
+        Reply findReply = replyRepository.findById(replyDTO.getReplyId()).orElseThrow(() -> new ReplyNotFoundException("해당 reply 엔티티를 찾을 수 없습니다.", ErrorCode.ENTITY_NOT_FOUND));
 
-        findReply.changeContent(dto.getContent());
-        findReply.changeUpdateInfo(dto.getRegisterId(), LocalDateTime.now());
-
-//        dto.setUpdatedBy(dto.getRegisterId());
-//        dto.setUpdatedDate(LocalDateTime.now());
-//
-//        Long replyId = replyRepository.updateReply(dto);
+        findReply.changeContent(replyDTO.getContent());
+        findReply.changeUpdateInfo(replyDTO.getRegisterId(), LocalDateTime.now());
 
         return findReply.getReplyId();
     }
 
     /**
+     * 댓글을 삭제할 때 사용하는 메소드입니다.
      * 댓글 삭제 플래그만 변경 합니다.
      * @param replyDTO
      * @return replyId, this is ReplyEntity's ID that was successfully updated.
@@ -129,18 +135,7 @@ public class ReplyServiceImpl implements ReplyService {
         findReply.changeIsRemove(true);
         findReply.changeUpdateInfo(replyDTO.getRegisterId(), LocalDateTime.now());
 
-        // 댓글 삭제 플래그만 변경한다.
-//        replyDTO.setIsRemove(true);
-//        replyDTO.setUpdatedBy(replyDTO.getRegisterId());
-//        replyDTO.setUpdatedDate(LocalDateTime.now());
-//        replyRepository.updateReply(replyDTO);
-
         return findReply.getReplyId();
     }
 
-    @Transactional
-    @Override
-    public void deleteAll() {
-        replyRepository.deleteAll();
-    }
 }

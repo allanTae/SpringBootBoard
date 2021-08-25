@@ -8,7 +8,6 @@ import lombok.ToString;
 import java.time.LocalDateTime;
 
 @Getter @Setter
-@ToString
 public class ReplyDTO {
 
     private Long replyId;
@@ -18,15 +17,14 @@ public class ReplyDTO {
     private Long replyGroup;
     private Long replyGroupOrder;
     private Long depth;
+    private Long replyLike;
+    private Boolean isRemove = false;
+
+    // 클라이언트 측에서 부모댓글, 자식댓글에 대한 정보를 담당하는 부분.
+    // 클라이언트 측에서 전달 된 다음 정보들을 바탕으로 replyService에서 댓글 CRUD 로직을 처리합니다.
     private Long parentReplyGroup;
     private Long parentReplyGroupOrder;
     private Long parentDepth;
-    private Long replyLike;
-    private String createdBy;
-    private LocalDateTime createdDate;
-    private String updatedBy;
-    private LocalDateTime updatedDate;
-    private Boolean isRemove = false;
 
     public ReplyDTO() {
     }
@@ -48,8 +46,7 @@ public class ReplyDTO {
     @Builder
     public ReplyDTO(Long replyId, Long boardId, String registerId, String content, Long replyGroup,
                     Long replyGroupOrder, Long depth, Long replyLike,
-                    Long parentReplyGroup, Long parentReplyGroupOrder, Long parentDepth,
-                    String updatedBy, LocalDateTime updatedDate, boolean isRemove) {
+                    Long parentReplyGroup, Long parentReplyGroupOrder, Long parentDepth, boolean isRemove) {
         this.replyId = replyId;
         this.boardId = boardId;
         this.registerId = registerId;
@@ -61,8 +58,6 @@ public class ReplyDTO {
         this.parentReplyGroup = parentReplyGroup;
         this.parentReplyGroupOrder = parentReplyGroupOrder;
         this.parentDepth = parentDepth;
-        this.updatedBy = updatedBy;
-        this.updatedDate = updatedDate;
         this.isRemove = isRemove;
     }
 

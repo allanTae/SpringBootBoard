@@ -12,7 +12,7 @@ import javax.validation.constraints.NotEmpty;
 public class MemberForm {
 
     @NotEmpty(message = "아이디를 입력 해 주세요.")
-    private String memberId;
+    private String authId;
 
     @NotEmpty(message = "비밀번호를 입력 해 주세요.")
     private String pwd;

@@ -8,6 +8,8 @@ import com.allan.springBootBoard.web.board.repository.ReplyRepository;
 import com.allan.springBootBoard.web.error.code.ErrorCode;
 import com.allan.springBootBoard.web.error.exception.BoardNotFoundException;
 import com.allan.springBootBoard.web.error.exception.ReplyNotFoundException;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,12 +21,13 @@ import java.util.List;
 @Service
 @Transactional(readOnly = true)
 @Slf4j
+@RequiredArgsConstructor
 public class ReplyServiceImpl implements ReplyService {
 
-    @Autowired
+    @NonNull
     ReplyRepository replyRepository;
 
-    @Autowired
+    @NonNull
     BoardRepository boardRepository;
 
     @Override

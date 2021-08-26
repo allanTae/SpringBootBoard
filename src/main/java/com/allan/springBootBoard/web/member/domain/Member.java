@@ -18,7 +18,7 @@ public class Member extends BaseEntity {
     private Long memberId;
 
     @Column(nullable = false, unique = true, length = 20)
-    private String id;
+    private String authId;
 
     @Column(nullable = false)
     private String pwd;
@@ -58,11 +58,11 @@ public class Member extends BaseEntity {
 
 
     @Builder
-    public Member(String id, String pwd, String name, Long age,
+    public Member(String authId, String pwd, String name, Long age,
                   Gender gender, Address address, String createdBy, LocalDateTime createdDate,
                   String updatedBy, LocalDateTime updatedDate,
                   MemberRole role, String phoneNumber, String dateOfBirth) {
-        this.id = id;
+        this.authId = authId;
         this.pwd = pwd;
         this.name = name;
         this.age = age;

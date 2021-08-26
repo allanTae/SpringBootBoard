@@ -43,7 +43,7 @@ public class MemberServiceImpl implements MemberService{
     public Long join(MemberForm form, String dateOfBirth){
 
         Member member = Member.builder()
-                .id(form.getMemberId())
+                .authId(form.getAuthId())
                 .pwd(passwordEncoder.encode(form.getPwd()))
                 .role(MemberRole.USER)
                 .name(form.getName())
@@ -51,7 +51,7 @@ public class MemberServiceImpl implements MemberService{
                 .age(form.getAge())
                 .phoneNumber(form.getPhone())
                 .gender(Gender.valueOf(Integer.parseInt(form.getGender()))) // 폼에서 전달 된 String 값을 int로 변환하기 위함.
-                .createdBy(form.getMemberId())
+                .createdBy(form.getAuthId())
                 .createdDate(LocalDateTime.now())
                 .dateOfBirth(dateOfBirth)
                 .build();
@@ -68,7 +68,7 @@ public class MemberServiceImpl implements MemberService{
      * @return
      */
     private boolean validateId(Member member) {
-        boolean isValidated = memberRepository.findById(member.getId()).isPresent();
+        boolean isValidated = memberRepository.findByAuthId(member.getAuthId()).isPresent();
         if(!isValidated){
             return true;
         }else{
@@ -83,7 +83,7 @@ public class MemberServiceImpl implements MemberService{
      */
     @Override
     public Member findByAuthId(String authId) {
-        return memberRepository.findById(authId).orElseThrow(() -> new MemberNotFoundException("해당 Member 엔티티가 존재하지 않습니다.", ErrorCode.ENTITY_NOT_FOUND));
+        return memberRepository.findByAuthId(authId).orElseThrow(() -> new MemberNotFoundException("해당 Member 엔티티가 존재하지 않습니다.", ErrorCode.ENTITY_NOT_FOUND));
     }
 
     /**

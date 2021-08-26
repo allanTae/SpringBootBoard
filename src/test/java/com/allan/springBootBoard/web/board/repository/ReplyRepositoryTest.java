@@ -17,7 +17,7 @@ import static org.hamcrest.Matchers.is;
 
 @DataJpaTest
 @AutoConfigureMybatis
-class ReplyRepositoryImplTest {
+class ReplyRepositoryTest {
 
     Long TEST_REPLY_ID = 1l;
     Long TEST_REPLY_GROUP= 2l;

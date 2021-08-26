@@ -48,8 +48,8 @@
 	// 중복 아이디 검사 버튼 이벤트
 	$(document).on('click', '#btnIdCheck', function(e){
 		e.preventDefault();
-		var memberId = $('#memberId').val();
-        var paramData = {"memberId": memberId};
+		var authId = $('#authId').val();
+        var paramData = {"authId": authId};
 
 		var headers = {"Content-Type" : "application/x-www-form-urlencoded; charset=UTF-8;"
 				, "X-HTTP-Method-Override" : "POST"};
@@ -87,7 +87,7 @@
     }
 
     // 아이디 유효성 체크 이벤트
-    $(document).on('input', '#memberId', function(e){
+    $(document).on('input', '#authId', function(e){
         // 영소문자, 숫자만 허용하는 10~16자리 문자열
         var reg = /^[a-zA-Z0-9]{10,16}$/g;
         var id = e.target.value;
@@ -241,9 +241,9 @@
 				<form:form name="form" id="form" class="form-signup" role="form" modelAttribute="memberForm" method="post" action="${pageContext.request.contextPath}/member">
 
 					<div class="form-group row">
-						<label for="memberId" class="col-md-3 col-form-label text-md-right">아이디</label>
+						<label for="authId" class="col-md-3 col-form-label text-md-right">아이디</label>
 						<div class="col-md-5">
-							<form:input path="memberId" id="memberId" class="form-control" placeholder="아이디을 입력해 주세요" />
+							<form:input path="authId" id="authId" class="form-control" placeholder="아이디을 입력해 주세요" />
 							<div id="checkId"></div>
 						</div>
 						<div class="col-md-3">
@@ -252,8 +252,8 @@
 						</div>
 					</div>
 					<div class="row">
-						<label for="memberIdError" class="col-md-3" text-md-right></label>
-						<form:errors path="memberId" id="memberIdError" class="col-md-6 form-group text-left" style="font-size:15px; color:red; width=100px;"/>
+						<label for="authIdError" class="col-md-3" text-md-right></label>
+						<form:errors path="authId" id="authIdError" class="col-md-6 form-group text-left" style="font-size:15px; color:red; width=100px;"/>
 					</div>
 
 					<div class="form-group row">

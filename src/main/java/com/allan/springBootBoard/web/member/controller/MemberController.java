@@ -1,9 +1,6 @@
 package com.allan.springBootBoard.web.member.controller;
 
-import com.allan.springBootBoard.web.board.domain.Address;
 import com.allan.springBootBoard.web.member.domain.Gender;
-import com.allan.springBootBoard.web.member.domain.Member;
-import com.allan.springBootBoard.web.member.domain.MemberRole;
 import com.allan.springBootBoard.web.member.domain.model.MemberForm;
 import com.allan.springBootBoard.web.member.service.MemberService;
 import lombok.extern.slf4j.Slf4j;
@@ -16,11 +13,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import javax.validation.Valid;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Pattern;
 
 @Slf4j
@@ -49,8 +43,8 @@ public class MemberController {
         String dateOfBirth = form.getYear() + "-" + form.getMonth() + "-" + form.getDay();
 
         // 유효성 검사
-        if(!Pattern.compile(ID_PATTERN).matcher(form.getMemberId()).find()){
-            log.error("memberId: " + form.getMemberId());
+        if(!Pattern.compile(ID_PATTERN).matcher(form.getAuthId()).find()){
+            log.error("memberId: " + form.getAuthId());
             bindingResult.rejectValue("memberId", "id.invalidatedVal", "아이디는 영대소문자, 숫자로 10자~16자까지만 입력이 가능합니다.");
         }
         if(!Pattern.compile(NAME_PATTERN).matcher(form.getName()).find()){

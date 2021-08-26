@@ -21,9 +21,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private MemberRepository memberRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String id){
+    public UserDetails loadUserByUsername(String authId){
         try {
-            return memberRepository.findById(id).map(u -> new UserDetailsVO(u, Collections
+            return memberRepository.findByAuthId(authId).map(u -> new UserDetailsVO(u, Collections
                     .singleton(new SimpleGrantedAuthority(u.getRole().getValue())))).orElseThrow(() -> {
                     return new UserNotFoundException("UserNotFoundException");
             });

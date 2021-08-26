@@ -1,4 +1,4 @@
-package com.allan.springBootBoard.web.service;
+package com.allan.springBootBoard.web.board.service;
 
 import com.allan.springBootBoard.common.Search;
 import com.allan.springBootBoard.web.board.repository.CategoryRepository;
@@ -36,7 +36,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @Rollback(value = true)
-class BoardServiceImplTest {
+class BoardServiceTest {
 
     private String TEST_MEMBER_AUTH_ID = "TEST_ID";
     private Long TEST_BOARD_ENTITY_ID = 1l;
@@ -62,7 +62,6 @@ class BoardServiceImplTest {
         //given
         Long TEST_CATEGORY_ID = 2l;
         Member TEST_MEMBER = createMember(createAddress(), TEST_MEMBER_AUTH_ID);
-        Board TEST_BOARD = createBoard(TEST_MEMBER);
         given(memberService.findByAuthId(any(String.class)))
                 .willReturn(TEST_MEMBER);
         Category TEST_CATEGORY = createCategory();
@@ -179,13 +178,12 @@ class BoardServiceImplTest {
                 .createdDate(LocalDateTime.now())
                 .build();
 
-        //em.persist(category);
         return category;
     }
 
     private Member createMember(Address address, String id) {
         Member member = Member.builder()
-                .id(id)
+                .authId(id)
                 .pwd("test")
                 .name("tester")
                 .age(29L)

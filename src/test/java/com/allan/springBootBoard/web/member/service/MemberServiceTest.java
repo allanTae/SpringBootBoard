@@ -1,9 +1,10 @@
-package com.allan.springBootBoard.web.service;
+package com.allan.springBootBoard.web.member.service;
 
 import com.allan.springBootBoard.web.board.domain.Address;
 import com.allan.springBootBoard.web.member.domain.model.MemberDTO;
 import com.allan.springBootBoard.web.member.domain.MemberRole;
-import com.allan.springBootBoard.web.member.service.MemberService;
+import com.allan.springBootBoard.web.member.domain.model.MemberForm;
+import com.allan.springBootBoard.web.member.exception.SameIdUseException;
 import com.allan.springBootBoard.web.member.domain.Gender;
 import com.allan.springBootBoard.web.member.domain.Member;
 import com.allan.springBootBoard.web.member.repository.MemberRepository;
@@ -21,6 +22,7 @@ import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.atLeastOnce;
@@ -28,7 +30,7 @@ import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 @Rollback(value = true)
-class MemberServiceImplTest {
+class MemberServiceTest {
 
     String TEST_MEMBER_ID = "testId";
     Long TEST_MEMBER_ENTITY_ID = 1l;
@@ -44,7 +46,7 @@ class MemberServiceImplTest {
     @BeforeEach
     public void setUp(){
         MockitoAnnotations.openMocks(this);
-//        memberService = new MemberServiceImpl(memberRepository);
+        memberService = new MemberServiceImpl(memberRepository, passwordEncoder);
     }
 
     @Test
@@ -52,11 +54,24 @@ class MemberServiceImplTest {
         //given
         Address TEST_ADDR =  createAddress();
         Member TEST_MEMBER = createMember(TEST_ADDR, TEST_MEMBER_ID);
+        MemberForm form = new MemberForm();
+        form.setAuthId("TEST");
+        form.setPwd("TEST");
+        form.setDetailAddress("TEST");
+        form.setExtraAddress("TEST");
+        form.setRoadAddress("TEST");
+        form.setJibunAddress("TEST");
+        form.setPostcode("TEST");
+        form.setGender("1");
+        form.setPhone("22222222");
+        form.setName("TESTER");
+        form.setAge(10l);
+
         given(memberRepository.save(any(Member.class)))
                 .willReturn(TEST_MEMBER);
 
         //when
-//        memberService.join(TEST_MEMBER);
+        memberService.join(form, "19931221");
 
         //then
         verify(memberRepository, atLeastOnce()).save(any());
@@ -65,13 +80,26 @@ class MemberServiceImplTest {
     @Test
     public void 중복회원가입_테스트() throws Exception {
         //given
-        Address TEST_ADDR = createAddress();
-        Member TEST_MEMBER1 = createMember(TEST_ADDR, TEST_MEMBER_ID);
-        given(memberRepository.findById(any(String.class)))
-                .willReturn(Optional.of(TEST_MEMBER1));
+        Address TEST_ADDR =  createAddress();
+        Member TEST_MEMBER = createMember(TEST_ADDR, TEST_MEMBER_ID);
+        MemberForm form = new MemberForm();
+        form.setAuthId("TESTER");
+        form.setPwd("TEST");
+        form.setDetailAddress("TEST");
+        form.setExtraAddress("TEST");
+        form.setRoadAddress("TEST");
+        form.setJibunAddress("TEST");
+        form.setPostcode("TEST");
+        form.setGender("1");
+        form.setPhone("22222222");
+        form.setName("TESTER");
+        form.setAge(10l);
+
+        given(memberRepository.findByAuthId(any(String.class)))
+                .willReturn(Optional.of(TEST_MEMBER));
 
         // when, then
-//        assertThrows(SameIdUseException.class, () -> memberService.join(TEST_MEMBER1));
+        assertThrows(SameIdUseException.class, () -> memberService.join(form, "19220525"));
     }
 
     @Test
@@ -79,14 +107,14 @@ class MemberServiceImplTest {
         //given
         Address TEST_ADDR = createAddress();
         Member TEST_MEMBER = createMember(TEST_ADDR, TEST_MEMBER_ID);
-        given(memberRepository.findById(any((String.class))))
+        given(memberRepository.findByAuthId(any((String.class))))
                 .willReturn(Optional.of(TEST_MEMBER));
 
         //when
         memberService.findByAuthId(TEST_MEMBER_ID);
 
         //then
-        assertThat(TEST_MEMBER.getId(), is(TEST_MEMBER_ID));
+        verify(memberRepository, atLeastOnce()).findByAuthId(any(String.class));
     }
 
     @Test
@@ -118,7 +146,7 @@ class MemberServiceImplTest {
 
     private Member createMember(Address address, String id) {
         Member member = Member.builder()
-                .id(id)
+                .authId(id)
                 .pwd(passwordEncoder.encode("test"))
                 .name("AllanTae")
                 .age(29L)

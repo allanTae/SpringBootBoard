@@ -4,11 +4,17 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.NotEmpty;
+
 @Getter @Setter
 public class BoardForm {
 
     private Long boardId;
+
+    @NotEmpty(message = "제목을 입력 해 주세요.")
     private String title;
+
+    @NotEmpty(message = "내용을 입력 해 주세요.")
     private String content;
     private String tag;
     private Long viewCnt;

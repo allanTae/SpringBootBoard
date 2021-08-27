@@ -12,8 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Controller
@@ -58,7 +60,11 @@ public class BoardController {
 
     // 게시글 저장.
     @PostMapping("/saveBoard")
-    public String saveForm(@ModelAttribute BoardForm form, @RequestParam("mode") String mode){
+    public String saveForm(@Valid @ModelAttribute BoardForm form, BindingResult bindingResult, @RequestParam("mode") String mode){
+
+        if(bindingResult.hasErrors()){
+            return "board/boardForm";
+        }
 
         BoardDTO dto = BoardDTO.builder()
                 .boardId(form.getBoardId())

@@ -10,6 +10,15 @@
 <title>board</title>
 	<script src="https://cdn.ckeditor.com/ckeditor5/23.1.0/classic/ckeditor.js"></script>
 	<script>
+	    var isEmpty = function(value){
+	        if (value === null) return true
+            if (typeof value === 'undefined') return true
+            if (typeof value === 'string' && value === '') return true
+            if (Array.isArray(value) && value.length < 1) return true
+            if (typeof value === 'object' && value.constructor.name === 'Object' && Object.keys(value).length < 1 && Object.getOwnPropertyNames(value) < 1) return true
+            if (typeof value === 'object' && value.constructor.name === 'String' && Object.keys(value).length < 1) return true // new String()
+	    }
+
 		$(document).on('click', '#btnSave', function(e){
 			e.preventDefault();
 			$("#form").submit();
@@ -21,13 +30,20 @@
 		});
 		
 		$(document).ready(function(){
-			// '새로 글쓰기' 와 '글 수정' 기능을 나누기 위한 일종의 토글
+			// '새로 글쓰기' 와 '글 수정' 기능을 나누기 위한 일종의 토글.
 			var mode = '<c:out value="${mode}"/>';
 			if ( mode == 'edit'){
 				//입력 폼 셋팅
 				$("input:hidden[name='mode']").val('<c:out value="${mode}"/>');
 			}
 
+            // error css 처리.
+            if(!isEmpty(titleError)){
+                $("input:text[name='title']").css({"border":"3px solid red"});
+            }
+            if(!isEmpty(contentError)){
+                $(".ck-content").css({"border":"3px solid red"});
+            }
 		});
 	
 	</script>
@@ -43,7 +59,8 @@
 					
 					<div class="mb-3">
 						<label for="title">제목</label>
-						<form:input path="title" id="title" class="form-control" placeholder="제목을 입력해 주세요" />
+						<form:input path="title" id="title" name="title" class="form-control" placeholder="제목 입력" />
+						<form:errors path="title" id="titleError" style="font-size:15px; color:red;" />
 					</div>
 					
 					<div class="mb-3">
@@ -53,7 +70,8 @@
 					
 					<div class="mb-3">
 						<label for="content">내용</label>
-						<form:textarea path="content" id="content" class="form-control" rows="5" placeholder="내용을 입력해 주세요" />	
+						<form:textarea path="content" id="content" name="content" class="form-control" rows="5" placeholder="내용 입력" />
+						<form:errors path="content" id="contentError" style="font-size:15px; color:red;" />
 					</div>
 					
 					<div class="mb-3">

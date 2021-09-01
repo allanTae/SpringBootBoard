@@ -75,7 +75,11 @@
 				$("#checkId").html(htmls);
 			}
 			, error:function(request,status,error){
-                alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);}
+                console.log(request);
+                if(request.status === 400 && request.responseText.indexOf("inputInvalidException")){
+                    alert("아이디는 영대소문자, 숫자로 10자~16자까지만 입력이 가능합니다.");
+                }
+            }
 		});
 	});
 

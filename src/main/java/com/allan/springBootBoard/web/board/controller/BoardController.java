@@ -1,7 +1,6 @@
 package com.allan.springBootBoard.web.board.controller;
 
 import com.allan.springBootBoard.common.Search;
-import com.allan.springBootBoard.security.user.domain.UserDetailsVO;
 import com.allan.springBootBoard.web.board.domain.Board;
 import com.allan.springBootBoard.web.board.domain.model.BoardDTO;
 import com.allan.springBootBoard.web.board.domain.model.BoardForm;
@@ -9,7 +8,7 @@ import com.allan.springBootBoard.web.board.domain.model.ReplyDTO;
 import com.allan.springBootBoard.web.board.service.BoardService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -33,7 +32,7 @@ public class BoardController {
                        @RequestParam(required = false, defaultValue = "1") int range,
                        @RequestParam(required = false, defaultValue = "title") String searchType,
                        @RequestParam(required = false) String keyword,
-                       @AuthenticationPrincipal UserDetailsVO user){
+                       Authentication authentication){
 
         Search search = Search.builder()
                 .searchType(searchType)
@@ -46,15 +45,15 @@ public class BoardController {
 
         model.addAttribute("boardList", boardList);
         model.addAttribute("pagination", search);
-        model.addAttribute("userId", user.getUsername());
+        model.addAttribute("userId", authentication.getName());
         return "board/boardList";
     }
 
     // 게시글 작성 폼.
     @GetMapping("/boardForm")
     public String boardForm(@ModelAttribute("boardForm") BoardForm form,
-                            @AuthenticationPrincipal UserDetailsVO user){
-        form.setRegisterId(user.getUsername());
+                            Authentication authentication){
+        form.setRegisterId(authentication.getName());
         return "board/boardForm";
     }
 
@@ -63,6 +62,7 @@ public class BoardController {
     public String saveForm(@Valid @ModelAttribute BoardForm form, BindingResult bindingResult, @RequestParam("mode") String mode){
 
         if(bindingResult.hasErrors()){
+            log.info("error: " + bindingResult.toString());
             return "board/boardForm";
         }
 
@@ -87,12 +87,12 @@ public class BoardController {
     // 게시글 내용 확인
     @GetMapping("/boardContent")
     public String getBoardContent(Model model, @RequestParam("boardId") Long boardId,
-                                  @AuthenticationPrincipal UserDetailsVO user){
+                                  Authentication authentication){
         ReplyDTO dto = new ReplyDTO();
-        dto.setRegisterId(user.getUsername());
+        dto.setRegisterId(authentication.getName());
         model.addAttribute("boardContent", boardService.findOne(boardId));
         model.addAttribute("replyDTO", dto);
-        model.addAttribute("userId", user.getUsername());
+        model.addAttribute("userId", authentication.getName());
 
         return "board/boardContent";
     }

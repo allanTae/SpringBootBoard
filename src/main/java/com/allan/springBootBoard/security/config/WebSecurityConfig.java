@@ -3,6 +3,7 @@ package com.allan.springBootBoard.security.config;
 import com.allan.springBootBoard.security.filter.CustomAuthenticationFilter;
 import com.allan.springBootBoard.security.handler.CustomLoginFailHandler;
 import com.allan.springBootBoard.security.handler.CustomLoginSuccessHandler;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,6 +21,9 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Autowired
+    BCryptPasswordEncoder passwordEncoder;
 
     // 정적 자원 security 설정 미적용.
     @Override
@@ -58,10 +62,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .addFilterBefore(filter, CsrfFilter.class);
     }
 
-    @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder(){
-        return new BCryptPasswordEncoder();
-    }
+//    @Bean
+//    public BCryptPasswordEncoder bCryptPasswordEncoder(){
+//        return new BCryptPasswordEncoder();
+//    }
 
     @Bean
     public CustomAuthenticationFilter customAuthenticationFilter() throws Exception {
@@ -85,7 +89,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public CustomAuthenticationProvider customAuthenticationProvider() {
-        return new CustomAuthenticationProvider(bCryptPasswordEncoder());
+        return new CustomAuthenticationProvider(passwordEncoder);
     }
 
     @Override

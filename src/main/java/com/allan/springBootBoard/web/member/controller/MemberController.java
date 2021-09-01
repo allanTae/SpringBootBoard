@@ -3,16 +3,21 @@ package com.allan.springBootBoard.web.member.controller;
 import com.allan.springBootBoard.web.member.domain.Gender;
 import com.allan.springBootBoard.web.member.domain.model.MemberForm;
 import com.allan.springBootBoard.web.member.service.MemberService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -33,7 +38,7 @@ public class MemberController {
      * @return
      */
     @PostMapping("/member")
-    public String joinUser(@ModelAttribute("memberForm") @Valid MemberForm form, BindingResult bindingResult){
+    public String joinUser(@ModelAttribute("memberForm") @Valid MemberForm form, BindingResult bindingResult, HttpServletResponse response){
 
         String ID_PATTERN = "^[a-zA-Z0-9]{10,16}$";
         String NAME_PATTERN = "^[가-힣]{2,16}$";
@@ -45,7 +50,7 @@ public class MemberController {
         // 유효성 검사
         if(!Pattern.compile(ID_PATTERN).matcher(form.getAuthId()).find()){
             log.error("memberId: " + form.getAuthId());
-            bindingResult.rejectValue("memberId", "id.invalidatedVal", "아이디는 영대소문자, 숫자로 10자~16자까지만 입력이 가능합니다.");
+            bindingResult.rejectValue("authId", "id.invalidatedVal", "아이디는 영대소문자, 숫자로 10자~16자까지만 입력이 가능합니다.");
         }
         if(!Pattern.compile(NAME_PATTERN).matcher(form.getName()).find()){
             log.error("name: " + form.getName());
@@ -60,11 +65,17 @@ public class MemberController {
             bindingResult.rejectValue("dateOfBirth", "dateOfBirth.invalidatedVal", "생년월일을 제대로 입력해 주세요.");
         }
         if(!bindingResult.hasErrors() && !form.getPwd().equals(form.getRe_pwd())){
+            log.error("pwd and re_pwd is not same");
             bindingResult.rejectValue("pwd", "pwd.invalidatedVal", "비밀번호와 비밀번호 확인이 일치하지 않습니다.");
             bindingResult.rejectValue("re_pwd", "re_pwd.invalidatedVal", "비밀번호와 비밀번호 확인이 일치하지 않습니다.");
         }
 
         if(bindingResult.hasErrors()){
+            log.error("회원가입 유효성 검사에 실패 하였습나다.");
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            for(FieldError error : bindingResult.getFieldErrors()){
+                log.error(error.getDefaultMessage());
+            }
             return "member/signupForm";
         }
 

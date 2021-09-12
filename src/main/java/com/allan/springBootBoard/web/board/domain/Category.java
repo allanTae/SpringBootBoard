@@ -28,15 +28,9 @@ public class Category extends BaseEntity {
     private List<Category> childes;
 
     @Builder
-    public Category(String name, Category parent, List<Category> childes,
-                    String createdBy, LocalDateTime createdDate,
-                    String updatedBy, LocalDateTime updatedDate) {
+    public Category(String name, Category parent, List<Category> childes) {
         this.name = name;
         this.parent = parent;
         this.childes = childes;
-        this.createdBy = createdBy;
-        this.createdDate = createdDate;
-        this.updatedBy = updatedBy;
-        this.updatedDate = updatedDate;
     }
 }

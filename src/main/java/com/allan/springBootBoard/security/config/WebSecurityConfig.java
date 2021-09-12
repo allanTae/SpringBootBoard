@@ -62,11 +62,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .addFilterBefore(filter, CsrfFilter.class);
     }
 
-//    @Bean
-//    public BCryptPasswordEncoder bCryptPasswordEncoder(){
-//        return new BCryptPasswordEncoder();
-//    }
-
     @Bean
     public CustomAuthenticationFilter customAuthenticationFilter() throws Exception {
         CustomAuthenticationFilter customAuthenticationFilter = new CustomAuthenticationFilter(authenticationManager());

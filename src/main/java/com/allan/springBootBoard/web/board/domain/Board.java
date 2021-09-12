@@ -6,6 +6,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -47,26 +48,19 @@ public class Board extends BaseEntity {
 
     @Builder
     public Board(Member member, Category category, String title, String content,
-                 String tag, Long view_cnt, String createdBy, LocalDateTime createdDate,
-                 String updatedBy, LocalDateTime updatedDate) {
+                 String tag, Long view_cnt) {
         this.member = member;
         this.category = category;
         this.title = title;
         this.content = content;
         this.tag = tag;
         this.viewCnt = view_cnt;
-        this.createdBy = createdBy;
-        this.createdDate = createdDate;
-        this.updatedBy = updatedBy;
-        this.updatedDate = updatedDate;
     }
 
-    public void changeBoardContent(String title, String content, String tag, String updatedBy){
+    public void changeBoardContent(String title, String content, String tag){
         this.title = title;
         this.content = content;
         this.tag = tag;
-        this.updatedBy = updatedBy;
-        this.updatedDate = LocalDateTime.now();
     }
 
     public void changeViewCnt(Long viewCnt){

@@ -220,7 +220,6 @@ public class BoardControllerTest {
                 .title("TEST_TITLE")
                 .content("TEST_CONTENT")
                 .tag("TEST_TAG")
-                .createdBy("TESTER")
                 .build();
 
         ReflectionTestUtils.setField(board, "boardId", 1l);

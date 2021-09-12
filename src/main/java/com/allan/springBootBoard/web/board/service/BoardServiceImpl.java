@@ -60,8 +60,6 @@ public class BoardServiceImpl implements BoardService {
                 .category(findCategory)
                 .title(boardDTO.getTitle())
                 .content(boardDTO.getContent())
-                .createdBy(registerId)
-                .createdDate(LocalDateTime.now())
                 .tag(boardDTO.getTag())
                 .build();
 
@@ -92,7 +90,7 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public Long update(BoardDTO dto, String updatedBy) {
         Board findBoard = boardRepository.findById(dto.getBoardId()).orElseThrow(() -> new BoardNotFoundException("해당 Board 엔티티가 존재하지 않습니다.", ENTITY_NOT_FOUND));
-        findBoard.changeBoardContent(dto.getTitle(), dto.getContent(), dto.getTag(), updatedBy);
+        findBoard.changeBoardContent(dto.getTitle(), dto.getContent(), dto.getTag());
         return dto.getBoardId();
     }
 

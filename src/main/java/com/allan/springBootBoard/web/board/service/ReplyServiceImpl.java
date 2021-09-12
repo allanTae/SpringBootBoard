@@ -57,8 +57,6 @@ public class ReplyServiceImpl implements ReplyService {
                 .replyGroup(replyId)    // 댓글 그룹번호 설정.
                 .replyGroupOrder(1L)    // 댓글 그룹번호 내 초기 순서 설정.
                 .content(replyDTO.getContent())
-                .createdBy(replyDTO.getRegisterId())
-                .createdDate(LocalDateTime.now())
                 .build();
 
         board.addReply(reply);
@@ -87,8 +85,6 @@ public class ReplyServiceImpl implements ReplyService {
                 .content(replyDTO.getContent())
                 .depth(replyDTO.getParentDepth()+1)
                 .replyGroup(replyDTO.getParentReplyGroup())
-                .createdBy(replyDTO.getRegisterId())
-                .createdDate(LocalDateTime.now())
                 .build();
 
         // 연관 관계 메소드를 사용.
@@ -119,7 +115,6 @@ public class ReplyServiceImpl implements ReplyService {
         Reply findReply = replyRepository.findById(replyDTO.getReplyId()).orElseThrow(() -> new ReplyNotFoundException("해당 reply 엔티티를 찾을 수 없습니다.", ErrorCode.ENTITY_NOT_FOUND));
 
         findReply.changeContent(replyDTO.getContent());
-        findReply.changeUpdateInfo(replyDTO.getRegisterId(), LocalDateTime.now());
 
         return findReply.getReplyId();
     }
@@ -136,7 +131,6 @@ public class ReplyServiceImpl implements ReplyService {
         Reply findReply = replyRepository.findById(replyDTO.getReplyId()).orElseThrow(() -> new ReplyNotFoundException("해당 reply 엔티티를 찾을 수 없습니다.", ErrorCode.ENTITY_NOT_FOUND));
 
         findReply.changeIsRemove(true);
-        findReply.changeUpdateInfo(replyDTO.getRegisterId(), LocalDateTime.now());
 
         return findReply.getReplyId();
     }

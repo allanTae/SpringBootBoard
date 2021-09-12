@@ -17,7 +17,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 
 @Service
 @Transactional(readOnly = true)
@@ -51,8 +50,6 @@ public class MemberServiceImpl implements MemberService{
                 .age(form.getAge())
                 .phoneNumber(form.getPhone())
                 .gender(Gender.valueOf(Integer.parseInt(form.getGender()))) // 폼에서 전달 된 String 값을 int로 변환하기 위함.
-                .createdBy(form.getAuthId())
-                .createdDate(LocalDateTime.now())
                 .dateOfBirth(dateOfBirth)
                 .build();
 
@@ -96,8 +93,8 @@ public class MemberServiceImpl implements MemberService{
     @Override
     public Long updateMemberInfo(MemberDTO memberDTO, String updatedBy) {
         Member findMember =  memberRepository.findByMemberId(memberDTO.getMemberId()).orElseThrow(() -> new MemberNotFoundException("해당 Member 엔티티가 존재하지 않습니다.", ErrorCode.ENTITY_NOT_FOUND));
-        findMember.changeAddress(memberDTO.getAddress(), updatedBy);
-        findMember.changePassword(memberDTO.getPassword(), updatedBy);
+        findMember.changeAddress(memberDTO.getAddress());
+        findMember.changePassword(memberDTO.getPassword());
         return findMember.getMemberId();
     }
 

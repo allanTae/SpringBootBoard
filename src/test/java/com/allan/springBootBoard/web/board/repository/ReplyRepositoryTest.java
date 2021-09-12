@@ -1,5 +1,8 @@
 package com.allan.springBootBoard.web.board.repository;
 
+import com.allan.springBootBoard.common.config.jpaAuditing.JpaAuditingConfig;
+import com.allan.springBootBoard.security.user.service.UserDetailsServiceImpl;
+import com.allan.springBootBoard.security.user.test.WithMockCustomUser;
 import com.allan.springBootBoard.web.board.domain.Board;
 import com.allan.springBootBoard.web.board.domain.Reply;
 import com.allan.springBootBoard.web.board.domain.model.ReplyDTO;
@@ -9,14 +12,23 @@ import org.mybatis.spring.boot.test.autoconfigure.AutoConfigureMybatis;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
+import org.springframework.security.test.context.support.WithUserDetails;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-@DataJpaTest
+@DataJpaTest(includeFilters = @ComponentScan.Filter(
+        type = FilterType.ASSIGNABLE_TYPE,
+        classes = {JpaAuditingConfig.class, UserDetailsServiceImpl.class}
+        )
+)
 @AutoConfigureMybatis
+@WithMockCustomUser(userId = "user1")
 class ReplyRepositoryTest {
 
     Long TEST_REPLY_ID = 1l;
@@ -144,8 +156,6 @@ class ReplyRepositoryTest {
                 .replyGroup(TEST_REPLY_GROUP)
                 .replyGroupOrder(1l)
                 .content("TEST")
-                .createdBy("TESTER")
-                .createdDate(LocalDateTime.now())
                 .build();
     }
 
@@ -157,16 +167,12 @@ class ReplyRepositoryTest {
                 .replyGroupOrder(replyGroupOrder)
                 .depth(depth)
                 .content("TEST")
-                .createdBy("TESTER")
-                .createdDate(LocalDateTime.now())
                 .build();
     }
 
     private Board createBoard() {
         Board board = Board.builder()
                 .title("테스트 게시글 내용")
-                .createdBy("fakeuser")
-                .createdDate(LocalDateTime.now())
                 .build();
         testEntityManager.persist(board);
         return board;

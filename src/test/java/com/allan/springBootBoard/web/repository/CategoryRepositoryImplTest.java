@@ -29,8 +29,6 @@ class CategoryRepositoryImplTest {
         //given
         Category cat = Category.builder()
                 .name("자유게시판")
-                .createdBy("관리자")
-                .createdDate(LocalDateTime.now())
                 .build();
 
         //when

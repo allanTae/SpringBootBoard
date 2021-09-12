@@ -18,6 +18,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.transaction.annotation.Transactional;
@@ -133,7 +134,6 @@ class ReplyServiceTest {
         //then
         verify(replyRepository, atLeastOnce()).findById(any(Long.class));
         assertThat(TEST_REPLY.getContent(), is(TEST_REPLY_DTO.getContent()));
-        assertThat(TEST_REPLY.getUpdatedBy(), is(TEST_REPLY_DTO.getRegisterId()));
     }
 
 
@@ -153,7 +153,6 @@ class ReplyServiceTest {
         //then
         verify(replyRepository, atLeastOnce()).findById(any());
         assertTrue(TEST_REPLY.getIsRemove());
-        assertThat(TEST_REPLY.getUpdatedBy(), is(TEST_REPLY_DTO.getRegisterId()));
     }
 
     private Reply createReply() {
@@ -200,39 +199,5 @@ class ReplyServiceTest {
 
         return board;
     }
-
-//    @Test
-//    public void 댓글_삭제() throws Exception {
-//        //given
-//        Board board = createBoard();
-//        Reply reply = Reply.builder()
-//                .replyId(1L)
-//                .board(board)
-//                .content("변경 전")
-//                .createdBy("testId")
-//                .createdDate(LocalDateTime.now())
-//                .build();
-//        em.persist(reply);
-//
-//        ReplyDTO dto = ReplyDTO.builder()
-//                .replyId(1L)
-//                .boardId(board.getBoardId())
-//                .isRemove(true)
-//                .build();
-//
-//        em.flush();
-//        em.clear();
-//        List<ReplyDTO> list1 = replyService.list(board.getBoardId());
-//        assertEquals(1,list1.size());
-//
-//        //when
-//        replyService.deleteReply(dto);
-//        Reply deletedReply = em.find(Reply.class, 1L);
-//        List<ReplyDTO> list = replyService.list(board.getBoardId());
-//
-//        //then
-//        assertEquals(1, list.size());
-//        assertEquals(deletedReply.getIsRemove(), true);
-//    }
 
 }

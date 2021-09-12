@@ -151,8 +151,6 @@ class BoardServiceTest {
                 .title("TEST")
                 .content("TEST")
                 .tag("TEST")
-                .createdBy("TEST")
-                .createdDate(LocalDateTime.now())
                 .member(TEST_MEMBER)
                 .build();
 
@@ -174,8 +172,6 @@ class BoardServiceTest {
     private Category createCategory() {
         Category category = Category.builder()
                 .name("테스트게시")
-                .createdBy("테스트관리")
-                .createdDate(LocalDateTime.now())
                 .build();
 
         return category;
@@ -189,8 +185,6 @@ class BoardServiceTest {
                 .age(29L)
                 .gender(Gender.MAN)
                 .address(address)
-                .createdBy("testId")
-                .createdDate(LocalDateTime.now())
                 .role(MemberRole.USER)
                 .phoneNumber("01079978543")
                 .build();

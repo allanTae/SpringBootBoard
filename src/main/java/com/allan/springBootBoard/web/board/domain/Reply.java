@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import net.minidev.json.annotate.JsonIgnore;
 import org.hibernate.annotations.ColumnDefault;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -61,8 +62,7 @@ public class Reply extends BaseEntity {
 
     @Builder
     public Reply(Long replyId, Board board, String content, Long replyGroup, Long replyGroupOrder,
-                 Long depth, Long replyLike, LocalDateTime createdDate,
-                 String createdBy, LocalDateTime updatedDate, String updatedBy) {
+                 Long depth, Long replyLike) {
         this.replyId = replyId; // 계층형 댓글 그룹번호를 설정하기 위 별도로 값을 부여하기 위함.
         this.board = board;
         this.content = content;
@@ -70,10 +70,6 @@ public class Reply extends BaseEntity {
         this.replyGroupOrder = replyGroupOrder;
         this.depth = depth;
         this.replyLike = replyLike;
-        this.createdBy = createdBy;
-        this.createdDate = createdDate;
-        this.updatedBy = updatedBy;
-        this.updatedDate = updatedDate;
     }
 
     public void changeGroupOrder(Long replyGroupOrder){
@@ -81,11 +77,6 @@ public class Reply extends BaseEntity {
     }
 
     public void changeContent(String content) {this.content = content; }
-
-    public void changeUpdateInfo(String updatedBy, LocalDateTime updatedDate){
-        this.updatedBy = updatedBy;
-        this.updatedDate = updatedDate;
-    }
 
     public void changeBoard(Board board){
         this.board = board;

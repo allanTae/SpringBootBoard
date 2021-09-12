@@ -3,6 +3,7 @@ package com.allan.springBootBoard.security.user.domain;
 import com.allan.springBootBoard.web.member.domain.Member;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Delegate;
 import org.springframework.security.core.GrantedAuthority;
@@ -13,6 +14,7 @@ import java.util.Collection;
 @AllArgsConstructor
 @Getter
 @ToString
+@NoArgsConstructor
 public class UserDetailsVO implements UserDetails {
 
     @Delegate

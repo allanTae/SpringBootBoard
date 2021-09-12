@@ -33,6 +33,7 @@ dependencies {
 	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.1.4'
 	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:2.1.4'
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
+	implementation 'org.springframework.security:spring-security-test'
 
 	// 배포시에는 제거하도록.
 	implementation 'org.springframework.boot:spring-boot-devtools'

@@ -1,5 +1,7 @@
 package com.allan.springBootBoard.web.member.repository;
 
+import com.allan.springBootBoard.common.config.jpaAuditing.JpaAuditingConfig;
+import com.allan.springBootBoard.security.user.test.WithMockCustomUser;
 import com.allan.springBootBoard.web.board.domain.Address;
 import com.allan.springBootBoard.web.member.domain.Gender;
 import com.allan.springBootBoard.web.member.domain.Member;
@@ -10,11 +12,19 @@ import org.mybatis.spring.boot.test.autoconfigure.AutoConfigureMybatis;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
+import org.springframework.security.test.context.support.WithMockUser;
+
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@DataJpaTest
+@DataJpaTest(includeFilters = @ComponentScan.Filter(
+        type = FilterType.ASSIGNABLE_TYPE,
+        classes = JpaAuditingConfig.class
+))
+@WithMockCustomUser()
 @AutoConfigureMybatis
 public class MemberRepositoryTest {
 
@@ -64,8 +74,6 @@ public class MemberRepositoryTest {
                 .name("TESTER")
                 .age(10l)
                 .address(new Address("", "", "", "", ""))
-                .createdBy("TESTER")
-                .createdDate(LocalDateTime.now())
                 .gender(Gender.MAN)
                 .phoneNumber("01022223333")
                 .dateOfBirth("19221102")

@@ -17,7 +17,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.util.ReflectionTestUtils;
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -74,6 +73,7 @@ class MemberServiceTest {
         memberService.join(form, "19931221");
 
         //then
+        verify(passwordEncoder, atLeastOnce()).encode(any());
         verify(memberRepository, atLeastOnce()).save(any());
     }
 
@@ -152,8 +152,6 @@ class MemberServiceTest {
                 .age(29L)
                 .gender(Gender.MAN)
                 .address(address)
-                .createdBy("testId")
-                .createdDate(LocalDateTime.now())
                 .role(MemberRole.USER)
                 .phoneNumber("01012341234")
                 .build();

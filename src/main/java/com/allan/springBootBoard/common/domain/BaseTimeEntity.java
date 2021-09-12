@@ -1,8 +1,9 @@
 package com.allan.springBootBoard.common.domain;
 
-import lombok.*;
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.LastModifiedBy;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.Column;
@@ -11,15 +12,15 @@ import javax.persistence.MappedSuperclass;
 import java.time.LocalDateTime;
 
 @MappedSuperclass
-@Getter @Setter
+@Getter
+@Setter
 @EntityListeners(AuditingEntityListener.class)
-public abstract class BaseEntity extends BaseTimeEntity{
+public class BaseTimeEntity {
 
     @Column(nullable = false, updatable = false)
-    @CreatedBy
-    public String createdBy;
+    @CreatedDate
+    public LocalDateTime createdDate;
 
-    @LastModifiedBy
-    public String updatedBy;
-
+    @LastModifiedDate
+    public LocalDateTime updatedDate;
 }

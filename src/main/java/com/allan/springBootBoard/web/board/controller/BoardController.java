@@ -15,7 +15,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @Controller
 @RequestMapping("/board")
@@ -39,11 +38,14 @@ public class BoardController {
                 .keyword(keyword)
                 .build();
 
-        List<BoardDTO> boardList = boardService.findAllByMybatis(search);
+        int boardListCnt = boardService.findBoardListCnt(search);
+        log.info("boardListCnt: "+ boardListCnt);
 
-        search.pageInfo(page, range, boardList.size());
+        search.pageInfo(page, range, boardListCnt);
+        log.info("startList: " + search.getStartList());
+        log.info("listSize: " + search.getListSize());
 
-        model.addAttribute("boardList", boardList);
+        model.addAttribute("boardList", boardService.findBoardList(search));
         model.addAttribute("pagination", search);
         model.addAttribute("userId", authentication.getName());
         return "board/boardList";

@@ -2,7 +2,6 @@ package com.allan.springBootBoard.web.board.service;
 
 import com.allan.springBootBoard.common.Search;
 import com.allan.springBootBoard.web.board.repository.CategoryRepository;
-import com.allan.springBootBoard.web.board.service.BoardServiceImpl;
 import com.allan.springBootBoard.web.member.domain.Gender;
 import com.allan.springBootBoard.web.member.domain.Member;
 import com.allan.springBootBoard.web.board.domain.Address;
@@ -11,7 +10,6 @@ import com.allan.springBootBoard.web.board.domain.Category;
 import com.allan.springBootBoard.web.board.domain.model.BoardDTO;
 import com.allan.springBootBoard.web.board.repository.BoardRepository;
 import com.allan.springBootBoard.web.board.repository.mapper.BoardMapper;
-import com.allan.springBootBoard.web.board.service.BoardService;
 import com.allan.springBootBoard.web.member.domain.MemberRole;
 import com.allan.springBootBoard.web.member.service.MemberService;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,7 +21,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -119,22 +116,22 @@ class BoardServiceTest {
     @Test
     public void 마이바티스게시물_조회() throws Exception {
         //given
-        Search TEST_SEARCH = new Search("test", "test", 0, 0, 0);
+        Search TEST_SEARCH = new Search("test", "test");
         List<BoardDTO> TEST_BOARD_DTOS = new ArrayList<>();
-        given(boardMapper.selectAllBoards(any(Search.class)))
+        given(boardMapper.selectBoardList(any(Search.class)))
                 .willReturn(TEST_BOARD_DTOS);
 
         //when
-        boardService.findAllByMybatis(TEST_SEARCH);
+        boardService.findBoardList(TEST_SEARCH);
 
         //then
-        verify(boardMapper, atLeastOnce()).selectAllBoards(TEST_SEARCH);
+        verify(boardMapper, atLeastOnce()).selectBoardList(TEST_SEARCH);
     }
 
     @Test
     public void 마이바티스_삭제() throws Exception {
         //given
-        Search TEST_SEARCH = new Search("test", "test", 0, 0, 0);
+        Search TEST_SEARCH = new Search("test", "test");
         int TEST_DELETE_COUNT = 1;
         given(boardMapper.deleteAll())
                 .willReturn(TEST_DELETE_COUNT);

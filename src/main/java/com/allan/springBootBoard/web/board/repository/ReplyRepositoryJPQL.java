@@ -1,8 +1,6 @@
 package com.allan.springBootBoard.web.board.repository;
 
-import com.allan.springBootBoard.web.board.domain.model.ReplyDTO;
-
-public interface ReplyRepositoryCustom {
+public interface ReplyRepositoryJPQL {
     public Long getMaxReplyId();
     public Long deleteReply(Long replyId, Long boardId);
 }

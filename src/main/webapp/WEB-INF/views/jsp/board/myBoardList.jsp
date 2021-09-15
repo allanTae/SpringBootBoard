@@ -7,7 +7,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<c:url var="getBoardList" value="/board/getBoardList">
+<c:url var="getBoardList" value="${pageContext.request.contextPath}/myBoard/getBoardList">
 </c:url>
 <style>
 	#paginationBox {
@@ -58,8 +58,6 @@
 		var url = "${getBoardList}";
 		url = url + "?page=" + page;
 		url = url + "&range=" + range;
-		url = url + "&searchType=" + "${pagination.searchType}";
-		url = url + "&keyword=" + "${pagination.keyword}";
 		location.href = url;
 	}
 	//페이지 번호 클릭
@@ -67,8 +65,6 @@
 		var url = "${getBoardList}";
 		url = url + "?page=" + page;
 		url = url + "&range=" + range;
-		url = url + "&searchType=" + "${pagination.searchType}";
-		url = url + "&keyword=" + "${pagination.keyword}";
 		location.href = url;
 	}
 	//다음 버튼 이벤트
@@ -78,19 +74,9 @@
 		var url = "${getBoardList}";
 		url = url + "?page=" + page;
 		url = url + "&range=" + range;
-		url = url + "&searchType=" + "${pagination.searchType}";
-		url = url + "&keyword=" +  "${pagination.keyword}";
 		location.href = url;
 	}
 
-	// 검색 버튼 이벤트
-	$(document).on('click', '#btnSearch', function(e){
-		e.preventDefault();
-		var url = "${getBoardList}";
-		url = url + "?searchType=" + $('#searchType').val();
-		url = url + "&keyword=" + $('#keyword').val();
-		location.href = url;
-	});
 	// 로그인 버튼 이벤트
 	$(document).on('click', '#btnLogin', function(e){
 		e.preventDefault();
@@ -108,12 +94,6 @@
 		e.preventDefault();
 		location.href = "${pageContext.request.contextPath}/user/getUserList";
 	});
-
-	// 자신이 작성한 게시글 목록 버튼 이벤트
-    $(document).on('click', '#btnMyBoard', function(e){
-        e.preventDefault();
-        location.href = "${pageContext.request.contextPath}/myBoard/getBoardList";
-    });
 </script>
 
 
@@ -187,7 +167,6 @@
                     <form>
                         <div>
                             <button style="width:80px; display:inline;" class="btn btn-sm btn-primary" type="button" name="btnLogout" id="btnLogout">로그아웃</button>
-                            <button style="width:80px; display:inline;" class="btn btn-sm btn-primary" type="button" name="btnMyBoard" id="btnMyBoard">개인 게시글 목록</button>
                             <sec:authorize access="hasRole('ROLE_ADMIN')" >
                                 <button style="width:100px; display:inline;" class="btn btn-sm btn-primary" type="button" name="btnUserPage" id="btnUserPage">관리자 페이지</button>
                             </sec:authorize>
@@ -247,26 +226,11 @@
 		</div>
 		<!-- pagination{e} -->
 
-		<!-- search{s} -->
-		<div class="form-group row justify-content-center">
-			<div class="w100" style="padding-right:10px">
-				<select class="form-control form-control-sm" name="searchType" id="searchType">
-					<option value="title">제목</option>
-					<option value="content">본문</option>
-					<option value="registerId">작성자</option>
-				</select>
-			</div>
-			<div class="w300" style="padding-right:10px">
-				<input type="text" class="form-control form-control-sm" name="keyword" id="keyword" value="${pagination.keyword}">
-			</div>
-			<div>
-				<button class="btn btn-sm btn-primary" name="btnSearch" id="btnSearch">검색</button>
-			</div>
-		</div>
-		<!-- search{e} -->
 	</div>
 	<!-- bottom-cotainer{e} -->
 
 </article>
+
 </body>
+
 </html>

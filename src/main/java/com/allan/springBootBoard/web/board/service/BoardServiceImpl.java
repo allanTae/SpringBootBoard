@@ -113,8 +113,18 @@ public class BoardServiceImpl implements BoardService {
      * @return
      */
     @Override
-    public List<BoardDTO> findAllByMybatis(Search search) {
-        return boardMapper.selectAllBoards(search);
+    public List<BoardDTO> findBoardList(Search search) {
+        return boardMapper.selectBoardList(search);
+    }
+
+    /**
+     * mybatis 로 게시물 조회.
+     * @param search
+     * @return
+     */
+    @Override
+    public int findBoardListCnt(Search search) {
+        return boardMapper.selectBoardListCnt(search);
     }
 
     /**

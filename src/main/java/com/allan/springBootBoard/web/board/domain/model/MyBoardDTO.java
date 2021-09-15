@@ -7,23 +7,22 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-@Getter @Setter
-public class BoardDTO {
-
+@Getter
+@Setter
+public class MyBoardDTO {
     private Long boardId;
     private String title;
-    private String content;
-    private String tag;
     private Long viewCnt;
     private String createdBy;
     private String createdDate;
 
     @Builder
-    public BoardDTO(Long boardId, String title, String content, String tag) {
+    public MyBoardDTO(Long boardId, String title, Long viewCnt, String createdBy, String createdDate){
         this.boardId = boardId;
         this.title = title;
-        this.content = content;
-        this.tag = tag;
+        this.viewCnt = viewCnt;
+        this.createdBy = createdBy;
+        this.createdDate = createdDate;
     }
 
     public void setCreatedDate(LocalDateTime createdDate){

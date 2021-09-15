@@ -5,7 +5,7 @@
 
 <mapper namespace="com.allan.springBootBoard.web.board.repository.mapper.BoardMapper">
 
-    <select id="selectAllBoards" resultType="BoardDTO" parameterType="Search">
+    <select id="selectBoardList" resultType="BoardDTO" parameterType="Search">
         SELECT
         board_id, category_id, title, content, tag, view_cnt, created_by, created_date
         FROM
@@ -25,8 +25,44 @@
         LIMIT #{startList}, #{listSize}
     </select>
 
+    <select id="selectBoardListCnt" resultType="int" parameterType="Search">
+        SELECT
+        count(*) as boardListCnt
+        FROM
+        BOARD
+        <trim prefix="WHERE">
+            <if test="searchType=='title' and keyword != null and keyword != '' ">
+                title like CONCAT('%', #{keyword}, '%')
+            </if>
+            <if test="searchType=='content' and keyword != null and keyword != '' ">
+                content like CONCAT('%', #{keyword}, '%')
+            </if>
+            <if test="searchType=='registerId' and keyword != null and keyword != '' ">
+                created_by like CONCAT('%', #{keyword}, '%')
+            </if>
+        </trim>
+    </select>
+
     <delete id="deleteAll" >
         DELETE FROM BOARD
     </delete>
+
+    <select id="selectMyBoardListCnt" resultType="int" parameterType="long">
+        SELECT
+        count(*) as myBoardListCnt
+        FROM
+        BOARD
+        WHERE member_id = #{memberId}
+    </select>
+
+    <select id="selectMyBoardListByLoginId" resultType="MyBoardDTO" parameterType="HashMap">
+        SELECT
+        board_id, title, view_cnt, created_by, created_date
+        FROM
+        BOARD
+        WHERE member_id = #{memberId}
+        ORDER BY board_id DESC
+        LIMIT #{startList}, #{listSize}
+    </select>
 
 </mapper>

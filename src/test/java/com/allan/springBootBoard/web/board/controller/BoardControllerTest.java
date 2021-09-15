@@ -67,7 +67,7 @@ public class BoardControllerTest {
     public void 게시글_목록_조회_테스트() throws Exception {
         //given
         List<BoardDTO> TEST_BOARDS = Arrays.asList(BoardDTO.builder().build());
-        given(boardService.findAllByMybatis(any()))
+        given(boardService.findBoardList(any()))
                 .willReturn(TEST_BOARDS);
 
         //when

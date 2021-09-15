@@ -2,7 +2,6 @@ package com.allan.springBootBoard.web.board.repository;
 
 import com.allan.springBootBoard.web.board.domain.Board;
 import com.allan.springBootBoard.web.board.domain.Reply;
-import com.allan.springBootBoard.web.board.domain.model.ReplyDTO;
 import lombok.RequiredArgsConstructor;
 
 import javax.persistence.EntityManager;
@@ -10,7 +9,7 @@ import javax.persistence.PersistenceContext;
 import java.util.List;
 
 @RequiredArgsConstructor
-public class ReplyRepositoryImpl implements ReplyRepositoryCustom{
+public class ReplyRepositoryImpl implements ReplyRepositoryJPQL {
 
     @PersistenceContext
     EntityManager em;

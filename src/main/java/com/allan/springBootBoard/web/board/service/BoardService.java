@@ -36,7 +36,14 @@ public interface BoardService {
      * @param search
      * @return
      */
-    public List<BoardDTO> findAllByMybatis(Search search);
+    public List<BoardDTO> findBoardList(Search search);
+
+    /**
+     * mybatis를 사용하여 검색 키워드를 사용하여 게시글을 조회하는 메소드입니다.
+     * @param search
+     * @return
+     */
+    public int findBoardListCnt(Search search);
 
     /**
      * mybatis를 사용하여 모든 게시글을 삭제하는 메소드입니다.

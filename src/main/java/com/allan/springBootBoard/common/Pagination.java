@@ -1,9 +1,6 @@
 package com.allan.springBootBoard.common;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.slf4j.Slf4j;
 
@@ -18,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Getter @Setter
 @ToString
-@Slf4j
+@NoArgsConstructor
 public class Pagination {
 
     private int listSize = 10;              //초기값으로 1개의 페이지가 포함하는 게시글 수, 10으로 설정
@@ -42,6 +39,13 @@ public class Pagination {
     private boolean prev;					// 이전 페이지 여부
 
     private boolean next;					// 다음 페이지 여부
+
+    public Pagination(int page, int range, int listCnt) {
+        this.page = page;
+        this.range = range;
+        this.listCnt = listCnt;
+        pageInfo(page, range, listCnt);
+    }
 
     public void pageInfo(int page, int range, int listCnt) {
 

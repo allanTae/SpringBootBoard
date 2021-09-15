@@ -17,6 +17,9 @@
     <definition name="board/*" extends="base-layout">
         <put-attribute name="tile_body" value="/WEB-INF/views/jsp/board/{1}.jsp" />
     </definition>
+    <definition name="myBoard/*" extends="base-layout">
+        <put-attribute name="tile_body" value="/WEB-INF/views/jsp/board/{1}.jsp" />
+    </definition>
     <definition name="member/*" extends="base-layout">
         <put-attribute name="tile_body" value="/WEB-INF/views/jsp/member/{1}.jsp" />
     </definition>

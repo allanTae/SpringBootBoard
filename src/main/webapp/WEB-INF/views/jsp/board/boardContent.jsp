@@ -21,12 +21,16 @@
 				  "'": '&#39;', 
 				  '/': '&#x2F;', 
 				  '`': '&#x60;', 
-				  '=': '&#x3D;' }; 
+				  '=': '&#x3D;' };
 				  
 	function escapeHtml (string) { 
 		return String(string).replace(/[&<>"'`=\/]/g, function (s) { return entityMap[s]; }); 
 		
 	}
+
+	// 로그인 아이디, 회원 이름
+	//var authId = ${userInfo.authId};
+	//var user_name = ${userInfo.user_name};
 
 
 	// 댓글 리스트 갱신
@@ -103,9 +107,9 @@
             htmls += '</svg>';
             htmls += '<p class="media-body pb-3 mb-0 small lh-125 border-bottom horder-gray">';
             htmls += '<span class="d-block">';
-            htmls += '<strong class="text-gray-dark">' + reply.registerId + '</strong>';
+            htmls += '<strong class="text-gray-dark">' + reply.userName + '</strong>';
             htmls += '<span style="padding-left: 7px; font-size: 9pt">';
-            htmls += '<a href="javascript:void(0)" onclick="fn_editReply(' + reply.replyId + ', \'' + reply.registerId + '\', \'' + escapeHtml(reply.content) + '\' )" style="padding-right:5px">수정</a>';
+            htmls += '<a href="javascript:void(0)" onclick="fn_editReply(' + reply.replyId + ', \'' + reply.registerId + '\', \'' + escapeHtml(reply.content) + '\', \'' + reply.userName + '\')" style="padding-right:5px">수정</a>';
             htmls += '<a href="javascript:void(0)" onclick="fn_deleteReply(' + reply.replyId + ')" style="padding-right:5px">삭제</a>';
             htmls += '<a href="javascript:void(0)" onclick="fn_replyForm(' + reply.replyGroup + ', ' + reply.replyGroupOrder + ', ' + reply.replyId + ', ' + reply.depth + ' )" >댓글작성</a>';
             htmls += '</span>';
@@ -136,7 +140,7 @@
 	$(document).on('click', '#btnReplyParentSave', function(e){
 	    e.preventDefault();
         var replyContent = $('#content').val();
-        var registerId = "${userId}";
+        var registerId = "${userInfo.authId}";
         var paramData = JSON.stringify({"content": replyContent
                                       , "registerId": registerId
                                       , "boardId":'${boardContent.boardId}'
@@ -203,8 +207,11 @@
 	});
 	
 	// 댓글 수정 버튼 클릭 메소드
-	function fn_editReply(replyId, registerId, content){
-	    if(registerId == "${userId}"){
+	function fn_editReply(replyId, registerId, content, userName){
+	    console.log("registerId: " + registerId);
+	    console.log("authId: " + "${userInfo.authId}");
+	    console.log("userName: " + userName);
+	    if(registerId == "${userInfo.authId}"){
 	        var htmls = "";
                     htmls += '<div class="media text-muted pt-3" id="replyId' + replyId + '">';
                     htmls += '<svg class="bd-placeholder-img mr-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder:32x32">';
@@ -214,9 +221,9 @@
                     htmls += '</svg>';
                     htmls += '<p class="media-body pb-3 mb-0 small lh-125 border-bottom horder-gray">';
                     htmls += '<span class="d-block">';
-                    htmls += '<strong class="text-gray-dark">' + registerId + '</strong>';
+                    htmls += '<strong class="text-gray-dark">' + userName + '</strong>';
                     htmls += '<span style="padding-left: 7px; font-size: 9pt">';
-                    htmls += '<a href="javascript:void(0)" onclick="fn_updateReply(' + replyId + ', \'' + registerId + '\')" style="padding-right:5px">저장</a>';
+                    htmls += '<a href="javascript:void(0)" onclick="fn_updateReply(' + replyId + ', \'' + registerId + '\'' + ')" style="padding-right:5px">저장</a>';
                     htmls += '<a href="javascript:void(0)" onClick="showReplyList()">취소<a>';
                     htmls += '</span>';
                     htmls += '</span>';
@@ -234,6 +241,9 @@
 
 	// 댓글 수정 후 저장 버튼 클릭 메소드
 	function fn_updateReply(replyId, registerId){
+	    console.log("fn_updateReply");
+	    console.log("replyId: " + replyId);
+	    console.log("registerId: " + registerId);
 		var replyEditContent = $('#editContent').val();
 		var paramData = JSON.stringify({"content": replyEditContent
 				                      , "replyId": replyId
@@ -297,7 +307,7 @@
         htmls += '<textarea id="childContent" class="form-control" rows="3" placeholder="댓글을 입력해 주세요"></textarea>';
         htmls += '</div>';
         htmls += '<div class="col-sm-2">';
-        htmls += '<input type=text class="form-control" id="childRegisterId" value="${userId}" readonly="true"></input>';
+        htmls += '<input type=text class="form-control" id="childRegisterId" value="${userInfo.authId}" readonly="true"></input>';
         htmls += '<input type=hidden id="parentReplyGroup" value=' + replyGroup + ' ></input>';
         htmls += '<input type=hidden id="parentReplyGroupOrder" value=' + replyGroupOrder + ' ></input>';
         htmls += '<input type=hidden id="parentDepth" value=' + depth + ' ></input>';
@@ -357,7 +367,7 @@
                             <form:textarea path="content" id="content" class="form-control" rows="3" placeholder="댓글을 입력해 주세요"></form:textarea>
                         </div>
                         <div class="col-sm-2">
-                            <form:input path="registerId" class="form-control" id="registerId" readonly="true"></form:input>
+                            <p>작성자 : ${userInfo.user_name}님</p>
                             <button type="button" class="btn btn-sm btn-primary" id="btnReplyParentSave" style="width: 100%; margin-top: 10px"> 저 장 </button>
                         </div>
                     </div>

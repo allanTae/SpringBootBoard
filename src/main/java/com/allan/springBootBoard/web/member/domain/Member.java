@@ -36,6 +36,12 @@ public class Member extends BaseTimeEntity {
     @Column(nullable = false)
     private Long age;
 
+    @Column
+    private String email;
+
+    @Column
+    private String picture;
+
     @Enumerated(value = EnumType.STRING)
     private Gender gender;
 
@@ -92,7 +98,7 @@ public class Member extends BaseTimeEntity {
     @Builder
     public Member(String authId, String pwd, String name, Long age,
                   Gender gender, Address address,
-                  MemberRole role, String phoneNumber, String dateOfBirth) {
+                  MemberRole role, String phoneNumber, String dateOfBirth, String email, String picture) {
         this.authId = authId;
         this.pwd = pwd;
         this.name = name;
@@ -102,6 +108,8 @@ public class Member extends BaseTimeEntity {
         this.role = role;
         this.phoneNumber = phoneNumber;
         this.dateOfBirth = dateOfBirth;
+        this.email = email;
+        this.picture = picture;
     }
 
     public void changePassword(String password){
@@ -116,4 +124,14 @@ public class Member extends BaseTimeEntity {
         this.isEnable = isEnable;
     }
 
+    public Member update(String name, String picture){
+        this.name = name;
+        this.picture = picture;
+
+        return this;
+    }
+
+    public String getRoleKey(){
+        return role.getKey();
+    }
 }

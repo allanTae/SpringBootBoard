@@ -27,7 +27,7 @@ public class WithMockCustomUserSecurityContextFactory
                 .build();
 
         UserDetailsVO principal = new UserDetailsVO(TestMember, Collections
-                .singleton(new SimpleGrantedAuthority(TestMember.getRole().getValue())));
+                .singleton(new SimpleGrantedAuthority(TestMember.getRole().getKey())));
         Authentication auth =
                 new UsernamePasswordAuthenticationToken(principal, "password", principal.getAuthorities());
         context.setAuthentication(auth);

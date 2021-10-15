@@ -1,14 +1,17 @@
 package com.allan.springBootBoard.web.member.controller;
 
 import com.allan.springBootBoard.security.config.WebSecurityConfig;
+import com.allan.springBootBoard.security.oauth2.CustomOAuth2UserService;
 import com.allan.springBootBoard.web.config.WebConfig;
 import com.allan.springBootBoard.web.member.domain.model.MemberForm;
+import com.allan.springBootBoard.web.member.repository.MemberRepository;
 import com.allan.springBootBoard.web.member.service.MemberService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.boot.test.autoconfigure.AutoConfigureMybatis;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;

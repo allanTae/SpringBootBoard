@@ -64,8 +64,8 @@
 					</div>
 					
 					<div class="mb-3">
-						<label for="registerId">작성자</label>
-						<form:input path="registerId" id="registerId" class="form-control" readonly="true"  />
+						<label for="name">작성자</label>
+						<form:input path="name" id="name" class="form-control" readonly="true"  />
 					</div>
 					
 					<div class="mb-3">

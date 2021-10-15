@@ -41,16 +41,16 @@ public class BoardServiceImpl implements BoardService {
      * 게시물 생성.
      * @param categoryPk
      * @param boardDTO
-     * @param registerId
+     * @param authId
      * @return
      */
     @Transactional
     @Override
-    public Long save(Long categoryPk, BoardDTO boardDTO, String registerId) {
+    public Long save(Long categoryPk, BoardDTO boardDTO, String authId) {
 
         // 엔티티 조회
         Member findMember;
-        findMember = memberService.findByAuthId(registerId);
+        findMember = memberService.findByAuthId(authId);
 
         Category findCategory = categoryRepository.findOne(categoryPk);
 
@@ -83,12 +83,11 @@ public class BoardServiceImpl implements BoardService {
     /**
      * 게시물 수정.
      * @param dto
-     * @param updatedBy
      * @return
      */
     @Transactional
     @Override
-    public Long update(BoardDTO dto, String updatedBy) {
+    public Long update(BoardDTO dto) {
         Board findBoard = boardRepository.findById(dto.getBoardId()).orElseThrow(() -> new BoardNotFoundException("해당 Board 엔티티가 존재하지 않습니다.", ENTITY_NOT_FOUND));
         findBoard.changeBoardContent(dto.getTitle(), dto.getContent(), dto.getTag());
         return dto.getBoardId();

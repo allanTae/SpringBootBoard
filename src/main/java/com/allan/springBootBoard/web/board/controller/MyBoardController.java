@@ -5,8 +5,11 @@ import com.allan.springBootBoard.infra.AuthenticationConverter;
 import com.allan.springBootBoard.web.board.domain.model.MyBoardDTO;
 import com.allan.springBootBoard.web.board.service.MyBoardService;
 import com.allan.springBootBoard.web.member.domain.Member;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,7 +42,8 @@ public class MyBoardController {
         List<MyBoardDTO> myBoards = myBoardService.getMyBoardList(findMember.getMemberId(), pagination);
         model.addAttribute("boardList", myBoards);
         model.addAttribute("pagination", pagination);
-        model.addAttribute("userId", authentication.getName());
+
+        model.addAttribute("user_name", findMember.getName());
         return "board/myBoardList";
     }
 }

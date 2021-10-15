@@ -1,11 +1,14 @@
 package com.allan.springBootBoard.web.board.controller;
 
 import com.allan.springBootBoard.common.Search;
+import com.allan.springBootBoard.infra.AuthenticationConverter;
 import com.allan.springBootBoard.web.board.domain.Board;
 import com.allan.springBootBoard.web.board.domain.model.BoardDTO;
 import com.allan.springBootBoard.web.board.domain.model.BoardForm;
 import com.allan.springBootBoard.web.board.domain.model.ReplyDTO;
 import com.allan.springBootBoard.web.board.service.BoardService;
+import com.allan.springBootBoard.web.member.domain.Member;
+import com.allan.springBootBoard.web.user.domain.model.UserInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -14,6 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 @Controller
@@ -23,6 +27,12 @@ public class BoardController {
 
     @Autowired
     BoardService boardService;
+
+    @Autowired
+    HttpSession httpSession;
+
+    @Autowired
+    AuthenticationConverter authenticationConverter;
 
     // 게시판 목록.
     @GetMapping("/getBoardList")
@@ -39,15 +49,15 @@ public class BoardController {
                 .build();
 
         int boardListCnt = boardService.findBoardListCnt(search);
-        log.info("boardListCnt: "+ boardListCnt);
 
         search.pageInfo(page, range, boardListCnt);
-        log.info("startList: " + search.getStartList());
-        log.info("listSize: " + search.getListSize());
 
         model.addAttribute("boardList", boardService.findBoardList(search));
         model.addAttribute("pagination", search);
-        model.addAttribute("userId", authentication.getName());
+
+        Member findMember = authenticationConverter.getMemberFromAuthentication(authentication);
+        userInfo(findMember, model);
+
         return "board/boardList";
     }
 
@@ -55,16 +65,19 @@ public class BoardController {
     @GetMapping("/boardForm")
     public String boardForm(@ModelAttribute("boardForm") BoardForm form,
                             Authentication authentication){
-        form.setRegisterId(authentication.getName());
+
+        Member findMember = authenticationConverter.getMemberFromAuthentication(authentication);
+        form.setName(findMember.getName());
+
         return "board/boardForm";
     }
 
     // 게시글 저장.
     @PostMapping("/saveBoard")
-    public String saveForm(@Valid @ModelAttribute BoardForm form, BindingResult bindingResult, @RequestParam("mode") String mode){
+    public String saveForm(@Valid @ModelAttribute BoardForm form, BindingResult bindingResult, @RequestParam("mode") String mode,
+                           Authentication authentication){
 
         if(bindingResult.hasErrors()){
-            log.info("error: " + bindingResult.toString());
             return "board/boardForm";
         }
 
@@ -75,11 +88,13 @@ public class BoardController {
                 .tag(form.getTag())
                 .build();
 
+        Member findMember = authenticationConverter.getMemberFromAuthentication(authentication);
+
         if(mode.equals("edit")){
-            boardService.update(dto, form.getRegisterId());
+            boardService.update(dto);
             log.info("update execute!!");
         }else{
-            boardService.save(7L, dto, form.getRegisterId()); // 현재 작성자와 카테고리 정보를 고정으로(4L, 5L)로 고정 해놈. 수정 필요.
+            boardService.save(7L, dto, findMember.getAuthId()); // 현재 작성자와 카테고리 정보를 고정으로(4L, 5L)로 고정 해놈. 수정 필요.
             log.info("save execute!!");
         }
 
@@ -94,7 +109,9 @@ public class BoardController {
         dto.setRegisterId(authentication.getName());
         model.addAttribute("boardContent", boardService.findOne(boardId));
         model.addAttribute("replyDTO", dto);
-        model.addAttribute("userId", authentication.getName());
+
+        Member findMember = authenticationConverter.getMemberFromAuthentication(authentication);
+        userInfo(findMember, model);
 
         return "board/boardContent";
     }
@@ -116,11 +133,15 @@ public class BoardController {
                 .title(board.getTitle())
                 .content(board.getContent())
                 .tag(board.getTag())
-                .registerId(board.getCreatedBy())
+                .name(board.getCreatedBy())
                 .build();
         model.addAttribute("boardForm", form);
         model.addAttribute("mode", mode);
         return "board/boardForm";
     }
 
+    public void userInfo(Member member, Model model){
+        UserInfo userInfo = new UserInfo(member.getName(), member.getAuthId());
+        model.addAttribute("userInfo", userInfo);
+    }
 }

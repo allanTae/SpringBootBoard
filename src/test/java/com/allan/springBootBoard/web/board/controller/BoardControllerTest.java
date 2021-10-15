@@ -1,10 +1,12 @@
 package com.allan.springBootBoard.web.board.controller;
 
+import com.allan.springBootBoard.infra.AuthenticationConverter;
 import com.allan.springBootBoard.security.config.WebSecurityConfig;
 import com.allan.springBootBoard.web.board.domain.Board;
 import com.allan.springBootBoard.web.board.domain.model.BoardDTO;
 import com.allan.springBootBoard.web.board.domain.model.BoardForm;
 import com.allan.springBootBoard.web.board.service.BoardService;
+import com.allan.springBootBoard.web.member.domain.Member;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.boot.test.autoconfigure.AutoConfigureMybatis;
@@ -46,6 +48,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 //@AutoConfigureMockMvc
 @WithMockUser
 public class BoardControllerTest {
+
+    Member TEST_MEMBER;
+
     @Autowired
     WebApplicationContext webApplicationContext;
 
@@ -55,12 +60,16 @@ public class BoardControllerTest {
     @MockBean
     private BoardService boardService;
 
+    @MockBean
+    private AuthenticationConverter authenticationConverter;
+
     @BeforeEach
     public void setUp(){
         mvc = MockMvcBuilders
                 .webAppContextSetup(webApplicationContext)
                 .apply(springSecurity())
                 .build();
+        TEST_MEMBER = createMember();
     }
 
     @Test
@@ -69,6 +78,10 @@ public class BoardControllerTest {
         List<BoardDTO> TEST_BOARDS = Arrays.asList(BoardDTO.builder().build());
         given(boardService.findBoardList(any()))
                 .willReturn(TEST_BOARDS);
+
+        given(authenticationConverter.getMemberFromAuthentication(any()))
+                .willReturn(TEST_MEMBER);
+
 
         //when
         ResultActions resultActions = mvc.perform(get("/board/getBoardList")
@@ -83,13 +96,16 @@ public class BoardControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("boardList"))
                 .andExpect(model().attributeExists("pagination"))
-                .andExpect(model().attributeExists("userId"))
+                .andExpect(model().attributeExists("userInfo"))
                 .andExpect(view().name("board/boardList"));
     }
 
     @Test
     public void 게시글_작성_폼_테스트() throws Exception {
         //given, when
+        given(authenticationConverter.getMemberFromAuthentication(any()))
+                .willReturn(TEST_MEMBER);
+
         ResultActions resultActions = mvc.perform(get("/board/boardForm"));
 
         //then
@@ -107,6 +123,9 @@ public class BoardControllerTest {
                 .content("TEST_CONTENT")
                 .tag("TEST")
                 .build();
+
+        given(authenticationConverter.getMemberFromAuthentication(any()))
+                .willReturn(TEST_MEMBER);
 
         //when
         ResultActions resultActions = mvc.perform(post("/board/saveBoard?mode=").with(csrf())
@@ -137,7 +156,7 @@ public class BoardControllerTest {
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED));
 
         //then
-        verify(boardService, atLeastOnce()).update(any(), any());
+        verify(boardService, atLeastOnce()).update(any());
         resultActions
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/board/getBoardList"))
@@ -151,6 +170,9 @@ public class BoardControllerTest {
         given(boardService.findOne(any()))
                 .willReturn(TEST_BOARD);
 
+        given(authenticationConverter.getMemberFromAuthentication(any()))
+                .willReturn(TEST_MEMBER);
+
         //when
         ResultActions resultActions = mvc.perform(get("/board/boardContent")
                 .param("boardId", "1"));
@@ -159,7 +181,7 @@ public class BoardControllerTest {
         resultActions
                 .andExpect(model().attributeExists("boardContent"))
                 .andExpect(model().attributeExists("replyDTO"))
-                .andExpect(model().attributeExists("userId"))
+                .andExpect(model().attributeExists("userInfo"))
                 .andExpect(view().name("board/boardContent"));
     }
 
@@ -225,5 +247,13 @@ public class BoardControllerTest {
         ReflectionTestUtils.setField(board, "boardId", 1l);
 
         return board;
+    }
+
+    private Member createMember() {
+        Member member = Member.builder()
+                .name("test")
+                .authId("tester")
+                .build();
+        return member;
     }
 }

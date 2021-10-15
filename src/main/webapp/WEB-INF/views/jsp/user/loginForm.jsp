@@ -36,6 +36,9 @@
         </label>
     </div>
 	<button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+	<a href="${pageContext.request.contextPath}/oauth2/authorization/google" class="btn btn-success active" role="button">Google Login</a>
+	<a href="${pageContext.request.contextPath}/oauth2/authorization/naver" class="btn btn-secondary active" role="button">Naver Login</a>
+	<a href="${pageContext.request.contextPath}/oauth2/authorization/kakao" class="btn btn-secondary" role="button">Kakao Login</a>
 	<span style="font-size:11pt;">
 		<a href="#" id="signUp">Sign up</a>
 	</span>

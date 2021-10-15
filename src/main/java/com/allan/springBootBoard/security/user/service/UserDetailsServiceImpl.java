@@ -24,7 +24,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String authId){
         try {
             return memberRepository.findByAuthId(authId).map(u -> new UserDetailsVO(u, Collections
-                    .singleton(new SimpleGrantedAuthority(u.getRole().getValue())))).orElseThrow(() -> {
+                    .singleton(new SimpleGrantedAuthority(u.getRole().getKey())))).orElseThrow(() -> {
                     return new UserNotFoundException("UserNotFoundException");
             });
         } catch(EmptyResultDataAccessException ex){

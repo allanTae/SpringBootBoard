@@ -29,7 +29,7 @@ public interface BoardService {
      * @param updatedBy
      * @return
      */
-    public Long update(BoardDTO boardDTO, String updatedBy);
+    public Long update(BoardDTO boardDTO);
 
     /**
      * mybatis를 사용하여 검색 키워드를 사용하여 게시글을 조회하는 메소드입니다.

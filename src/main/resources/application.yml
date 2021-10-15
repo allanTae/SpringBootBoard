@@ -12,6 +12,7 @@ server:
 
 spring:
   profiles:
+    include: oauth
     active: devDB
 
   #  jsp viewResolver 설정.

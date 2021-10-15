@@ -181,7 +181,7 @@
 			<div style=" margin-bottom: 20px; display: inline-block; padding:10px;">
 			    <sec:authorize access="isAuthenticated()">
                     <div>
-                        <p>${userId}님</p>
+                        <p>${userInfo.user_name}님</p>
                         <p>환영합니다.</p>
                     </div>
                     <form>

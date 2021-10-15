@@ -16,10 +16,13 @@ public interface ReplyRepository extends JpaRepository<Reply, Long>, ReplyReposi
      * 게시물로 댓글 조회.
      * @param
      * @return List<Reply>
+     *     댓글을 조회하는 과정중에 회원의 아이디가 아닌 이름이 필요했기 때문에 Member 테이블과 조인을 추가함.
      */
+
     @Query("select new com.allan.springBootBoard.web.board.domain.model.ReplyDTO(r.replyId, r.createdBy, r.content, r.replyGroup, r.replyGroupOrder, " +
-            "r.depth, r.replyLike, r.isRemove)" +
-            " from Reply r join r.board b on b.boardId = :boardId order by  " +
+            "r.depth, r.replyLike, r.isRemove, m.name)" +
+            " from Reply r join r.board b on b.boardId = :boardId " +
+            " join Member m on r.createdBy = m.authId order by  " +
             "r.replyGroup asc, r.replyGroupOrder asc")
     public List<ReplyDTO> getReplyList(@Param("boardId") Long boardId);
 

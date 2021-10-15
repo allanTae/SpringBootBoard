@@ -8,5 +8,5 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     public Optional<Member> findByAuthId(String authId);
     public Optional<Member> findByMemberId(Long memberId);
-
+    public Optional<Member> findByEmail(String email);
 }

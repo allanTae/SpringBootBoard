@@ -89,7 +89,7 @@ class BoardServiceTest {
                 .willReturn(Optional.of(TEST_BOARD));
 
         //when
-        boardService.update(TEST_UPDATE_INFO, "tester");
+        boardService.update(TEST_UPDATE_INFO);
 
         //then
         verify(boardRepository, atLeastOnce()).findById(TEST_BOARD_ENTITY_ID);

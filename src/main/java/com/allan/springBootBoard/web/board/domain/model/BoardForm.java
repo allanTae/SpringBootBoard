@@ -18,15 +18,15 @@ public class BoardForm {
     private String content;
     private String tag;
     private Long viewCnt;
-    private String registerId;
+    private String name;
 
     @Builder
-    public BoardForm(Long boardId, String title, String content, String tag, Long viewCnt, String registerId) {
+    public BoardForm(Long boardId, String title, String content, String tag, Long viewCnt, String name) {
         this.boardId = boardId;
         this.title = title;
         this.content = content;
         this.tag = tag;
         this.viewCnt = viewCnt;
-        this.registerId = registerId;
+        this.name = name;
     }
 }

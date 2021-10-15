@@ -35,12 +35,7 @@
 
     // 취소 버튼 이벤트
 	$(document).on('click', '#btnCancle', function(e){
-		e.preventDefault(); 
-		//$('#uid').val('');
-		//$('#name').val('');
-		//$('#pwd1').val('');
-		//$('#pwd2').val('');
-		//$('#email').val('');
+		e.preventDefault();
 		
 		location.href="${pageContext.request.contextPath}/board/getBoardList";
 	});

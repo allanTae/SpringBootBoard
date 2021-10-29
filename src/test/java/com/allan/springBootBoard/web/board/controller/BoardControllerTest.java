@@ -2,11 +2,11 @@ package com.allan.springBootBoard.web.board.controller;
 
 import com.allan.springBootBoard.infra.AuthenticationConverter;
 import com.allan.springBootBoard.security.config.WebSecurityConfig;
-import com.allan.springBootBoard.web.board.domain.Board;
 import com.allan.springBootBoard.web.board.domain.model.BoardDTO;
 import com.allan.springBootBoard.web.board.domain.model.BoardForm;
 import com.allan.springBootBoard.web.board.service.BoardService;
 import com.allan.springBootBoard.web.member.domain.Member;
+import com.allan.springBootBoard.web.member.domain.MemberRole;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.boot.test.autoconfigure.AutoConfigureMybatis;
@@ -166,9 +166,9 @@ public class BoardControllerTest {
     @Test
     public void 게시글_조회_테스트() throws Exception {
         //given
-        Board TEST_BOARD = Board.builder().build();
+        BoardDTO TEST_BOARD_DTO = BoardDTO.builder().build();
         given(boardService.findOne(any()))
-                .willReturn(TEST_BOARD);
+                .willReturn(TEST_BOARD_DTO);
 
         given(authenticationConverter.getMemberFromAuthentication(any()))
                 .willReturn(TEST_MEMBER);
@@ -221,9 +221,9 @@ public class BoardControllerTest {
     @Test
     public void 게시글_수정_폼_테스트() throws Exception {
         //given
-        Board TEST_BOARD = createBoard();
+        BoardDTO TEST_BOARD_DTO = createBoardDTO();
         given(boardService.findOne((any())))
-                .willReturn(TEST_BOARD);
+                .willReturn(TEST_BOARD_DTO);
 
         //when
         ResultActions resultActions = mvc.perform(get("/board/editForm")
@@ -237,22 +237,23 @@ public class BoardControllerTest {
                 .andExpect(view().name("board/boardForm"));
     }
 
-    private Board createBoard() {
-        Board board = Board.builder()
+    private BoardDTO createBoardDTO() {
+        BoardDTO boardDTO = BoardDTO.builder()
                 .title("TEST_TITLE")
                 .content("TEST_CONTENT")
                 .tag("TEST_TAG")
                 .build();
 
-        ReflectionTestUtils.setField(board, "boardId", 1l);
+        ReflectionTestUtils.setField(boardDTO, "boardId", 1l);
 
-        return board;
+        return boardDTO;
     }
 
     private Member createMember() {
         Member member = Member.builder()
                 .name("test")
                 .authId("tester")
+                .role(MemberRole.USER)
                 .build();
         return member;
     }

@@ -1,13 +1,16 @@
 package com.allan.springBootBoard.web.board.controller;
 
 import com.allan.springBootBoard.common.Pagination;
+import com.allan.springBootBoard.common.Search;
 import com.allan.springBootBoard.infra.AuthenticationConverter;
 import com.allan.springBootBoard.security.config.WebSecurityConfig;
 import com.allan.springBootBoard.web.board.domain.Address;
+import com.allan.springBootBoard.web.board.domain.model.BoardDTO;
 import com.allan.springBootBoard.web.board.domain.model.MyBoardDTO;
 import com.allan.springBootBoard.web.board.service.MyBoardService;
 import com.allan.springBootBoard.web.member.domain.Gender;
 import com.allan.springBootBoard.web.member.domain.Member;
+import com.allan.springBootBoard.web.member.domain.MemberRole;
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.boot.test.autoconfigure.AutoConfigureMybatis;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,8 +66,8 @@ public class MyBoardControllerTest {
         given(myBoardService.getMyBoardListCnt(any()))
                 .willReturn(TEST_MY_BOARD_LIST_CNT);
 
-        List<MyBoardDTO> myBoardDTOList = createMyBoardDTOList();
-        given(myBoardService.getMyBoardList(any(), any(Pagination.class)))
+        List<BoardDTO> myBoardDTOList = createMyBoardDTOList();
+        given(myBoardService.getMyBoardList(any(), any(Search.class)))
                 .willReturn(myBoardDTOList);
 
         //when
@@ -79,10 +82,10 @@ public class MyBoardControllerTest {
                 .andExpect(view().name("board/myBoardList"));
     }
 
-    private List<MyBoardDTO> createMyBoardDTOList() {
+    private List<BoardDTO> createMyBoardDTOList() {
         return List.of(
-                new MyBoardDTO(1l, "test", 1l, "tester", "2020-09-16 23:44:15"),
-                new MyBoardDTO(2l, "test", 2l, "tester", "2020-09-16 23:44:15")
+                new BoardDTO(1l, "test", 2l, "testerId", LocalDateTime.now(),"testerName", "testerId", MemberRole.USER),
+                new BoardDTO(2l, "test", 3l, "testerId", LocalDateTime.now(),"testerName", "testerId", MemberRole.USER)
         );
     }
 

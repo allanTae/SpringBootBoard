@@ -68,16 +68,26 @@ public class Member extends BaseTimeEntity {
 
     private String updatedBy;
 
+    @Column(nullable = false)
+    private String nickname;
+
     /**
-     * 회원 가입 처리는 회원아이디가 생성되지 않은 상태이기에 spring Jpa Auditing 으로는 불가하기에
-     * 따로 등록자, 수정자를 엔티티에서 순수 JPA를 통 수정하도록 처리하였습니다.
+     * 회원 가입 처리는 회원아이디가 생성되지 않은 상태이므로 spring Jpa Auditing 으로는 불가하기에
+     * 따로 등록자, 수정자를 엔티티에서 순수 JPA를 통하여 수정하도록 처리하였습니다.
      * 또한 등록자와 초기 수정자는 system 으로 기재하도록 처리 되었습니다.
+     *
+     * 초기 가입시, 가입유형에 따라 nickname 을 소셜가입시 name 으로, 서비스가입시 authId 로 설정하도록 하였습니다.
      */
     @PrePersist
     public void prePersist(){
         this.isEnable = true;
         createdBy = "system";
         updatedBy = "system";
+        if(role.getJoinType().getType().equals(JoinType.NORMAL.getType())){
+            this.nickname = authId;
+        }else{
+            this.nickname= name;
+        }
     }
 
     /**
@@ -123,6 +133,8 @@ public class Member extends BaseTimeEntity {
     public void changeIsEnable(boolean isEnable){
         this.isEnable = isEnable;
     }
+
+    public void changeNickname(String nickname) {this.nickname = nickname;}
 
     public Member update(String name, String picture){
         this.name = name;

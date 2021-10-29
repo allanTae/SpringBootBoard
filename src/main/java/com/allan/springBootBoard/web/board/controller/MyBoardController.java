@@ -1,7 +1,9 @@
 package com.allan.springBootBoard.web.board.controller;
 
 import com.allan.springBootBoard.common.Pagination;
+import com.allan.springBootBoard.common.Search;
 import com.allan.springBootBoard.infra.AuthenticationConverter;
+import com.allan.springBootBoard.web.board.domain.model.BoardDTO;
 import com.allan.springBootBoard.web.board.domain.model.MyBoardDTO;
 import com.allan.springBootBoard.web.board.service.MyBoardService;
 import com.allan.springBootBoard.web.member.domain.Member;
@@ -31,17 +33,20 @@ public class MyBoardController {
     @GetMapping("/getBoardList")
     public String myBoardList(Authentication authentication, Model model,
                               @RequestParam(required = false, defaultValue = "1") int page,
-                              @RequestParam(required = false, defaultValue = "1") int range){
+                              @RequestParam(required = false, defaultValue = "1") int range,
+                              @RequestParam(required = false, defaultValue = "title") String searchType,
+                              @RequestParam(required = false) String keyword){
 
         Member findMember = authenticationConverter.getMemberFromAuthentication(authentication);
 
+        // 페이징 정보 입력.
+        Search search = new Search(searchType, keyword);
         int listCnt = myBoardService.getMyBoardListCnt(findMember.getMemberId());
-        Pagination pagination = new Pagination(page, range, listCnt);
+        search.pageInfo(page, range, listCnt);
 
-
-        List<MyBoardDTO> myBoards = myBoardService.getMyBoardList(findMember.getMemberId(), pagination);
+        List<BoardDTO> myBoards = myBoardService.getMyBoardList(findMember.getMemberId(), search);
         model.addAttribute("boardList", myBoards);
-        model.addAttribute("pagination", pagination);
+        model.addAttribute("pagination", search);
 
         model.addAttribute("user_name", findMember.getName());
         return "board/myBoardList";

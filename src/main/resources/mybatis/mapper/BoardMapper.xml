@@ -5,22 +5,22 @@
 
 <mapper namespace="com.allan.springBootBoard.web.board.repository.mapper.BoardMapper">
 
-    <select id="selectBoardList" resultType="BoardDTO" parameterType="Search">
+    <select id="selectBoardList" resultMap="BoardDTOS" parameterType="Search">
         SELECT
-        board_id, category_id, title, content, tag, view_cnt, created_by, created_date
+        b.board_id, b.title, b.tag, b.view_cnt, b.created_by, b.created_date, m.name, m.auth_id, m.role
         FROM
-        BOARD
-        <trim prefix="WHERE">
+        BOARD b join MEMBER m on b.member_id = m.member_id
+        <where>
             <if test="searchType=='title' and keyword != null and keyword != '' ">
-                title like CONCAT('%', #{keyword}, '%')
+                b.title like CONCAT('%', #{keyword}, '%')
             </if>
             <if test="searchType=='content' and keyword != null and keyword != '' ">
-                content like CONCAT('%', #{keyword}, '%')
+                b.content like CONCAT('%', #{keyword}, '%')
             </if>
             <if test="searchType=='registerId' and keyword != null and keyword != '' ">
-                created_by like CONCAT('%', #{keyword}, '%')
+                b.created_by like CONCAT('%', #{keyword}, '%')
             </if>
-        </trim>
+        </where>
         ORDER BY board_id DESC
         LIMIT #{startList}, #{listSize}
     </select>
@@ -30,7 +30,7 @@
         count(*) as boardListCnt
         FROM
         BOARD
-        <trim prefix="WHERE">
+        <where>
             <if test="searchType=='title' and keyword != null and keyword != '' ">
                 title like CONCAT('%', #{keyword}, '%')
             </if>
@@ -40,7 +40,7 @@
             <if test="searchType=='registerId' and keyword != null and keyword != '' ">
                 created_by like CONCAT('%', #{keyword}, '%')
             </if>
-        </trim>
+        </where>
     </select>
 
     <delete id="deleteAll" >
@@ -55,14 +55,35 @@
         WHERE member_id = #{memberId}
     </select>
 
-    <select id="selectMyBoardListByLoginId" resultType="MyBoardDTO" parameterType="HashMap">
+    <select id="selectMyBoardListByLoginId" resultMap="BoardDTOS" parameterType="HashMap">
         SELECT
-        board_id, title, view_cnt, created_by, created_date
+        b.board_id, b.title, b.content, b.tag, b.view_cnt, b.created_by, b.created_date, m.name, m.auth_id, m.role
         FROM
-        BOARD
-        WHERE member_id = #{memberId}
+        BOARD b join MEMBER m on b.member_id = m.member_id
+        WHERE b.member_id = #{memberId}
+        <trim prefix="AND">
+            <if test="searchType=='title' and keyword != null and keyword != '' ">
+                b.title like CONCAT('%', #{keyword}, '%')
+            </if>
+            <if test="searchType=='content' and keyword != null and keyword != '' ">
+                b.content like CONCAT('%', #{keyword}, '%')
+            </if>
+        </trim>
         ORDER BY board_id DESC
         LIMIT #{startList}, #{listSize}
     </select>
+
+    <resultMap id="BoardDTOS" type="BoardDTO">
+        <constructor>
+            <idArg column="board_id" javaType="Long" />
+            <arg column="title" javaType="String" />
+            <arg column="view_cnt" javaType="Long" />
+            <arg column="created_by" javaType="String" />
+            <arg column="created_date" javaType="java.time.LocalDateTime" />
+            <arg column="name" javaType="String" />
+            <arg column="auth_id" javaType="String" />
+            <arg column="role" javaType="com.allan.springBootBoard.web.member.domain.MemberRole" />
+        </constructor>
+    </resultMap>
 
 </mapper>

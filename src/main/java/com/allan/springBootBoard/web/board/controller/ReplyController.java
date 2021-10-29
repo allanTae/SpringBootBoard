@@ -23,8 +23,8 @@ public class ReplyController {
     ReplyService replyService;
 
     @GetMapping("/replies")
-    public ResponseEntity<List<ReplyDTO>> getReplyList(@ModelAttribute BoardDTO dto){
-        return new ResponseEntity<List<ReplyDTO>>(replyService.list(dto.getBoardId()), HttpStatus.OK);
+    public ResponseEntity<List<ReplyDTO>> getReplyList(@RequestParam("boardId") Long boardId){
+        return new ResponseEntity<List<ReplyDTO>>(replyService.list(boardId), HttpStatus.OK);
     }
 
     @PostMapping("/replies/parent-reply")

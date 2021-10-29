@@ -16,9 +16,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.util.List;
 
 @Controller
 @RequestMapping("/board")
@@ -43,20 +43,16 @@ public class BoardController {
                        @RequestParam(required = false) String keyword,
                        Authentication authentication){
 
-        Search search = Search.builder()
-                .searchType(searchType)
-                .keyword(keyword)
-                .build();
-
+        // 페이징 정보 입력.
+        Search search = new Search(searchType, keyword);
         int boardListCnt = boardService.findBoardListCnt(search);
-
         search.pageInfo(page, range, boardListCnt);
 
-        model.addAttribute("boardList", boardService.findBoardList(search));
-        model.addAttribute("pagination", search);
+        List<BoardDTO> boardList = boardService.findBoardList(search);
+        model.addAttribute("boardList", boardList); // 게시물 목록을 표시하기 위한 model 정보.
+        model.addAttribute("pagination", search); // 페이징 목록을 표시하기 위한 model 정보.
 
-        Member findMember = authenticationConverter.getMemberFromAuthentication(authentication);
-        userInfo(findMember, model);
+        userInfo(authentication, model);
 
         return "board/boardList";
     }
@@ -67,7 +63,7 @@ public class BoardController {
                             Authentication authentication){
 
         Member findMember = authenticationConverter.getMemberFromAuthentication(authentication);
-        form.setName(findMember.getName());
+        form.setName(findMember.getNickname());
 
         return "board/boardForm";
     }
@@ -110,9 +106,7 @@ public class BoardController {
         model.addAttribute("boardContent", boardService.findOne(boardId));
         model.addAttribute("replyDTO", dto);
 
-        Member findMember = authenticationConverter.getMemberFromAuthentication(authentication);
-        userInfo(findMember, model);
-
+        userInfo(authentication, model);
         return "board/boardContent";
     }
 
@@ -127,21 +121,23 @@ public class BoardController {
     @GetMapping("/editForm")
     public String editForm(@RequestParam("boardId") Long boardId, @RequestParam("mode") String mode,
                            Model model){
-        Board board = boardService.findOne(boardId);
+        BoardDTO boardDTO = boardService.findOne(boardId);
         BoardForm form = BoardForm.builder()
-                .boardId(board.getBoardId())
-                .title(board.getTitle())
-                .content(board.getContent())
-                .tag(board.getTag())
-                .name(board.getCreatedBy())
+                .boardId(boardDTO.getBoardId())
+                .title(boardDTO.getTitle())
+                .content(boardDTO.getContent())
+                .tag(boardDTO.getTag())
+                .name(boardDTO.getNickName())
                 .build();
         model.addAttribute("boardForm", form);
         model.addAttribute("mode", mode);
         return "board/boardForm";
     }
 
-    public void userInfo(Member member, Model model){
-        UserInfo userInfo = new UserInfo(member.getName(), member.getAuthId());
+    // 현재 로그인한 회원 이름, 아이디를 반환하는 메소드
+    public void userInfo(Authentication authentication, Model model){
+        Member findMember = authenticationConverter.getMemberFromAuthentication(authentication);
+        UserInfo userInfo = new UserInfo(findMember.getName(), findMember.getNickname());
         model.addAttribute("userInfo", userInfo);
     }
 }

@@ -1,15 +1,20 @@
 package com.allan.springBootBoard.web.board.service;
 
 import com.allan.springBootBoard.common.Pagination;
+import com.allan.springBootBoard.common.Search;
+import com.allan.springBootBoard.web.board.domain.model.BoardDTO;
 import com.allan.springBootBoard.web.board.domain.model.MyBoardDTO;
 import com.allan.springBootBoard.web.board.repository.BoardRepository;
 import com.allan.springBootBoard.web.board.repository.mapper.BoardMapper;
+import com.allan.springBootBoard.web.member.domain.MemberRole;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.annotation.Rollback;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -47,16 +52,17 @@ public class MyBoardServiceTest {
     @Test
     public void 로그인한_회원_게시글_목록_테스트() throws Exception {
         //given
-        Pagination TEST_PAGINATION = new Pagination(1, 1, 10);
-        List<MyBoardDTO> TEST_myBoardDTOList = List.of(
-                new MyBoardDTO(1l, "test_title", 1l, "tester", "2020-09-16 23:44:15"),
-                new MyBoardDTO(2l, "test_title", 1l, "tester", "2020-09-16 23:44:15")
+        Search TEST_SEARCH = new Search("title", "");
+        TEST_SEARCH.pageInfo(1, 1, 10);
+        List<BoardDTO> TEST_myBoardDTOList = List.of(
+                new BoardDTO(1l, "test", 2l, "testerId", LocalDateTime.now(),"testerName", "testerId", MemberRole.USER),
+                new BoardDTO(2l, "test", 3l, "testerId", LocalDateTime.now(),"testerName", "testerId", MemberRole.USER)
         );
         given(boardMapper.selectMyBoardListByLoginId(any()))
                 .willReturn(TEST_myBoardDTOList);
 
         //when
-        myBoardService.getMyBoardList(any(), TEST_PAGINATION);
+        myBoardService.getMyBoardList(any(), TEST_SEARCH);
 
         //then
         verify(boardMapper, atLeastOnce()).selectMyBoardListByLoginId(any());

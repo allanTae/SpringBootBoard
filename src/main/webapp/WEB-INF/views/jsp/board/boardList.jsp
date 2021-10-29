@@ -91,6 +91,7 @@
 		url = url + "&keyword=" + $('#keyword').val();
 		location.href = url;
 	});
+
 	// 로그인 버튼 이벤트
 	$(document).on('click', '#btnLogin', function(e){
 		e.preventDefault();
@@ -164,7 +165,7 @@
 											<c:out value="${list.title}" />
 										</a>
 									</td>
-									<td><c:out value="${list.createdBy}"/></td>
+									<td><c:out value="${list.nickName}"/></td>
 									<td><c:out value="${list.viewCnt}"/></td>
 									<td><c:out value="${list.createdDate}"/></td>
 								</tr>
@@ -181,7 +182,9 @@
 			<div style=" margin-bottom: 20px; display: inline-block; padding:10px;">
 			    <sec:authorize access="isAuthenticated()">
                     <div>
-                        <p>${userInfo.user_name}님</p>
+                        <p>
+                            ${userInfo.nickname} 님
+                        </p>
                         <p>환영합니다.</p>
                     </div>
                     <form>

@@ -30,8 +30,6 @@
 
 	// 로그인 아이디, 회원 이름
 	//var authId = ${userInfo.authId};
-	//var user_name = ${userInfo.user_name};
-
 
 	// 댓글 리스트 갱신
 	$(document).ready(function(){
@@ -107,7 +105,7 @@
             htmls += '</svg>';
             htmls += '<p class="media-body pb-3 mb-0 small lh-125 border-bottom horder-gray">';
             htmls += '<span class="d-block">';
-            htmls += '<strong class="text-gray-dark">' + reply.userName + '</strong>';
+            htmls += '<strong class="text-gray-dark">' + reply.nickName + '</strong>';
             htmls += '<span style="padding-left: 7px; font-size: 9pt">';
             htmls += '<a href="javascript:void(0)" onclick="fn_editReply(' + reply.replyId + ', \'' + reply.registerId + '\', \'' + escapeHtml(reply.content) + '\', \'' + reply.userName + '\')" style="padding-right:5px">수정</a>';
             htmls += '<a href="javascript:void(0)" onclick="fn_deleteReply(' + reply.replyId + ')" style="padding-right:5px">삭제</a>';
@@ -307,7 +305,7 @@
         htmls += '<textarea id="childContent" class="form-control" rows="3" placeholder="댓글을 입력해 주세요"></textarea>';
         htmls += '</div>';
         htmls += '<div class="col-sm-2">';
-        htmls += '<input type=text class="form-control" id="childRegisterId" value="${userInfo.authId}" readonly="true"></input>';
+        htmls += '<input type=text class="form-control" id="childRegisterId" value="${userInfo.nickname}" readonly="true"></input>';
         htmls += '<input type=hidden id="parentReplyGroup" value=' + replyGroup + ' ></input>';
         htmls += '<input type=hidden id="parentReplyGroupOrder" value=' + replyGroupOrder + ' ></input>';
         htmls += '<input type=hidden id="parentDepth" value=' + depth + ' ></input>';
@@ -339,10 +337,10 @@
 				</div>
 				<div class="board_info_box">
 					<span class="board_author">
-						<c:out value="${boardContent.createdBy}"/>,
+						<c:out value="${boardContent.nickName}"/>,
 					</span>
 					<span class="board_date">
-						<c:out value="${boardContent.createdDate}"/>
+						<c:out value="${boardContent.nickName}"/>
 					</span>
 				</div>
 				<div class="board_content">
@@ -367,7 +365,7 @@
                             <form:textarea path="content" id="content" class="form-control" rows="3" placeholder="댓글을 입력해 주세요"></form:textarea>
                         </div>
                         <div class="col-sm-2">
-                            <p>작성자 : ${userInfo.user_name}님</p>
+                            <p>작성자 : ${userInfo.nickname}</p>
                             <button type="button" class="btn btn-sm btn-primary" id="btnReplyParentSave" style="width: 100%; margin-top: 10px"> 저 장 </button>
                         </div>
                     </div>

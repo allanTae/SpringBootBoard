@@ -7,14 +7,16 @@ import lombok.Getter;
 @Getter
 public enum MemberRole {
 
-    USER("ROLE_USER", "normal"),
-    ADMIN("ROLE_ADMIN", "manager"),
-    GOOGLE("ROLE_GOOGLE", "google"),
-    NAVER("ROLE_NAVER", "naver"),
-    KAKAO("ROLE_KAKAO", "kakao");
+    USER("ROLE_USER", "user", JoinType.NORMAL),
+    ADMIN("ROLE_ADMIN", "manager", JoinType.NORMAL),
+    GOOGLE("ROLE_GOOGLE", "user", JoinType.GOOGLE),
+    NAVER("ROLE_NAVER", "user", JoinType.NAVER),
+    KAKAO("ROLE_KAKAO", "user", JoinType.KAKAO);
 
     private String key;
-    private String title;
+    private String role;
+    private JoinType joinType; // 가입유형을 구분하기 위한 구분자.
+
 
     public static MemberRole valueOfTitle(String title){
         switch(title){

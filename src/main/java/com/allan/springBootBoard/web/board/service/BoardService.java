@@ -21,12 +21,11 @@ public interface BoardService {
      * @param boardId
      * @return
      */
-    public Board findOne(Long boardId);
+    public BoardDTO findOne(Long boardId);
 
     /**
      * 게시글 내용을 수정하는 메소드 입니다.
      * @param boardDTO
-     * @param updatedBy
      * @return
      */
     public Long update(BoardDTO boardDTO);

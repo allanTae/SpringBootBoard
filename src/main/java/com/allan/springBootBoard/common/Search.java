@@ -11,7 +11,6 @@ public class Search extends Pagination{
     private String searchType;
     private String keyword;
 
-    @Builder
     public Search(String searchType, String keyword) {
         this.searchType = searchType;
         this.keyword = keyword;

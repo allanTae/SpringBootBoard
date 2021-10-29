@@ -20,7 +20,7 @@ public interface ReplyRepository extends JpaRepository<Reply, Long>, ReplyReposi
      */
 
     @Query("select new com.allan.springBootBoard.web.board.domain.model.ReplyDTO(r.replyId, r.createdBy, r.content, r.replyGroup, r.replyGroupOrder, " +
-            "r.depth, r.replyLike, r.isRemove, m.name)" +
+            "r.depth, r.replyLike, r.isRemove, m.name, m.authId, m.role)" +
             " from Reply r join r.board b on b.boardId = :boardId " +
             " join Member m on r.createdBy = m.authId order by  " +
             "r.replyGroup asc, r.replyGroupOrder asc")

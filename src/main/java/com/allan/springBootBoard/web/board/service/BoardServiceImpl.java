@@ -12,6 +12,7 @@ import com.allan.springBootBoard.web.board.repository.mapper.BoardMapper;
 import com.allan.springBootBoard.web.member.service.MemberService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +24,7 @@ import static com.allan.springBootBoard.web.error.code.ErrorCode.ENTITY_NOT_FOUN
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
+@Slf4j
 public class BoardServiceImpl implements BoardService {
 
     @NonNull
@@ -74,10 +76,18 @@ public class BoardServiceImpl implements BoardService {
      */
     @Transactional
     @Override
-    public Board findOne(Long boardId) {
-        Board findBoard = boardRepository.findById(boardId).orElseThrow(() -> new BoardNotFoundException( "해당 Board 엔티티가 존재하지 안습니다.", ENTITY_NOT_FOUND));
+    public BoardDTO findOne(Long boardId) {
+        Board findBoard = boardRepository.getBoard(boardId).orElseThrow(() -> new BoardNotFoundException( "해당 Board 엔티티가 존재하지 안습니다.", ENTITY_NOT_FOUND));
+        BoardDTO boardDTO = BoardDTO.builder()
+                .boardId(findBoard.getBoardId())
+                .title(findBoard.getTitle())
+                .content(findBoard.getContent())
+                .tag(findBoard.getTag()).build();
+        boardDTO.setCreatedDate(findBoard.getCreatedDate());
+        boardDTO.setNickName(findBoard.getMember().getName(), findBoard.getMember().getAuthId(), findBoard.getMember().getRole());
+
         findBoard.changeViewCnt(findBoard.getViewCnt() + 1);
-        return findBoard;
+        return boardDTO;
     }
 
     /**
@@ -113,6 +123,7 @@ public class BoardServiceImpl implements BoardService {
      */
     @Override
     public List<BoardDTO> findBoardList(Search search) {
+        log.info("startList: " + search.getStartList());
         return boardMapper.selectBoardList(search);
     }
 

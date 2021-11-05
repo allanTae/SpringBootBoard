@@ -85,6 +85,7 @@ public class MemberControllerTest {
         TEST_MEMBER_FORM.setDetailAddress("TEST_DETAIL_ADDRESS");
         TEST_MEMBER_FORM.setPhone("062-888-3333");
         TEST_MEMBER_FORM.setPostcode("500-2222");
+        TEST_MEMBER_FORM.setEmail("test@test.test.com");
 
         //when
         ResultActions resultActions = mvc.perform(post("/member").with(csrf())
@@ -122,6 +123,7 @@ public class MemberControllerTest {
         TEST_MEMBER_FORM.setYear("19923");
         TEST_MEMBER_FORM.setMonth("03");
         TEST_MEMBER_FORM.setDay("23");
+        TEST_MEMBER_FORM.setEmail("test@test.test.com");
 
         //when
         ResultActions resultActions = mvc.perform(post("/member").with(csrf())

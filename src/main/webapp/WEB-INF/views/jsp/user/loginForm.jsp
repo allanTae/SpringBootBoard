@@ -78,6 +78,11 @@
         e.preventDefault();
     });
 
+    $(document).on('click', '#find-pwd', function(e){
+        <!-- location.href ="${pageContext.request.contextPath}/serviceLogin/findPwdForm"; -->
+        e.preventDefault();
+    });
+
     // 소셜 로그인 버튼 이벤트들.
     $(document).on('click', '.btnNaver', function(e){
         location.href = "${pageContext.request.contextPath}/oauth2/authorization/naver";
@@ -92,11 +97,6 @@
         e.preventDefault();
     });
 </script>
-<html>
-<head>
-<title>login page</title>
-</head>
-<body>
     <div>
         <!-- login form {s} -->
         <form:form class="form-signin" name="form" id="form" role="form"
@@ -124,7 +124,8 @@
         <!-- login form {e} -->
 
         <p class="sign-in_more-action">
-            <span clsss="more-action_text_find-password more-action_text" style="font-size:11pt;">
+            <!-- modal 구동 버튼 (trigger) -->
+            <span clsss="more-action_text_find-password more-action_text " id="find-pwd" data-toggle="modal" data-target="#myModal" style="font-size:11pt;">
                비밀번호 찾기
             </span>
             <span class="more-action_text_sign-in sign-in more-action_text" style="font-size:11pt;">

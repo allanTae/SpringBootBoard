@@ -16,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import javax.annotation.Resource;
 
 @RequiredArgsConstructor
+@Slf4j
 public class CustomAuthenticationProvider implements AuthenticationProvider {
 
     @Resource(name="userDetailsService")
@@ -34,10 +35,10 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
         // UserDetailsService를 통해 DB에서 아이디로 사용자 조회
         UserDetailsVO userDetailsVO = (UserDetailsVO) userDetailsService.loadUserByUsername(userId);
-        if(!bCryptPasswordEncoder.matches(userPwd, userDetailsVO.getPassword())){
-            throw new BadCredentialsException("BadCredentialsException");
+        if(bCryptPasswordEncoder.matches(userPwd, userDetailsVO.getPassword())){
+            return new UsernamePasswordAuthenticationToken(userDetailsVO, userPwd, userDetailsVO.getAuthorities());
         }
-        return new UsernamePasswordAuthenticationToken(userDetailsVO, userPwd, userDetailsVO.getAuthorities());
+        throw new BadCredentialsException("BadCredentialsException");
     }
 
     @Override

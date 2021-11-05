@@ -73,6 +73,7 @@ public class MemberRepositoryTest {
                 .pwd("TEST")
                 .name("TESTER")
                 .age(10l)
+                .email("test@test.test.com")
                 .address(new Address("", "", "", "", ""))
                 .gender(Gender.MAN)
                 .phoneNumber("01022223333")

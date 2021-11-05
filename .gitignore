@@ -38,3 +38,6 @@ out/
 
 ### oauth2 ###
 application-oauth.yml
+
+### SMTP ###
+application-email.yml

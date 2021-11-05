@@ -30,4 +30,19 @@ public interface MemberService {
      */
     public Long updateMemberInfo(MemberDTO memberDTO, String updatedBy);
 
+    /**
+     * 입력받은 회원 이름, 아이디 정보로 회원가입 여부를 확인하는 메소드입니다.
+     * @param memberName
+     * @param authId
+     * @return
+     */
+    public boolean isJoined(String memberName, String authId);
+
+    /**
+     * 회원의 비밀번호를 임시 비밀번호로 변경 후, 회원의 이메일로 임시 비밀번호를 발송하는 메소드입니다.
+     * @param memberName
+     * @param authId
+     * @return
+     */
+    public void changePwdAndSendEmail(String memberName, String authId);
 }

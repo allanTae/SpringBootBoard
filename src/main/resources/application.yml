@@ -12,8 +12,16 @@ server:
 
 spring:
   profiles:
-    include: oauth
+    include:
+      - oauth
+      - email
     active: devDB
+
+  http:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
 
   #  jsp viewResolver 설정.
   mvc:

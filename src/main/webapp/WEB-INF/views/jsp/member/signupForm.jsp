@@ -289,6 +289,17 @@
 					</div>
 
 					<div class="form-group row">
+                        <label for="email" class="col-md-3 col-form-label text-md-right">이메일</label>
+                        <div class="col-md-5">
+                            <form:input path="email" id="email" class="form-control" placeholder="이메일을 입력해 주세요" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label for="emailError" class="col-md-3" text-md-right></label>
+                        <form:errors path="email" id="emailError" class="col-md-6 form-group text-left" style="font-size:15px; color:red; width=100px;"/>
+                    </div>
+
+					<div class="form-group row">
                         <label for="dateOfBirth" class="col-md-3 col-form-label text-md-right">생년월일</label>
                         <div class="input-group col-md-3">
                             <select name="year" id="year" title="년도" class="custom-select"></select>

@@ -1,6 +1,7 @@
 package com.allan.springBootBoard.web.member.service;
 
 import com.allan.springBootBoard.web.board.domain.Address;
+import com.allan.springBootBoard.web.email.service.EmailService;
 import com.allan.springBootBoard.web.member.domain.model.MemberDTO;
 import com.allan.springBootBoard.web.member.domain.MemberRole;
 import com.allan.springBootBoard.web.member.domain.model.MemberForm;
@@ -21,6 +22,7 @@ import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -42,10 +44,13 @@ class MemberServiceTest {
     @Mock
     BCryptPasswordEncoder passwordEncoder;
 
+    @Mock
+    EmailService emailService;
+
     @BeforeEach
     public void setUp(){
         MockitoAnnotations.openMocks(this);
-        memberService = new MemberServiceImpl(memberRepository, passwordEncoder);
+        memberService = new MemberServiceImpl(memberRepository, passwordEncoder, emailService);
     }
 
     @Test
@@ -138,6 +143,41 @@ class MemberServiceTest {
         verify(memberRepository, atLeastOnce()).findByMemberId(any(Long.class));
         assertThat(TEST_MEMBER.getAddress().getJibunAddress(), is("updateCity"));
         assertThat(TEST_MEMBER.getPwd(), is("updatePassword"));
+    }
+
+    @Test
+    public void 아이디_이메일로_회원가입확인_테스트() throws Exception {
+        //given
+        Address TEST_ADDR = createAddress();
+        Member TEST_MEMBER = createMember(TEST_ADDR, TEST_MEMBER_ID);
+        given(memberRepository.findByAuthId(any()))
+                .willReturn(Optional.of(TEST_MEMBER));
+
+        //when
+        memberService.isJoined(TEST_MEMBER.getName(),TEST_MEMBER.getAuthId());
+
+        //then
+        verify(memberRepository, atLeastOnce()).findByAuthId(any());
+    }
+
+    @Test
+    public void 비밀번호변경_이메일발송_테스트() throws Exception {
+        //given
+        String TEST_ENCODE_PWD = "incodePwd";
+        Address TEST_ADDR = createAddress();
+        Member TEST_MEMBER = createMember(TEST_ADDR, TEST_MEMBER_ID);
+        given(memberRepository.findByAuthId(any()))
+                .willReturn(Optional.of(TEST_MEMBER));
+        given(passwordEncoder.encode(any()))
+                .willReturn(TEST_ENCODE_PWD);
+
+        //when
+        memberService.changePwdAndSendEmail(TEST_MEMBER.getName(), TEST_MEMBER.getAuthId());
+
+        //then
+        verify(memberRepository, atLeastOnce()).findByAuthId(any());
+        verify(emailService, atLeastOnce()).mailSend(any());
+        assertThat(TEST_MEMBER.getPwd(), is(TEST_ENCODE_PWD));
     }
 
     private Address createAddress() {

@@ -42,6 +42,9 @@ public class MemberForm {
     @NotEmpty(message = "성별을 선택 해 주세요.")
     private String gender;
 
+    @NotEmpty(message = "이메일을 입력 해 주세요.")
+    private String email;
+
     @Max(message = "나이를 제대로 입력 해 주세요.", value = 150L)
     @Min(message = "나이를 제대로 입력 해 주세요.", value = 0L)
     private Long age;

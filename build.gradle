@@ -50,8 +50,10 @@ dependencies {
 	testImplementation 'org.springframework.security:spring-security-test'
 
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
-
 	implementation 'org.springframework.security:spring-security-taglibs'
+
+	// 이메일 인증을 위한 SMTP
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
 
 }
 

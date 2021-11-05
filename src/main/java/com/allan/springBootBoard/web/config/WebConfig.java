@@ -3,6 +3,7 @@ package com.allan.springBootBoard.web.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -49,5 +50,15 @@ public class WebConfig implements WebMvcConfigurer {
     public BCryptPasswordEncoder bCryptPasswordEncoder(){
         return new BCryptPasswordEncoder();
     }
+
+    // spring 에서 사용할 JavaMailSender
+//    @Bean
+//    public JavaMailSenderImpl mailSender() {
+//        JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
+//        javaMailSender.setProtocol(emailProtocal);
+//        javaMailSender.setHost(emailHost);
+//        javaMailSender.setPort(emailPort);
+//        return javaMailSender;
+//    }
 }
 

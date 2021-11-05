@@ -2,11 +2,12 @@
 <!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN" "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
 <tiles-definitions>
     <!-- account -->
-    <definition name="account-layout" template="/WEB-INF/tiles/layouts/login_layout.jsp">
+    <definition name="account-layout" template="/WEB-INF/tiles/layouts/login/login_layout.jsp">
         <put-attribute name="tile_common" value="/WEB-INF/tiles/layouts/common.jsp" />
     </definition>
     <definition name="user/*" extends="account-layout">
-        <put-attribute name="tile_body" value="/WEB-INF/views/jsp/user/{1}.jsp" />
+        <put-attribute name="tile_body" value="/WEB-INF/views/jsp/user/loginForm.jsp" />
+        <put-attribute name="tile_modal_find-pwd" value="/WEB-INF/views/jsp/user/modal_find-pwd.jsp" />
     </definition>
 
     <!-- base -->
@@ -32,4 +33,5 @@
     <definition name="error/*" extends="error-layout">
         <put-attribute name="tile_body" value="/WEB-INF/views/jsp/error/{1}.jsp" />
     </definition>
+
 </tiles-definitions>

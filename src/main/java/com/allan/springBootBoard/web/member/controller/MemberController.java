@@ -44,30 +44,35 @@ public class MemberController {
         String NAME_PATTERN = "^[가-힣]{2,16}$";
         String PASSWORD_PATTERN = "^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*()\\-_=+~₩|\\\\:;\"',.<>/?]{10,16}$";
         String DATE_OF_BIRTH_PATTERN ="^[0-9]{4}-[0-9]{2}-[0-9]{2}$";
+        String EMAIL_PATTER = "^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$";
 
         String dateOfBirth = form.getYear() + "-" + form.getMonth() + "-" + form.getDay();
 
         // 유효성 검사
         if(!Pattern.compile(ID_PATTERN).matcher(form.getAuthId()).find()){
-            log.error("memberId: " + form.getAuthId());
+            log.error("error memberId: " + form.getAuthId());
             bindingResult.rejectValue("authId", "id.invalidatedVal", "아이디는 영대소문자, 숫자로 10자~16자까지만 입력이 가능합니다.");
         }
         if(!Pattern.compile(NAME_PATTERN).matcher(form.getName()).find()){
-            log.error("name: " + form.getName());
+            log.error("error name: " + form.getName());
             bindingResult.rejectValue("name", "name.invalidatedVal", "이름은 한글 2자~16자까지만 입력이 가능합니다.");
         }
         if(!Pattern.compile(PASSWORD_PATTERN).matcher(form.getPwd()).find()){
-            log.error("pwd: " + form.getPwd());
+            log.error("error pwd: " + form.getPwd());
             bindingResult.rejectValue("pwd", "pwd.invalidatedVal", "비밀번호는 영대소문자, 숫자, 특수문자를 반드시 한글자 포함하고, 10~16자까지만 입력이 가능합니다.");
         }
         if(!Pattern.compile(DATE_OF_BIRTH_PATTERN).matcher(dateOfBirth).find()){
-            log.error("dateOfBirth: " + dateOfBirth);
+            log.error("error dateOfBirth: " + dateOfBirth);
             bindingResult.rejectValue("dateOfBirth", "dateOfBirth.invalidatedVal", "생년월일을 제대로 입력해 주세요.");
         }
         if(!bindingResult.hasErrors() && !form.getPwd().equals(form.getRe_pwd())){
             log.error("pwd and re_pwd is not same");
             bindingResult.rejectValue("pwd", "pwd.invalidatedVal", "비밀번호와 비밀번호 확인이 일치하지 않습니다.");
             bindingResult.rejectValue("re_pwd", "re_pwd.invalidatedVal", "비밀번호와 비밀번호 확인이 일치하지 않습니다.");
+        }
+        if(!Pattern.compile(EMAIL_PATTER).matcher(form.getEmail()).find()){
+            log.error("error email: " + form.getEmail());
+            bindingResult.rejectValue("email", "email.invalidatedVal", "올바른 이메일 형식이 아닙니다.");
         }
 
         if(bindingResult.hasErrors()){

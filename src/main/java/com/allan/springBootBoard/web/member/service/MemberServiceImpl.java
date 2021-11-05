@@ -1,6 +1,8 @@
 package com.allan.springBootBoard.web.member.service;
 
 import com.allan.springBootBoard.web.board.domain.Address;
+import com.allan.springBootBoard.web.email.model.MailDTO;
+import com.allan.springBootBoard.web.email.service.EmailService;
 import com.allan.springBootBoard.web.error.code.ErrorCode;
 import com.allan.springBootBoard.web.error.exception.MemberNotFoundException;
 import com.allan.springBootBoard.web.member.domain.Gender;
@@ -30,6 +32,9 @@ public class MemberServiceImpl implements MemberService{
     @NonNull
     private BCryptPasswordEncoder passwordEncoder;
 
+    @NonNull
+    EmailService emailService;
+
     /**
      * 회원 가입 처리하는 메소드입니다.
      * 클라이언트로부터 전달 받은 form 정보를 토대로 Member 엔티티를 저장합니다.
@@ -51,6 +56,7 @@ public class MemberServiceImpl implements MemberService{
                 .phoneNumber(form.getPhone())
                 .gender(Gender.valueOf(Integer.parseInt(form.getGender()))) // 폼에서 전달 된 String 값을 int로 변환하기 위함.
                 .dateOfBirth(dateOfBirth)
+                .email(form.getEmail())
                 .build();
 
         if(validateId(member)){
@@ -97,5 +103,32 @@ public class MemberServiceImpl implements MemberService{
         findMember.changePassword(memberDTO.getPassword());
         return findMember.getMemberId();
     }
+
+    /**
+     * 회원 이름과 아이디로 회원가입유무를 확인하는 메소드입니다.
+     * @param memberName
+     * @param authId
+     * @return
+     */
+    @Override
+    public boolean isJoined(String memberName, String authId) {
+        Member findMember = memberRepository.findByAuthId(authId).orElseThrow(() -> new MemberNotFoundException("입력한 아이다로 가입한 계정이 없습니다.", ErrorCode.ENTITY_NOT_FOUND));
+        if(findMember.getName().equals(memberName)){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    @Transactional
+    @Override
+    public void changePwdAndSendEmail(String memberName, String authId) {
+        Member findMember = memberRepository.findByAuthId(authId).orElseThrow(() -> new MemberNotFoundException("입력한 아이디로 가입한 계정이 없습니다.", ErrorCode.ENTITY_NOT_FOUND));
+        String tempPwd = findMember.getTempPwd();
+        findMember.changePassword(passwordEncoder.encode(tempPwd));
+        MailDTO mailDTO = emailService.createMail(findMember.getEmail(), findMember.getName(), tempPwd);
+        emailService.mailSend(mailDTO);
+    }
+
 
 }

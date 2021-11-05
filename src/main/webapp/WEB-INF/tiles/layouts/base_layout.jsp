@@ -22,6 +22,9 @@
 <!-- Ajax jquery -->
 <script src="http://code.jquery.com/jquery-latest.min.js"></script>
 
+<!-- SWAL -->
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
 <style> 
 	body{padding : 0px} 
 	#tile_header { width:100%; } 
